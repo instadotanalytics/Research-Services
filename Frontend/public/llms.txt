@@ -1,0 +1,24 @@
+# ResearchEdge — Academic Services Platform
+
+> Professional research and academic support services for students, researchers, scholars and educational institutions.
+
+## Core Pages
+- Home: /
+- About: /about
+- Services: /services
+- FAQ: /faq
+- Contact: /contact
+
+## Services
+- Dissertation Writing: /services/dissertation-writing
+- Research Paper Writing: /services/research-paper-writing
+- Research Paper Publication Assistance: /services/research-paper-publication
+- Thesis Writing: /services/thesis-writing
+- Synopsis Writing: /services/synopsis-writing
+- Data Collection & Analysis: /services/data-collection-analysis
+- Faculty Development Program: /services/faculty-development-program
+- Research Proposal Writing: /services/research-proposal-writing
+- Academic Writing: /services/academic-writing
+
+## Notes
+This is an academic guidance platform. We do not guarantee publication, marks or any academic outcomes.
