@@ -7,13 +7,15 @@
    ALIGNMENT: this page has no container of its own.
    Every section uses the site's global ".container" class
    (the same one the Navbar uses), so the left edge of the
-   logo and the right edge of the "Get Started" button line
-   up exactly with the content below at every screen size.
+   logo lines up exactly with the hero text and the content
+   below at every screen size.
 
-   HERO: the hero copy AND the hero image now live inside the
-   same ".container" as a 2-column grid. The image therefore
-   ends exactly where the "Get Started" button ends (no more
-   bleeding past the header's right edge).
+   HERO (matches the reference design):
+   - the photo is FULL-BLEED, anchored to the right edge of the
+     screen and fading softly into the page colour on its left
+   - the copy sits on the left, aligned to the .container edge
+   - features have a title + small caption
+   - the "reply within 24 hours" pill is solid blue with an arrow
    ========================================================= */
 
 .ct-hero,
@@ -52,52 +54,55 @@
 /* ============================ HERO ============================ */
 .ct-hero {
   --ct-hero-bg: #f4f8ff;
-  /* Width of the soft fade on the LEFT edge of the photo (blends it into the page colour) */
-  --ct-fade: 22%;
+  /* How much of the photo's left side is covered by the page colour.
+     "solid" = fully covered up to here, "end" = fully visible from here. */
+  --ct-fade-solid: 44%;
+  --ct-fade-end: 64%;
   position: relative;
   overflow: hidden;
   background: var(--ct-hero-bg);
   color: var(--ct-text);
 }
 
-/* The global .container provides the left/right padding and max-width, so both
-   columns sit exactly between the logo's left edge and the button's right edge. */
-.ct-hero .ct-hero__inner {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  align-items: center;
-  column-gap: 40px;
-  padding-top: 64px;
-  padding-bottom: 64px;
-}
-
-.ct-hero__copy {
-  max-width: 600px;
-  min-width: 0;
-}
-
-/* Photo: sits in the right grid column and ends on the container's right edge */
+/* Full-bleed photo anchored to the right edge; keeps the picture's proportions */
 .ct-hero__media {
-  position: relative;
-  width: 100%;
-  min-width: 0;
-  height: clamp(380px, 34vw, 480px);
-  border-radius: 24px;
-  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  aspect-ratio: 1920 / 820;
   background-repeat: no-repeat;
-  /* Image is a wide banner whose meaningful content is on its right side */
-  background-size: auto 100%;
+  background-size: cover;
   background-position: right center;
   pointer-events: none;
 }
 
-/* Soft fade on the left edge so the photo melts into the hero background */
 .ct-hero__media::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, var(--ct-hero-bg) 0, transparent var(--ct-fade));
+  background: linear-gradient(
+    90deg,
+    var(--ct-hero-bg) 0,
+    var(--ct-hero-bg) var(--ct-fade-solid),
+    transparent var(--ct-fade-end)
+  );
+}
+
+/* The global .container gives the left/right padding, so the copy's left edge
+   matches the logo exactly. Vertical spacing is set here. */
+.ct-hero .ct-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  min-height: clamp(500px, 36vw, 660px);
+  padding-top: 56px;
+  padding-bottom: 72px;
+}
+
+.ct-hero__copy {
+  max-width: 640px;
 }
 
 .ct-eyebrow-row {
@@ -126,7 +131,7 @@
 }
 
 .ct-hero h1 {
-  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+  font-size: clamp(2.1rem, 4.6vw, 3.6rem);
   font-weight: 700;
   line-height: 1.12;
   letter-spacing: -0.02em;
@@ -141,30 +146,27 @@
 
 .ct-hero__copy > p {
   max-width: 540px;
-  margin: 0 0 28px;
+  margin: 0 0 30px;
   font-size: 1.05rem;
   line-height: 1.75;
   color: #475569;
 }
 
+/* Features: icon + title + caption, separated by thin dividers */
 .ct-hero__features {
   list-style: none;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 12px 0;
-  margin: 0 0 28px;
+  margin: 0 0 32px;
   padding: 0;
 }
 
 .ct-hero__features li {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 20px;
-  font-size: 0.92rem;
-  color: #334155;
-  white-space: nowrap;
+  gap: 12px;
+  padding: 0 24px;
 }
 
 .ct-hero__features li:first-child {
@@ -180,16 +182,53 @@
   flex-shrink: 0;
 }
 
+.ct-hero__feature-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.ct-hero__feature-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ct-primary);
+}
+
+.ct-hero__feature-sub {
+  font-size: 0.8rem;
+  color: var(--ct-muted);
+}
+
+/* Solid blue pill with clock + arrow */
 .ct-hero__badge {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 13px 22px;
+  gap: 14px;
+  padding: 15px 28px;
   border-radius: 999px;
-  background: #e3ecfd;
+  background: linear-gradient(135deg, #1d4ed8, var(--ct-secondary));
+  color: #fff;
   font-size: 0.95rem;
-  font-weight: 500;
-  color: #1d4ed8;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ct-hero__badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.36);
+}
+
+.ct-hero__badge:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.45);
+  outline-offset: 3px;
+}
+
+.ct-hero__badge svg {
+  flex-shrink: 0;
 }
 
 /* ============================ MAIN ============================ */
@@ -854,13 +893,27 @@ textarea.ct-input {
 }
 
 /* ========================== RESPONSIVE ========================== */
-@media (max-width: 1100px) {
-  .ct-hero .ct-hero__inner {
-    column-gap: 28px;
+@media (max-width: 1100px) and (min-width: 901px) {
+  .ct-hero {
+    --ct-fade-solid: 52%;
+    --ct-fade-end: 70%;
+  }
+  .ct-hero__copy {
+    max-width: 56%;
   }
   .ct-hero__features li {
     padding: 0 14px;
+    gap: 9px;
+  }
+  .ct-hero__features svg {
+    width: 24px;
+    height: 24px;
+  }
+  .ct-hero__feature-title {
     font-size: 0.88rem;
+  }
+  .ct-hero__feature-sub {
+    font-size: 0.74rem;
   }
 }
 
@@ -874,23 +927,39 @@ textarea.ct-input {
 }
 
 @media (max-width: 900px) {
-  /* Stack: copy on top, photo underneath — both inside the container */
+  .ct-hero {
+    display: flex;
+    flex-direction: column;
+  }
   .ct-hero .ct-hero__inner {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: 32px;
+    order: 1;
+    display: block;
+    min-height: 0;
     padding-top: 48px;
-    padding-bottom: 48px;
+    padding-bottom: 0;
   }
   .ct-hero__copy {
     max-width: 640px;
   }
-  .ct-hero__media {
-    height: clamp(220px, 52vw, 340px);
-    border-radius: 20px;
+  .ct-hero__features {
+    flex-wrap: wrap;
+    gap: 16px 0;
   }
-  /* Fade from the top instead of the left when stacked */
+  /* Photo moves below the copy and is cropped to its right side */
+  .ct-hero__media {
+    order: 2;
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    height: clamp(210px, 52vw, 340px);
+    aspect-ratio: auto;
+    margin-top: 28px;
+    background-size: 180% auto;
+    background-position: right center;
+  }
   .ct-hero__media::after {
-    background: linear-gradient(to bottom, var(--ct-hero-bg) 0, transparent 28%);
+    background: linear-gradient(to bottom, var(--ct-hero-bg) 0, transparent 34%);
   }
   .ct-main {
     padding: 44px 0 52px;
@@ -920,8 +989,7 @@ textarea.ct-input {
 
 @media (max-width: 600px) {
   .ct-hero .ct-hero__inner {
-    padding-top: 36px;
-    padding-bottom: 36px;
+    padding-top: 40px;
   }
   .ct-eyebrow-row {
     margin-bottom: 18px;
@@ -936,11 +1004,11 @@ textarea.ct-input {
   }
   .ct-hero__copy > p {
     font-size: 0.98rem;
-    margin-bottom: 22px;
+    margin-bottom: 24px;
   }
   .ct-hero__features {
-    gap: 12px 20px;
-    margin-bottom: 22px;
+    gap: 16px 24px;
+    margin-bottom: 24px;
   }
   .ct-hero__features li,
   .ct-hero__features li:first-child {
@@ -948,11 +1016,8 @@ textarea.ct-input {
     border-left: 0 !important;
   }
   .ct-hero__badge {
-    padding: 11px 18px;
+    padding: 13px 22px;
     font-size: 0.9rem;
-  }
-  .ct-hero__media {
-    border-radius: 16px;
   }
   .ct-form {
     padding: 20px 16px;
@@ -992,6 +1057,7 @@ textarea.ct-input {
   a.ct-method:hover,
   .ct-why__item:hover,
   .ct-submit:not(:disabled):hover,
+  .ct-hero__badge:hover,
   .ct-cta__btn:hover {
     transform: none;
   }

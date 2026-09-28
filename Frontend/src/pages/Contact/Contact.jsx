@@ -21,13 +21,14 @@ import {
   ListChecks,
   MessagesSquare,
   ArrowUpRight,
+  ArrowRight,
 } from 'lucide-react';
 import SEO from '../../components/SEO.jsx';
 import api from '../../services/api.js';
 import { createEnquiry } from '../../services/enquiryApi.js';
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import { validateEmail, validatePhone, required } from '../../utils/validation.js';
-import heroImage from '../../assets/contact-heroimage.png';
+import heroImage from '../../assets/contact heroimage.png';
 import './Contact.css';
 
 /* ------------------------------------------------------------------ */
@@ -254,11 +255,14 @@ export default function Contact() {
 
       {/* ============================ HERO ============================ */}
       <section className="ct-hero" aria-labelledby="ct-hero-title">
-        {/*
-          Both the copy and the image live INSIDE the same global "container" the
-          Navbar uses (2-column grid). Left edge = logo's left edge,
-          right edge = "Get Started" button's right edge.
-        */}
+        {/* Full-bleed hero photo, anchored to the right edge of the screen */}
+        <div
+          className="ct-hero__media"
+          aria-hidden="true"
+          style={{ backgroundImage: `url("${heroImage}")` }}
+        />
+
+        {/* Same global "container" as the Navbar, so the copy lines up with the logo */}
         <div className="container ct-hero__inner">
           <motion.div
             className="ct-hero__copy"
@@ -287,31 +291,34 @@ export default function Contact() {
 
             <ul className="ct-hero__features">
               <li>
-                <BookOpen size={22} aria-hidden="true" />
-                <span>Research Support</span>
+                <BookOpen size={30} strokeWidth={1.6} aria-hidden="true" />
+                <span className="ct-hero__feature-text">
+                  <span className="ct-hero__feature-title">Research Support</span>
+                  <span className="ct-hero__feature-sub">Get expert guidance</span>
+                </span>
               </li>
               <li>
-                <GraduationCap size={22} aria-hidden="true" />
-                <span>Academic Guidance</span>
+                <GraduationCap size={30} strokeWidth={1.6} aria-hidden="true" />
+                <span className="ct-hero__feature-text">
+                  <span className="ct-hero__feature-title">Academic Guidance</span>
+                  <span className="ct-hero__feature-sub">For your success</span>
+                </span>
               </li>
               <li>
-                <BarChart3 size={22} aria-hidden="true" />
-                <span>Data Analysis</span>
+                <BarChart3 size={30} strokeWidth={1.6} aria-hidden="true" />
+                <span className="ct-hero__feature-text">
+                  <span className="ct-hero__feature-title">Data Analysis</span>
+                  <span className="ct-hero__feature-sub">Insights that matter</span>
+                </span>
               </li>
             </ul>
 
-            <div className="ct-hero__badge">
-              <Clock size={18} aria-hidden="true" />
+            <a href="#enquiry-form" className="ct-hero__badge" onClick={focusForm}>
+              <Clock size={20} aria-hidden="true" />
               <span>We aim to reply within 24 hours</span>
-            </div>
+              <ArrowRight size={18} aria-hidden="true" />
+            </a>
           </motion.div>
-
-          {/* Hero image (CSS background, so no global <img> rules can affect it) */}
-          <div
-            className="ct-hero__media"
-            aria-hidden="true"
-            style={{ backgroundImage: `url("${heroImage}")` }}
-          />
         </div>
       </section>
 
