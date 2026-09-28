@@ -1,0 +1,136 @@
+.admin-topbar {
+  background: #ffffff;
+  padding: 16px 32px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* Search Bar */
+.topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f1f5f9;
+  padding: 10px 16px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  transition: all 0.2s;
+}
+
+.topbar-search:focus-within {
+  background: #ffffff;
+  box-shadow: 0 0 0 2px #2563eb;
+}
+
+.search-icon {
+  color: #94a3b8;
+}
+
+.topbar-search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.9rem;
+  color: #1e293b;
+  width: 100%;
+}
+
+.topbar-search input::placeholder {
+  color: #94a3b8;
+}
+
+/* Actions */
+.admin-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.icon-btn {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  background: #e2e8f0;
+  color: #2563eb;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: #ef4444;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+/* User Profile */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 20px;
+  border-left: 1px solid #e2e8f0;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .admin-topbar {
+    padding-left: 80px; /* Space for mobile menu button */
+  }
+
+  .topbar-search {
+    max-width: 100%;
+    order: 3;
+    margin-top: 10px;
+  }
+
+  .user-info {
+    display: none;
+  }
+}
