@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Mail, 
   Phone, 
@@ -7,15 +7,15 @@ import {
   ShieldCheck, 
   Search, 
   ArrowRight, 
-  ChevronDown,
-  GraduationCap 
+  GraduationCap,
+  X
 } from 'lucide-react';
 import './Navbar.css';
 
 const links = [
   { to: '/', label: 'Home' },
   { to: '/about', label: 'About Us' },
-  { to: '/services', label: 'Services', hasDropdown: true },
+  { to: '/services', label: 'Services' },
   { to: '/faq', label: 'FAQ' },
   { to: '/contact', label: 'Contact' },
 ];
@@ -23,31 +23,36 @@ const links = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef(null);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   // Close mobile menu on route change
   useEffect(() => {
     setOpen(false);
+    setSearchOpen(false);
   }, [pathname]);
 
-  // Smooth Scroll Detection
+  // Smooth Scroll Detection (FIXED flicker)
   useEffect(() => {
     let ticking = false;
 
     const onScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          // Trigger at 5px for instant response
-          setScrolled(window.scrollY > 5);
+          // Only trigger when scroll passes 10px (prevents jitter on tiny scrolls)
+          setScrolled(window.scrollY > 10);
           ticking = false;
         });
         ticking = true;
       }
     };
 
-    onScroll(); 
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    
+
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -58,6 +63,29 @@ export default function Navbar() {
       document.body.style.overflow = '';
     };
   }, [open]);
+
+  // Focus search input when opened
+  useEffect(() => {
+    if (searchOpen && searchInputRef.current) {
+      setTimeout(() => searchInputRef.current?.focus(), 50);
+    }
+  }, [searchOpen]);
+
+  // Handle search submit
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (!q) return;
+    // Navigate to a search page. If you don't have one,
+    // change this to navigate('/services') or open a modal.
+    navigate(`/search?q=${encodeURIComponent(q)}`);
+    setSearchOpen(false);
+    setSearchQuery('');
+  };
+
+  const toggleSearch = () => {
+    setSearchOpen((s) => !s);
+  };
 
   return (
     <>
@@ -116,15 +144,20 @@ export default function Navbar() {
                     }
                   >
                     {l.label}
-                    {l.hasDropdown && <ChevronDown size={14} className="nav-chevron" />}
                   </NavLink>
                 ))}
               </div>
 
               <div className="navbar-actions">
-                <button className="nav-search-btn" aria-label="Search">
+                {/* Search toggle */}
+                <button
+                  className="nav-search-btn"
+                  aria-label="Search"
+                  onClick={toggleSearch}
+                >
                   <Search size={20} />
                 </button>
+
                 <Link to="/contact" className="btn btn-primary nav-cta">
                   Get Started
                   <ArrowRight size={16} />
@@ -145,6 +178,31 @@ export default function Navbar() {
             </button>
           </div>
         </div>
+
+        {/* --- Search Overlay / Bar --- */}
+        {searchOpen && (
+          <div className="search-bar-overlay">
+            <form className="search-bar-form" onSubmit={handleSearchSubmit}>
+              <Search size={20} className="search-bar-icon" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Search services, topics, resources..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-bar-input"
+              />
+              <button
+                type="button"
+                className="search-bar-close"
+                onClick={() => setSearchOpen(false)}
+                aria-label="Close search"
+              >
+                <X size={20} />
+              </button>
+            </form>
+          </div>
+        )}
       </header>
 
       {/* Mobile menu backdrop */}
