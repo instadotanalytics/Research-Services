@@ -1,8 +1,19 @@
 
 /* =========================================================
-   CONTACT PAGE — ResearchEdge
+   CONTACT PAGE — ResearchPlus
    All classes are prefixed "ct-" so nothing leaks into or
    collides with the rest of the site.
+
+   ALIGNMENT: this page has no container of its own.
+   Every section uses the site's global ".container" class
+   (the same one the Navbar uses), so the left edge of the
+   logo and the right edge of the "Get Started" button line
+   up exactly with the content below at every screen size.
+
+   HERO: the hero copy AND the hero image now live inside the
+   same ".container" as a 2-column grid. The image therefore
+   ends exactly where the "Get Started" button ends (no more
+   bleeding past the header's right edge).
    ========================================================= */
 
 .ct-hero,
@@ -10,7 +21,7 @@
 .ct-why,
 .ct-map,
 .ct-cta {
-  --ct-primary: var(--primary, #1e3a8a);
+  --ct-primary: var(--primary, #0f2557);
   --ct-secondary: var(--secondary, #2563eb);
   --ct-accent: #f59e0b;
   --ct-bg: #f8fafc;
@@ -23,14 +34,6 @@
   --ct-body: 'Inter', system-ui, sans-serif;
   font-family: var(--ct-body);
   color: var(--ct-text);
-}
-
-.ct-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  box-sizing: border-box;
 }
 
 .ct-hero h1,
@@ -49,53 +52,52 @@
 /* ============================ HERO ============================ */
 .ct-hero {
   --ct-hero-bg: #f4f8ff;
-  /* Left part of the photo that is covered by the page colour.
-     If your image has NO text on its left side, set these to 0% and 18%. */
-  --ct-fade-solid: 46%;
-  --ct-fade-end: 60%;
+  /* Width of the soft fade on the LEFT edge of the photo (blends it into the page colour) */
+  --ct-fade: 22%;
   position: relative;
   overflow: hidden;
   background: var(--ct-hero-bg);
   color: var(--ct-text);
 }
 
-/* Right-anchored photo box that always keeps the picture's proportions */
-.ct-hero__media {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  aspect-ratio: 1920 / 820;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  pointer-events: none;
-}
-
-.ct-hero__media::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    var(--ct-hero-bg) 0,
-    var(--ct-hero-bg) var(--ct-fade-solid),
-    transparent var(--ct-fade-end)
-  );
-}
-
-.ct-hero__inner {
+/* The global .container provides the left/right padding and max-width, so both
+   columns sit exactly between the logo's left edge and the button's right edge. */
+.ct-hero .ct-hero__inner {
   position: relative;
-  z-index: 1;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   align-items: center;
-  min-height: clamp(520px, 42vw, 640px);
-  padding-top: 72px;
-  padding-bottom: 72px;
+  column-gap: 40px;
+  padding-top: 64px;
+  padding-bottom: 64px;
 }
 
 .ct-hero__copy {
   max-width: 600px;
+  min-width: 0;
+}
+
+/* Photo: sits in the right grid column and ends on the container's right edge */
+.ct-hero__media {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  height: clamp(380px, 34vw, 480px);
+  border-radius: 24px;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  /* Image is a wide banner whose meaningful content is on its right side */
+  background-size: auto 100%;
+  background-position: right center;
+  pointer-events: none;
+}
+
+/* Soft fade on the left edge so the photo melts into the hero background */
+.ct-hero__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--ct-hero-bg) 0, transparent var(--ct-fade));
 }
 
 .ct-eyebrow-row {
@@ -124,7 +126,7 @@
 }
 
 .ct-hero h1 {
-  font-size: clamp(2.1rem, 4.6vw, 3.6rem);
+  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
   font-weight: 700;
   line-height: 1.12;
   letter-spacing: -0.02em;
@@ -150,6 +152,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  gap: 12px 0;
   margin: 0 0 28px;
   padding: 0;
 }
@@ -158,9 +161,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 22px;
+  padding: 0 20px;
   font-size: 0.92rem;
   color: #334155;
+  white-space: nowrap;
 }
 
 .ct-hero__features li:first-child {
@@ -194,7 +198,7 @@
   padding: 56px 0 64px;
 }
 
-.ct-main__grid {
+.ct-main .ct-main__grid {
   display: grid;
   grid-template-columns: 2fr 3fr; /* 40 / 60 */
   gap: 40px;
@@ -207,7 +211,7 @@
   flex-direction: column;
   gap: 16px;
   position: sticky;
-  top: 96px;
+  top: 110px; /* clears the sticky header (80px) + breathing room */
 }
 
 .ct-info h2 {
@@ -315,7 +319,6 @@ a.ct-method:hover .ct-method__arrow {
   padding: 14px 16px;
   background: #fff;
   border: 1px solid var(--ct-border);
-
   border-radius: 14px;
 }
 
@@ -346,7 +349,7 @@ a.ct-method:hover .ct-method__arrow {
   border-radius: 18px;
   padding: 26px 28px;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.07);
-  scroll-margin-top: 96px;
+  scroll-margin-top: 110px;
 }
 
 .ct-form__header {
@@ -851,13 +854,13 @@ textarea.ct-input {
 }
 
 /* ========================== RESPONSIVE ========================== */
-@media (max-width: 1100px) and (min-width: 901px) {
-  .ct-hero {
-    --ct-fade-solid: 54%;
-    --ct-fade-end: 68%;
+@media (max-width: 1100px) {
+  .ct-hero .ct-hero__inner {
+    column-gap: 28px;
   }
-  .ct-hero__copy {
-    max-width: 52%;
+  .ct-hero__features li {
+    padding: 0 14px;
+    font-size: 0.88rem;
   }
 }
 
@@ -865,50 +868,41 @@ textarea.ct-input {
   .ct-why__grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .ct-main__grid {
+  .ct-main .ct-main__grid {
     gap: 32px;
   }
 }
 
 @media (max-width: 900px) {
-  .ct-hero {
-    display: flex;
-    flex-direction: column;
-  }
-  .ct-hero__inner {
-    order: 1;
-    display: block;
-    min-height: 0;
-    padding-top: 56px;
-    padding-bottom: 0;
+  /* Stack: copy on top, photo underneath — both inside the container */
+  .ct-hero .ct-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 32px;
+    padding-top: 48px;
+    padding-bottom: 48px;
   }
   .ct-hero__copy {
     max-width: 640px;
   }
-  /* Photo moves below the copy and is cropped to its right side */
   .ct-hero__media {
-    order: 2;
-    position: relative;
-    top: auto;
-    right: auto;
-    width: 100%;
-    height: clamp(210px, 52vw, 340px);
-    aspect-ratio: auto;
-    margin-top: 28px;
-    background-size: 180% auto;
-    background-position: right center;
+    height: clamp(220px, 52vw, 340px);
+    border-radius: 20px;
   }
+  /* Fade from the top instead of the left when stacked */
   .ct-hero__media::after {
-    background: linear-gradient(to bottom, var(--ct-hero-bg) 0, transparent 34%);
+    background: linear-gradient(to bottom, var(--ct-hero-bg) 0, transparent 28%);
   }
   .ct-main {
     padding: 44px 0 52px;
   }
-  .ct-main__grid {
+  .ct-main .ct-main__grid {
     grid-template-columns: 1fr;
   }
   .ct-info {
     position: static;
+  }
+  .ct-form {
+    scroll-margin-top: 90px;
   }
   .ct-map__card {
     grid-template-columns: 1fr;
@@ -925,11 +919,9 @@ textarea.ct-input {
 }
 
 @media (max-width: 600px) {
-  .ct-container {
-    padding: 0 16px;
-  }
-  .ct-hero__inner {
-    padding-top: 44px;
+  .ct-hero .ct-hero__inner {
+    padding-top: 36px;
+    padding-bottom: 36px;
   }
   .ct-eyebrow-row {
     margin-bottom: 18px;
@@ -958,6 +950,9 @@ textarea.ct-input {
   .ct-hero__badge {
     padding: 11px 18px;
     font-size: 0.9rem;
+  }
+  .ct-hero__media {
+    border-radius: 16px;
   }
   .ct-form {
     padding: 20px 16px;
