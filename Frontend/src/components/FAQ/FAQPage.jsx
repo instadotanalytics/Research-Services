@@ -39,7 +39,7 @@ export default function FAQPage() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
 
-  /* ---- data loading (same getFAQs() call as before, plus error + retry) ---- */
+  /* ---- data loading ---- */
   useEffect(() => {
     let active = true;
     setLoading(true);
@@ -63,10 +63,12 @@ export default function FAQPage() {
     };
   }, [attempt]);
 
-  /* ---- optional categories: only shown if the loaded data already has them ---- */
+  /* ---- optional categories ---- */
   const categories = useMemo(() => {
     const set = new Set(
-      faqs.map((f) => (typeof f.category === 'string' ? f.category.trim() : '')).filter(Boolean),
+      faqs
+        .map((f) => (typeof f.category === 'string' ? f.category.trim() : ''))
+        .filter(Boolean)
     );
     return set.size > 1 ? ['All', ...set] : [];
   }, [faqs]);
@@ -87,11 +89,11 @@ export default function FAQPage() {
     reduce
       ? {}
       : {
-        initial: { opacity: 0, y: 14 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, margin: '-40px' },
-        transition: { duration: 0.4, delay, ease: 'easeOut' },
-      };
+          initial: { opacity: 0, y: 14 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true, margin: '-40px' },
+          transition: { duration: 0.4, delay, ease: 'easeOut' },
+        };
 
   const clearFilters = () => {
     setQuery('');
@@ -116,10 +118,10 @@ export default function FAQPage() {
           {...(reduce
             ? {}
             : {
-              initial: { opacity: 0, y: 16 },
-              animate: { opacity: 1, y: 0 },
-              transition: { duration: 0.5, ease: 'easeOut' },
-            })}
+                initial: { opacity: 0, y: 16 },
+                animate: { opacity: 1, y: 0 },
+                transition: { duration: 0.5, ease: 'easeOut' },
+              })}
         >
           <span className="faq-eyebrow">
             <HelpCircle size={14} aria-hidden="true" /> FAQ &amp; Support
@@ -169,7 +171,7 @@ export default function FAQPage() {
 
           {/* RIGHT — search, filters, accordion */}
           <div className="faq-main">
-            {/* Search + categories (only when there is data to search) */}
+            {/* Search + categories */}
             {!loading && !error && faqs.length > 0 && (
               <div className="faq-toolbar">
                 <div className="faq-search">
@@ -223,7 +225,12 @@ export default function FAQPage() {
 
             {/* LOADING */}
             {loading && (
-              <div className="faq-loading" role="status" aria-live="polite" aria-busy="true">
+              <div
+                className="faq-loading"
+                role="status"
+                aria-live="polite"
+                aria-busy="true"
+              >
                 <LoadingSpinner />
                 <div className="faq-skeletons" aria-hidden="true">
                   {[0, 1, 2, 3, 4].map((n) => (
@@ -263,8 +270,8 @@ export default function FAQPage() {
                 </span>
                 <h2>No FAQs available</h2>
                 <p>
-                  We&rsquo;re currently updating our frequently asked questions. Please contact our
-                  team if you need assistance.
+                  We&rsquo;re currently updating our frequently asked questions. Please contact
+                  our team if you need assistance.
                 </p>
                 <Link to="/contact" className="faq-btn faq-btn--primary">
                   Contact Us
@@ -281,10 +288,15 @@ export default function FAQPage() {
                 </span>
                 <h2>No matching questions</h2>
                 <p>
-                  Try different keywords, or reach out to our team and we&rsquo;ll be happy to help.
+                  Try different keywords, or reach out to our team and we&rsquo;ll be happy to
+                  help.
                 </p>
                 <div className="faq-state__actions">
-                  <button type="button" className="faq-btn faq-btn--outline" onClick={clearFilters}>
+                  <button
+                    type="button"
+                    className="faq-btn faq-btn--outline"
+                    onClick={clearFilters}
+                  >
                     Clear search
                   </button>
                   <Link to="/contact" className="faq-btn faq-btn--primary">
@@ -296,7 +308,9 @@ export default function FAQPage() {
             )}
 
             {/* ACCORDION */}
-            {!loading && !error && filtered.length > 0 && <FAQAccordion faqs={filtered} />}
+            {!loading && !error && filtered.length > 0 && (
+              <FAQAccordion faqs={filtered} />
+            )}
           </div>
         </div>
       </section>

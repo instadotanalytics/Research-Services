@@ -14,8 +14,8 @@
   --fq-muted: var(--text-muted, #64748b);
   --fq-border: var(--border, #e2e8f0);
   --fq-danger: var(--danger, #dc2626);
-  --fq-head: "Poppins", "Inter", system-ui, sans-serif;
-  --fq-body: "Inter", system-ui, sans-serif;
+  --fq-head: 'Poppins', 'Inter', system-ui, sans-serif;
+  --fq-body: 'Inter', system-ui, sans-serif;
   font-family: var(--fq-body);
 }
 
@@ -56,11 +56,7 @@
     linear-gradient(rgba(30, 58, 138, 0.045) 1px, transparent 1px),
     linear-gradient(90deg, rgba(30, 58, 138, 0.045) 1px, transparent 1px);
   background-size: 44px 44px;
-  -webkit-mask-image: radial-gradient(
-    ellipse at center,
-    #000 20%,
-    transparent 75%
-  );
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
   mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
   pointer-events: none;
 }
@@ -242,11 +238,7 @@
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .faq-btn svg {
@@ -322,9 +314,7 @@
   background: #fff;
   border: 1.5px solid var(--fq-border);
   border-radius: 12px;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   -webkit-appearance: none;
   appearance: none;
 }
@@ -390,10 +380,7 @@
   color: #475569;
   cursor: pointer;
   white-space: nowrap;
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    color 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .faq-cat:hover {
@@ -443,10 +430,7 @@
   border: 1px solid var(--fq-border, #e2e8f0);
   border-radius: 14px;
   overflow: hidden;
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .faq-item:hover {
@@ -456,9 +440,7 @@
 .faq-item.open {
   border-color: var(--fq-secondary, #2563eb);
   background: #f8fbff;
-  box-shadow:
-    inset 3px 0 0 var(--fq-secondary, #2563eb),
-    0 6px 18px rgba(30, 58, 138, 0.06);
+  box-shadow: inset 3px 0 0 var(--fq-secondary, #2563eb), 0 6px 18px rgba(30, 58, 138, 0.06);
 }
 
 .faq-heading {
@@ -477,7 +459,7 @@
   border: 0;
   background: transparent;
   color: var(--fq-text, #0f172a);
-  font-family: var(--fq-head, "Poppins", sans-serif);
+  font-family: var(--fq-head, 'Poppins', sans-serif);
   font-size: 1rem;
   font-weight: 600;
   line-height: 1.45;
@@ -521,9 +503,7 @@
   border-radius: 8px;
   background: #eff6ff;
   color: var(--fq-secondary, #2563eb);
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .faq-item.open .faq-toggle {
@@ -537,7 +517,7 @@
 
 .faq-answer p {
   margin: 0;
-  padding: 0 24px 22px 62px; /* aligns with the question text */
+  padding: 0 24px 22px 62px;
   font-size: 0.95rem;
   line-height: 1.75;
   color: #475569;
@@ -568,12 +548,8 @@
 }
 
 @keyframes faq-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .faq-state {
@@ -684,7 +660,6 @@
 }
 
 /* ============================ CTA WRAP ============================ */
-/* Tightens the spacing of the existing CTASection so it reads as the final section */
 .faq-cta {
   background: var(--fq-bg);
 }

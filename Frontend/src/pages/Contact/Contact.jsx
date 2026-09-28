@@ -160,11 +160,11 @@ export default function Contact() {
     reduce
       ? {}
       : {
-        initial: { opacity: 0, y: 14 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, margin: '-40px' },
-        transition: { duration: 0.4, delay, ease: 'easeOut' },
-      };
+          initial: { opacity: 0, y: 14 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true, margin: '-40px' },
+          transition: { duration: 0.4, delay, ease: 'easeOut' },
+        };
 
   /* ---- validation (unchanged logic) ---- */
   const validate = () => {
@@ -266,10 +266,10 @@ export default function Contact() {
             {...(reduce
               ? {}
               : {
-                initial: { opacity: 0, y: 18 },
-                animate: { opacity: 1, y: 0 },
-                transition: { duration: 0.5, ease: 'easeOut' },
-              })}
+                  initial: { opacity: 0, y: 18 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: { duration: 0.5, ease: 'easeOut' },
+                })}
           >
             <div className="ct-eyebrow-row">
               <span className="ct-eyebrow">Let&rsquo;s discuss your research</span>
@@ -464,7 +464,10 @@ export default function Contact() {
                 <label htmlFor="ct-service">
                   <FileText size={14} aria-hidden="true" /> Service *
                 </label>
-                <select {...fieldProps('service')} className={`ct-input ct-select${errors.service ? ' ct-input--error' : ''}`}>
+                <select
+                  {...fieldProps('service')}
+                  className={`ct-input ct-select${errors.service ? ' ct-input--error' : ''}`}
+                >
                   <option value="">Select a service</option>
                   {SERVICE_OPTIONS.map((s) => (
                     <option key={s} value={s}>
@@ -528,7 +531,12 @@ export default function Contact() {
               </div>
             </div>
 
-            <button type="submit" className="ct-submit" disabled={submitting} aria-busy={submitting}>
+            <button
+              type="submit"
+              className="ct-submit"
+              disabled={submitting}
+              aria-busy={submitting}
+            >
               {submitting ? (
                 <>
                   <span className="ct-spinner" aria-hidden="true" />
@@ -543,7 +551,8 @@ export default function Contact() {
             </button>
 
             <p className="ct-note">
-              By submitting this form, you agree to our <Link to="/privacy-policy">Privacy Policy</Link>.
+              By submitting this form, you agree to our{' '}
+              <Link to="/privacy-policy">Privacy Policy</Link>.
             </p>
           </motion.form>
         </div>

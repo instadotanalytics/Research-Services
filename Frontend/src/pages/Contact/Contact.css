@@ -18,8 +18,8 @@
   --ct-border: var(--border, #e2e8f0);
   --ct-danger: var(--danger, #dc2626);
   --ct-success: #16a34a;
-  --ct-head: "Poppins", "Inter", system-ui, sans-serif;
-  --ct-body: "Inter", system-ui, sans-serif;
+  --ct-head: 'Poppins', 'Inter', system-ui, sans-serif;
+  --ct-body: 'Inter', system-ui, sans-serif;
   font-family: var(--ct-body);
   color: var(--ct-text);
 }
@@ -72,7 +72,7 @@
 }
 
 .ct-hero__media::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(
@@ -242,10 +242,7 @@
   border-radius: 12px;
   color: inherit;
   text-decoration: none;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 a.ct-method:hover,
@@ -303,9 +300,7 @@ a.ct-method:focus-visible {
 .ct-method__arrow {
   color: #94a3b8;
   flex-shrink: 0;
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 a.ct-method:hover .ct-method__arrow {
@@ -418,15 +413,12 @@ a.ct-method:hover .ct-method__arrow {
   min-height: 44px;
   padding: 10px 14px;
   font: inherit;
-  font-size: 1rem; /* prevents iOS zoom on focus */
+  font-size: 1rem;
   color: var(--ct-text);
   background: #fff;
   border: 1.5px solid var(--ct-border);
   border-radius: 12px;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .ct-input::placeholder {
@@ -523,11 +515,7 @@ textarea.ct-input {
   font-weight: 500;
   color: var(--ct-muted);
   cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ct-radio span {
@@ -577,10 +565,7 @@ textarea.ct-input {
   font-size: 0.98rem;
   font-weight: 600;
   cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    opacity 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
 .ct-submit:not(:disabled):hover {
@@ -608,9 +593,7 @@ textarea.ct-input {
 }
 
 @keyframes ct-spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .ct-note {
@@ -671,9 +654,7 @@ textarea.ct-input {
   background: var(--ct-primary);
   border: 1px solid var(--ct-primary);
   border-radius: 16px;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ct-why__item:hover {
@@ -802,7 +783,7 @@ textarea.ct-input {
 }
 
 .ct-cta__card::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   background-image:
@@ -846,10 +827,7 @@ textarea.ct-input {
   font-weight: 600;
   font-size: 0.97rem;
   text-decoration: none;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .ct-cta__btn:hover {
@@ -919,11 +897,7 @@ textarea.ct-input {
     background-position: right center;
   }
   .ct-hero__media::after {
-    background: linear-gradient(
-      to bottom,
-      var(--ct-hero-bg) 0,
-      transparent 34%
-    );
+    background: linear-gradient(to bottom, var(--ct-hero-bg) 0, transparent 34%);
   }
   .ct-main {
     padding: 44px 0 52px;
