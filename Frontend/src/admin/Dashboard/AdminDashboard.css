@@ -56,7 +56,7 @@
 
 .stat-card-value,
 .dash-card-value {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--text);
@@ -331,15 +331,51 @@
   font-weight: 600;
 }
 
-.status-new { background: #dbeafe; color: #1e40af; }
-.status-contacted { background: #fef3c7; color: #92400e; }
-.status-inprogress { background: #e0e7ff; color: #3730a3; }
-.status-completed { background: #d1fae5; color: #065f46; }
-.status-closed { background: #fee2e2; color: #991b1b; }
+.status-new {
+  background: #dbeafe;
+  color: #1e40af;
+}
+.status-contacted {
+  background: #fef3c7;
+  color: #92400e;
+}
+.status-inprogress {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+.status-completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+.status-closed {
+  background: #fee2e2;
+  color: #991b1b;
+}
 
 /* ============ Responsive ============ */
 @media (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Skeleton Loading */
+.skeleton {
+  display: block;
+  background: linear-gradient(90deg, #eef2f7 25%, #f8fafc 50%, #eef2f7 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.bar.skeleton {
+  border-radius: 6px 6px 0 0;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }

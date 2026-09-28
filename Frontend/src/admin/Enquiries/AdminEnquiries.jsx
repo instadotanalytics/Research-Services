@@ -3,7 +3,7 @@ import { Search, Trash2, Eye, X, MoreVertical, Phone, Mail, Building2, Calendar,
 import { getEnquiries, updateEnquiry, deleteEnquiry } from '../../services/enquiryApi.js';
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal.jsx';
-import LoadingSpinner from '../../components/Loading/LoadingSpinner.jsx';
+import { TableSkeletonRows } from '../../components/Skeleton/Skeleton.jsx';
 import EmptyState from '../../components/Loading/EmptyState.jsx';
 import { ENQUIRY_STATUSES } from '../../utils/constants.js';
 import './AdminEnquiries.css';
@@ -35,7 +35,6 @@ export default function AdminEnquiries() {
     // eslint-disable-next-line
   }, [search, statusFilter]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => setActiveDropdown(null);
     document.addEventListener('click', handleClickOutside);
@@ -139,9 +138,7 @@ export default function AdminEnquiries() {
       </div>
 
       {/* Content */}
-      {loading ? (
-        <LoadingSpinner fullScreen />
-      ) : items.length === 0 ? (
+      {!loading && items.length === 0 ? (
         <div className="empty-wrapper">
           <EmptyState
             title="No enquiries found"
@@ -166,87 +163,91 @@ export default function AdminEnquiries() {
               </tr>
             </thead>
             <tbody>
-              {items.map((e) => (
-                <tr key={e._id}>
-                  <td>
-                    <div className="customer-cell">
-                      <div className="customer-avatar">{getInitials(e.name)}</div>
-                      <div className="customer-info">
-                        <strong>{e.name}</strong>
-                        {e.institution && (
-                          <span className="customer-sub">{e.institution}</span>
-                        )}
+              {loading ? (
+                <TableSkeletonRows rows={6} cols={6} />
+              ) : (
+                items.map((e) => (
+                  <tr key={e._id}>
+                    <td>
+                      <div className="customer-cell">
+                        <div className="customer-avatar">{getInitials(e.name)}</div>
+                        <div className="customer-info">
+                          <strong>{e.name}</strong>
+                          {e.institution && (
+                            <span className="customer-sub">{e.institution}</span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="contact-cell">
-                      <div className="contact-line">
-                        <Mail size={13} /> {e.email}
+                    </td>
+                    <td>
+                      <div className="contact-cell">
+                        <div className="contact-line">
+                          <Mail size={13} /> {e.email}
+                        </div>
+                        <div className="contact-line">
+                          <Phone size={13} /> {e.phone}
+                        </div>
                       </div>
-                      <div className="contact-line">
-                        <Phone size={13} /> {e.phone}
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span className="service-tag">{e.service}</span>
-                  </td>
-                  <td>
-                    <select
-                      className={`status-select status-${e.status
-                        .toLowerCase()
-                        .replace(/\s/g, '')}`}
-                      value={e.status}
-                      onChange={(ev) => onChangeStatus(e._id, ev.target.value)}
-                    >
-                      {ENQUIRY_STATUSES.map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="date-cell">
-                    {new Date(e.createdAt).toLocaleDateString('en-IN', {
-                      day: '2-digit',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                  </td>
-                  <td style={{ textAlign: 'right', position: 'relative' }}>
-                    <button
-                      className="kebab-btn"
-                      onClick={(ev) => toggleDropdown(ev, e._id)}
-                      aria-label="Actions"
-                    >
-                      <MoreVertical size={18} />
-                    </button>
+                    </td>
+                    <td>
+                      <span className="service-tag">{e.service}</span>
+                    </td>
+                    <td>
+                      <select
+                        className={`status-select status-${e.status
+                          .toLowerCase()
+                          .replace(/\s/g, '')}`}
+                        value={e.status}
+                        onChange={(ev) => onChangeStatus(e._id, ev.target.value)}
+                      >
+                        {ENQUIRY_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="date-cell">
+                      {new Date(e.createdAt).toLocaleDateString('en-IN', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </td>
+                    <td style={{ textAlign: 'right', position: 'relative' }}>
+                      <button
+                        className="kebab-btn"
+                        onClick={(ev) => toggleDropdown(ev, e._id)}
+                        aria-label="Actions"
+                      >
+                        <MoreVertical size={18} />
+                      </button>
 
-                    {activeDropdown === e._id && (
-                      <div className="dropdown-menu">
-                        <button
-                          onClick={() => {
-                            setSelected(e);
-                            setActiveDropdown(null);
-                          }}
-                        >
-                          <Eye size={14} /> View Details
-                        </button>
-                        <button
-                          className="danger"
-                          onClick={() => {
-                            setConfirm(e);
-                            setActiveDropdown(null);
-                          }}
-                        >
-                          <Trash2 size={14} /> Delete
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                      {activeDropdown === e._id && (
+                        <div className="dropdown-menu">
+                          <button
+                            onClick={() => {
+                              setSelected(e);
+                              setActiveDropdown(null);
+                            }}
+                          >
+                            <Eye size={14} /> View Details
+                          </button>
+                          <button
+                            className="danger"
+                            onClick={() => {
+                              setConfirm(e);
+                              setActiveDropdown(null);
+                            }}
+                          >
+                            <Trash2 size={14} /> Delete
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -354,9 +355,8 @@ export default function AdminEnquiries() {
                   {ENQUIRY_STATUSES.map((status) => (
                     <button
                       key={status}
-                      className={`status-chip ${
-                        selected.status === status ? 'active' : ''
-                      } status-${status.toLowerCase().replace(/\s/g, '')}`}
+                      className={`status-chip ${selected.status === status ? 'active' : ''
+                        } status-${status.toLowerCase().replace(/\s/g, '')}`}
                       onClick={() => onChangeStatus(selected._id, status)}
                     >
                       {status}

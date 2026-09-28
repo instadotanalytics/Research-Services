@@ -3,7 +3,7 @@ import { Plus, Edit, Trash2, X, MoreVertical, Star, Quote } from 'lucide-react';
 import { getTestimonials, createTestimonial, updateTestimonial, deleteTestimonial } from '../../services/contentApi.js';
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal.jsx';
-import LoadingSpinner from '../../components/Loading/LoadingSpinner.jsx';
+import { TableSkeletonRows } from '../../components/Skeleton/Skeleton.jsx';
 import './AdminTestimonials.css';
 
 const empty = {
@@ -35,7 +35,6 @@ export default function AdminTestimonials() {
 
   useEffect(load, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => setActiveDropdown(null);
     document.addEventListener('click', handleClickOutside);
@@ -130,9 +129,7 @@ export default function AdminTestimonials() {
       </div>
 
       {/* ============ Content ============ */}
-      {loading ? (
-        <LoadingSpinner fullScreen />
-      ) : items.length === 0 ? (
+      {!loading && items.length === 0 ? (
         <div className="empty-wrapper">
           <Quote size={48} strokeWidth={1.5} className="empty-icon" />
           <h3>No testimonials yet</h3>
@@ -154,78 +151,81 @@ export default function AdminTestimonials() {
               </tr>
             </thead>
             <tbody>
-              {items.map((t) => (
-                <tr key={t._id}>
-                  <td>
-                    <div className="testimonial-name-cell">
-                      <div className="testimonial-avatar">
-                        {getInitials(t.name)}
+              {loading ? (
+                <TableSkeletonRows rows={6} cols={5} />
+              ) : (
+                items.map((t) => (
+                  <tr key={t._id}>
+                    <td>
+                      <div className="testimonial-name-cell">
+                        <div className="testimonial-avatar">
+                          {getInitials(t.name)}
+                        </div>
+                        <div>
+                          <strong>{t.name}</strong>
+                          {t.institution && (
+                            <span className="testimonial-inst-preview">
+                              {t.institution}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div>
-                        <strong>{t.name}</strong>
-                        {t.institution && (
-                          <span className="testimonial-inst-preview">
-                            {t.institution}
-                          </span>
-                        )}
+                    </td>
+                    <td>
+                      <span className="designation-text">
+                        {t.designation || '—'}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="rating-stars">
+                        {[1, 2, 3, 4, 5].map((n) => (
+                          <Star
+                            key={n}
+                            size={14}
+                            className={n <= t.rating ? 'star-filled' : 'star-empty'}
+                            fill={n <= t.rating ? 'currentColor' : 'none'}
+                          />
+                        ))}
+                        <span className="rating-number">{t.rating}.0</span>
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span className="designation-text">
-                      {t.designation || '—'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="rating-stars">
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        <Star
-                          key={n}
-                          size={14}
-                          className={n <= t.rating ? 'star-filled' : 'star-empty'}
-                          fill={n <= t.rating ? 'currentColor' : 'none'}
-                        />
-                      ))}
-                      <span className="rating-number">{t.rating}.0</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span
-                      className={`status-badge ${
-                        t.status ? 'status-active' : 'status-disabled'
-                      }`}
-                    >
-                      {t.status ? 'Active' : 'Disabled'}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: 'right', position: 'relative' }}>
-                    <button
-                      className="kebab-btn"
-                      onClick={(e) => toggleDropdown(e, t._id)}
-                      aria-label="Actions"
-                    >
-                      <MoreVertical size={18} />
-                    </button>
+                    </td>
+                    <td>
+                      <span
+                        className={`status-badge ${t.status ? 'status-active' : 'status-disabled'
+                          }`}
+                      >
+                        {t.status ? 'Active' : 'Disabled'}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'right', position: 'relative' }}>
+                      <button
+                        className="kebab-btn"
+                        onClick={(e) => toggleDropdown(e, t._id)}
+                        aria-label="Actions"
+                      >
+                        <MoreVertical size={18} />
+                      </button>
 
-                    {activeDropdown === t._id && (
-                      <div className="dropdown-menu">
-                        <button onClick={() => openEdit(t)}>
-                          <Edit size={14} /> Edit
-                        </button>
-                        <button
-                          className="danger"
-                          onClick={() => {
-                            setConfirm(t);
-                            setActiveDropdown(null);
-                          }}
-                        >
-                          <Trash2 size={14} /> Delete
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                      {activeDropdown === t._id && (
+                        <div className="dropdown-menu">
+                          <button onClick={() => openEdit(t)}>
+                            <Edit size={14} /> Edit
+                          </button>
+                          <button
+                            className="danger"
+                            onClick={() => {
+                              setConfirm(t);
+                              setActiveDropdown(null);
+                            }}
+                          >
+                            <Trash2 size={14} /> Delete
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -320,9 +320,8 @@ export default function AdminTestimonials() {
                       <button
                         key={n}
                         type="button"
-                        className={`rating-star-btn ${
-                          n <= form.rating ? 'active' : ''
-                        }`}
+                        className={`rating-star-btn ${n <= form.rating ? 'active' : ''
+                          }`}
                         onClick={() =>
                           setForm({ ...form, rating: n })
                         }
