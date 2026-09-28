@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import { changePassword } from '../../services/authApi.js';
 import { User, Mail, Shield, Lock, CheckCircle, Eye, EyeOff } from 'lucide-react';
-import './AdminProfile.css';
+import "../Profile/AdminProfile.css";
 
 export default function AdminProfile() {
   const { user } = useAuth();

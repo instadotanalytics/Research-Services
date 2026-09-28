@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, GraduationCap, Check } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext.jsx';
-import { useToast } from '../../components/Toast/ToastContext.jsx';
-import { validateEmail } from '../../utils/validation.js';
+import { useAuth } from '../../../context/AuthContext.jsx';
+import { useToast } from '../../../components/Toast/ToastContext.jsx';
+import { validateEmail } from '../../../utils/validation.js';
 import './AdminLogin.css';
 
 export default function AdminLogin() {
