@@ -1,13 +1,29 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  LayoutDashboard, Briefcase, MessageSquare, Mail, Star, HelpCircle, BarChart3, Settings, User, LogOut, GraduationCap,
+  LayoutDashboard,
+  Briefcase,
+  MessageSquare,
+  Mail,
+  Star,
+  HelpCircle,
+  BarChart3,
+  Settings,
+  User,
+  LogOut,
+  GraduationCap,
+  X,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import './AdminSidebar.css';
 
 const menu = [
-  { section: 'Dashboard', items: [{ to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard }] },
+  {
+    section: 'Dashboard',
+    items: [
+      { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    ],
+  },
   {
     section: 'Content',
     items: [
@@ -33,53 +49,104 @@ const menu = [
   },
 ];
 
-export default function AdminSidebar() {
-  const [open, setOpen] = useState(false);
+export default function AdminSidebar({ open: externalOpen, onClose } = {}) {
+  const [internalOpen, setInternalOpen] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
+
+  // Support both controlled (from AdminLayout) and uncontrolled usage
+  const isControlled = typeof externalOpen === 'boolean';
+  const open = isControlled ? externalOpen : internalOpen;
+  const setOpen = isControlled
+    ? (v) => (typeof v === 'function' ? onClose?.(v) : onClose?.(v))
+    : setInternalOpen;
 
   const handleLogout = () => {
     logout();
     navigate('/admin/login');
   };
 
+  const closeMenu = () => {
+    if (isControlled) onClose?.();
+    else setInternalOpen(false);
+  };
+
+  const toggleMenu = () => {
+    if (isControlled) onClose?.();
+    else setInternalOpen((v) => !v);
+  };
+
   return (
     <>
-      <button className="admin-menu-btn" onClick={() => setOpen(!open)}>☰</button>
+      {/* Mobile menu toggle button */}
+      <button
+        className="admin-menu-btn"
+        onClick={toggleMenu}
+        aria-label={open ? 'Close menu' : 'Open menu'}
+      >
+        {open ? <X size={20} /> : '☰'}
+      </button>
+
+      {/* Mobile backdrop */}
+      {open && (
+        <div
+          className="admin-sidebar-backdrop"
+          onClick={closeMenu}
+          aria-hidden="true"
+        />
+      )}
 
       <aside className={`admin-sidebar ${open ? 'open' : ''}`}>
-
-        {/* Brand Header */}
+        {/* ============ Brand Header ============ */}
         <div className="admin-sidebar-brand">
-          <div className="admin-logo-icon"><GraduationCap size={20} /></div>
-          <span>Smart</span>
+          <div className="admin-logo-icon">
+            <GraduationCap size={22} />
+          </div>
+          <div className="admin-brand-text">
+            <strong>ResearchEdge</strong>
+            <span>Admin Panel</span>
+          </div>
+
+          {/* Close button (mobile only) */}
+          <button
+            className="admin-close-btn"
+            onClick={closeMenu}
+            aria-label="Close menu"
+          >
+            <X size={18} />
+          </button>
         </div>
 
+        {/* ============ Navigation ============ */}
         <nav className="admin-sidebar-nav">
-          {menu.map((s) => (
-            <div key={s.section} className="admin-nav-section">
-              {s.items.map((it) => (
+          {menu.map((section) => (
+            <div key={section.section} className="admin-nav-section">
+              <span className="admin-nav-section-title">{section.section}</span>
+
+              {section.items.map((item) => (
                 <NavLink
-                  key={it.to}
-                  to={it.to}
-                  className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`}
-                  onClick={() => setOpen(false)}
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `admin-nav-link ${isActive ? 'active' : ''}`
+                  }
+                  onClick={closeMenu}
                 >
-                  <div className="nav-icon-wrap">
-                    <it.icon size={18} />
-                  </div>
-                  <span className="nav-label">{it.label}</span>
+                  <span className="nav-icon-wrap">
+                    <item.icon size={18} />
+                  </span>
+                  <span className="nav-label">{item.label}</span>
                 </NavLink>
               ))}
             </div>
           ))}
         </nav>
 
-        {/* Logout Button */}
+        {/* ============ Footer — Logout ============ */}
         <div className="admin-sidebar-footer">
-          <button className="logout-btn" onClick={handleLogout}>
+          <button className="admin-logout" onClick={handleLogout}>
             <LogOut size={18} />
-            <span>Log Out</span>
+            <span>Logout</span>
           </button>
         </div>
       </aside>

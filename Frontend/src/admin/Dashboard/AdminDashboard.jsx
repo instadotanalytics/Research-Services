@@ -1,6 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Briefcase, MessageSquare, Mail, Star, HelpCircle, BarChart3, TrendingUp, MoreVertical } from 'lucide-react';
+import {
+  Briefcase,
+  MessageSquare,
+  Mail,
+  Star,
+  HelpCircle,
+  BarChart3,
+  TrendingUp,
+  MoreVertical,
+  Users,
+} from 'lucide-react';
 import { getEnquiries } from '../../services/enquiryApi.js';
 import { getServices } from '../../services/serviceApi.js';
 import { getContacts } from '../../services/contactApi.js';
@@ -40,32 +50,80 @@ export default function AdminDashboard() {
 
   if (loading) return <LoadingSpinner fullScreen />;
 
-  // Stat Cards for the top
+  /* ============ Stat Cards (6 cards) ============ */
   const statCards = [
-    { title: 'Total Enquiries', value: counts.enquiries, icon: MessageSquare, color: '#2563eb', link: '/admin/enquiries' },
-    { title: 'Total Services', value: counts.services, icon: Briefcase, color: '#16a34a', link: '/admin/services' },
-    { title: 'Total Testimonials', value: counts.testimonials, icon: Star, color: '#ec4899', link: '/admin/testimonials' },
-    { title: 'Contact Messages', value: counts.messages, icon: Mail, color: '#8b5cf6', link: '/admin/messages' },
+    {
+      title: 'Total Enquiries',
+      value: counts.enquiries,
+      icon: MessageSquare,
+      color: '#2563eb',
+      link: '/admin/enquiries',
+    },
+    {
+      title: 'New Enquiries',
+      value: counts.newEnquiries,
+      icon: TrendingUp,
+      color: '#f59e0b',
+      link: '/admin/enquiries',
+    },
+    {
+      title: 'Services',
+      value: counts.services,
+      icon: Briefcase,
+      color: '#16a34a',
+      link: '/admin/services',
+    },
+    {
+      title: 'Contact Messages',
+      value: counts.messages,
+      icon: Mail,
+      color: '#8b5cf6',
+      link: '/admin/messages',
+    },
+    {
+      title: 'Testimonials',
+      value: counts.testimonials,
+      icon: Star,
+      color: '#ec4899',
+      link: '/admin/testimonials',
+    },
+    {
+      title: 'FAQs',
+      value: counts.faqs,
+      icon: HelpCircle,
+      color: '#06b6d4',
+      link: '/admin/faqs',
+    },
   ];
 
-  // Stats for the bar chart (using real data)
+  /* ============ Bar Chart Data ============ */
+  const maxValue = Math.max(
+    counts.enquiries || 1,
+    counts.services || 1,
+    counts.messages || 1,
+    counts.faqs || 1,
+    counts.statistics || 1
+  );
+
   const chartData = [
-    { label: 'Enquiries', value: counts.enquiries || 0, max: Math.max(counts.enquiries || 1, counts.services || 1, counts.messages || 1) },
-    { label: 'Services', value: counts.services || 0, max: Math.max(counts.enquiries || 1, counts.services || 1, counts.messages || 1) },
-    { label: 'Messages', value: counts.messages || 0, max: Math.max(counts.enquiries || 1, counts.services || 1, counts.messages || 1) },
-    { label: 'FAQs', value: counts.faqs || 0, max: Math.max(counts.enquiries || 1, counts.services || 1, counts.messages || 1) },
-    { label: 'Stats', value: counts.statistics || 0, max: Math.max(counts.enquiries || 1, counts.services || 1, counts.messages || 1) },
+    { label: 'Enquiries', value: counts.enquiries || 0 },
+    { label: 'Services', value: counts.services || 0 },
+    { label: 'Messages', value: counts.messages || 0 },
+    { label: 'FAQs', value: counts.faqs || 0 },
+    { label: 'Stats', value: counts.statistics || 0 },
   ];
 
   return (
     <div className="dashboard-container">
-
-      {/* Top Stat Cards */}
+      {/* ============ Top Stat Cards ============ */}
       <div className="stat-cards-grid">
         {statCards.map((card, index) => (
           <Link to={card.link} key={index} className="stat-card">
-            <div className="stat-card-icon" style={{ background: `${card.color}15`, color: card.color }}>
-              <card.icon size={20} />
+            <div
+              className="stat-card-icon"
+              style={{ background: `${card.color}15`, color: card.color }}
+            >
+              <card.icon size={22} />
             </div>
             <div className="stat-card-info">
               <span className="stat-card-value">{card.value ?? 0}</span>
@@ -75,23 +133,26 @@ export default function AdminDashboard() {
         ))}
       </div>
 
+      {/* ============ Dashboard Grid ============ */}
       <div className="dashboard-grid">
-
-        {/* Left Column - Stats and Chart */}
+        {/* ============ LEFT COLUMN ============ */}
         <div className="dashboard-main">
-
           {/* Performance Card */}
           <div className="dash-card-section">
             <div className="dash-section-header">
               <h3>Performance</h3>
-              <button className="icon-btn-sm"><MoreVertical size={16} /></button>
+              <button className="icon-btn-sm" aria-label="More options">
+                <MoreVertical size={16} />
+              </button>
             </div>
 
             <div className="performance-content">
               <div className="performance-stat">
                 <span className="stat-label">Total Enquiries</span>
                 <span className="stat-value">{counts.enquiries || 0}</span>
-                <span className="stat-change positive">+{counts.newEnquiries || 0} new</span>
+                <span className="stat-change positive">
+                  +{counts.newEnquiries || 0} new this month
+                </span>
               </div>
 
               <div className="bar-chart">
@@ -100,10 +161,11 @@ export default function AdminDashboard() {
                     <div
                       className="bar"
                       style={{
-                        height: `${(item.value / item.max) * 100}%`,
-                        background: index === 0 ? '#2563eb' : '#bfdbfe'
+                        height: `${Math.max((item.value / maxValue) * 100, 8)}%`,
+                        background: index === 0 ? '#2563eb' : '#bfdbfe',
                       }}
-                    ></div>
+                      title={`${item.label}: ${item.value}`}
+                    />
                     <span className="bar-label">{item.label}</span>
                   </div>
                 ))}
@@ -115,13 +177,16 @@ export default function AdminDashboard() {
           <div className="dash-card-section">
             <div className="dash-section-header">
               <h3>Recent Enquiries</h3>
-              <Link to="/admin/enquiries" className="view-all-link">View All</Link>
+              <Link to="/admin/enquiries" className="view-all-link">
+                View All
+              </Link>
             </div>
             <div className="admin-table-wrap">
               <table className="admin-table">
                 <thead>
                   <tr>
                     <th>Name</th>
+                    <th>Email</th>
                     <th>Service</th>
                     <th>Status</th>
                     <th>Date</th>
@@ -129,24 +194,43 @@ export default function AdminDashboard() {
                 </thead>
                 <tbody>
                   {recent.length === 0 ? (
-                    <tr><td colSpan="4" style={{ textAlign: 'center', padding: 30, color: '#64748b' }}>No enquiries yet</td></tr>
-                  ) : recent.map((e) => (
-                    <tr key={e._id}>
-                      <td><strong>{e.name}</strong></td>
-                      <td>{e.service}</td>
-                      <td><span className={`status-badge status-${e.status.replace(/\s/g, '').toLowerCase()}`}>{e.status}</span></td>
-                      <td>{new Date(e.createdAt).toLocaleDateString()}</td>
+                    <tr>
+                      <td
+                        colSpan="5"
+                        style={{ textAlign: 'center', padding: 30, color: '#64748b' }}
+                      >
+                        No enquiries yet
+                      </td>
                     </tr>
-                  ))}
+                  ) : (
+                    recent.map((e) => (
+                      <tr key={e._id}>
+                        <td>
+                          <strong>{e.name}</strong>
+                        </td>
+                        <td>{e.email}</td>
+                        <td>{e.service}</td>
+                        <td>
+                          <span
+                            className={`status-badge status-${e.status
+                              .replace(/\s/g, '')
+                              .toLowerCase()}`}
+                          >
+                            {e.status}
+                          </span>
+                        </td>
+                        <td>{new Date(e.createdAt).toLocaleDateString()}</td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        {/* Right Column - Calendar / Upcoming */}
+        {/* ============ RIGHT COLUMN ============ */}
         <div className="dashboard-side">
-
           {/* Calendar Widget */}
           <div className="dash-card-section">
             <div className="dash-section-header">
@@ -162,8 +246,13 @@ export default function AdminDashboard() {
                 <span>Fri</span>
               </div>
               <div className="calendar-days">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(d => (
-                  <div key={d} className={`calendar-day ${d === 4 ? 'active' : ''}`}>{d}</div>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d) => (
+                  <div
+                    key={d}
+                    className={`calendar-day ${d === 4 ? 'active' : ''}`}
+                  >
+                    {d}
+                  </div>
                 ))}
               </div>
             </div>
@@ -173,24 +262,65 @@ export default function AdminDashboard() {
           <div className="dash-card-section">
             <div className="dash-section-header">
               <h3>Upcoming</h3>
-              <Link to="/admin/enquiries" className="view-all-link">See all</Link>
+              <Link to="/admin/enquiries" className="view-all-link">
+                See all
+              </Link>
             </div>
             <div className="upcoming-list">
               {recent.slice(0, 3).map((e, i) => (
                 <div key={i} className="upcoming-item">
-                  <div className="upcoming-dot"></div>
+                  <div className="upcoming-dot" />
                   <div className="upcoming-info">
                     <span className="upcoming-title">{e.name}</span>
-                    <span className="upcoming-time">{new Date(e.createdAt).toLocaleDateString()}</span>
+                    <span className="upcoming-time">
+                      {new Date(e.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
               ))}
               {recent.length === 0 && (
-                <p style={{ color: '#64748b', fontSize: '0.85rem' }}>No upcoming events</p>
+                <p style={{ color: '#64748b', fontSize: '0.85rem' }}>
+                  No upcoming events
+                </p>
               )}
             </div>
           </div>
 
+          {/* Quick Stats Widget */}
+          <div className="dash-card-section">
+            <div className="dash-section-header">
+              <h3>Quick Summary</h3>
+            </div>
+            <div className="upcoming-list">
+              <div className="upcoming-item">
+                <div className="upcoming-dot" style={{ background: '#16a34a' }} />
+                <div className="upcoming-info">
+                  <span className="upcoming-title">
+                    {counts.services || 0} Active Services
+                  </span>
+                  <span className="upcoming-time">All services published</span>
+                </div>
+              </div>
+              <div className="upcoming-item">
+                <div className="upcoming-dot" style={{ background: '#8b5cf6' }} />
+                <div className="upcoming-info">
+                  <span className="upcoming-title">
+                    {counts.unreadMessages || 0} Unread Messages
+                  </span>
+                  <span className="upcoming-time">Contact form messages</span>
+                </div>
+              </div>
+              <div className="upcoming-item">
+                <div className="upcoming-dot" style={{ background: '#ec4899' }} />
+                <div className="upcoming-info">
+                  <span className="upcoming-title">
+                    {counts.testimonials || 0} Testimonials
+                  </span>
+                  <span className="upcoming-time">Published reviews</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

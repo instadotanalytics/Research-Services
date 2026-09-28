@@ -2,14 +2,23 @@ import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import { changePassword } from '../../services/authApi.js';
-import { User, Mail, Shield, Lock } from 'lucide-react';
+import { User, Mail, Shield, Lock, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import './AdminProfile.css';
 
 export default function AdminProfile() {
   const { user } = useAuth();
   const toast = useToast();
-  const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [form, setForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -21,26 +30,43 @@ export default function AdminProfile() {
       toast.error('Password must be at least 6 characters');
       return;
     }
+    if (form.currentPassword === form.newPassword) {
+      toast.error('New password must be different from current password');
+      return;
+    }
     setLoading(true);
     try {
-      await changePassword({ currentPassword: form.currentPassword, newPassword: form.newPassword });
-      toast.success('Password updated');
+      await changePassword({
+        currentPassword: form.currentPassword,
+        newPassword: form.newPassword,
+      });
+      toast.success('Password updated successfully');
       setForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed');
+      toast.error(err.response?.data?.message || 'Failed to update password');
     } finally {
       setLoading(false);
     }
   };
 
+  const toggleShow = (field) => {
+    setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+
   // Get initials for avatar
   const getInitials = (name) => {
     if (!name) return 'A';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   return (
     <div className="admin-profile-page">
+      {/* Page Header */}
       <div className="admin-page-header">
         <div>
           <h1>My Profile</h1>
@@ -49,19 +75,24 @@ export default function AdminProfile() {
       </div>
 
       <div className="profile-grid">
-
-        {/* Account Information Card */}
+        {/* ============ LEFT: Account Info Card ============ */}
         <div className="profile-card">
+          {/* Avatar Header */}
           <div className="profile-card-header">
             <div className="profile-avatar">
               {getInitials(user?.name)}
+              <span className="profile-online-dot" />
             </div>
             <div className="profile-header-info">
               <h3>{user?.name || 'Admin'}</h3>
-              <span className="profile-role-badge">{user?.role || 'Administrator'}</span>
+              <span className="profile-role-badge">
+                <Shield size={11} />
+                {user?.role || 'Administrator'}
+              </span>
             </div>
           </div>
 
+          {/* Details List */}
           <div className="profile-details">
             <div className="profile-detail-row">
               <div className="detail-icon-wrap">
@@ -89,15 +120,29 @@ export default function AdminProfile() {
               </div>
               <div className="detail-content">
                 <span className="detail-label">Role</span>
-                <span className="detail-value" style={{ textTransform: 'capitalize' }}>
+                <span
+                  className="detail-value"
+                  style={{ textTransform: 'capitalize' }}
+                >
                   {user?.role || 'Administrator'}
                 </span>
               </div>
             </div>
           </div>
+
+          {/* Security Note */}
+          <div className="profile-security-note">
+            <div className="security-note-icon">
+              <CheckCircle size={16} />
+            </div>
+            <div>
+              <strong>Account Secured</strong>
+              <p>Your password is encrypted and stored securely.</p>
+            </div>
+          </div>
         </div>
 
-        {/* Change Password Card */}
+        {/* ============ RIGHT: Change Password Card ============ */}
         <div className="profile-card">
           <div className="card-section-header">
             <div className="section-icon-wrap">
@@ -112,41 +157,109 @@ export default function AdminProfile() {
           <form onSubmit={onSubmit} className="profile-form">
             <div className="form-group">
               <label>Current Password</label>
-              <input
-                type="password"
-                className="form-control"
-                value={form.currentPassword}
-                onChange={(e) => setForm({ ...form, currentPassword: e.target.value })}
-                required
-                placeholder="Enter current password"
-              />
+              <div className="password-input-wrap">
+                <input
+                  type={showPassword.current ? 'text' : 'password'}
+                  className="form-control"
+                  value={form.currentPassword}
+                  onChange={(e) =>
+                    setForm({ ...form, currentPassword: e.target.value })
+                  }
+                  required
+                  placeholder="Enter current password"
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => toggleShow('current')}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword.current ? (
+                    <EyeOff size={16} />
+                  ) : (
+                    <Eye size={16} />
+                  )}
+                </button>
+              </div>
             </div>
 
             <div className="form-group">
               <label>New Password</label>
-              <input
-                type="password"
-                className="form-control"
-                value={form.newPassword}
-                onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
-                required
-                placeholder="Enter new password (min 6 characters)"
-              />
+              <div className="password-input-wrap">
+                <input
+                  type={showPassword.new ? 'text' : 'password'}
+                  className="form-control"
+                  value={form.newPassword}
+                  onChange={(e) =>
+                    setForm({ ...form, newPassword: e.target.value })
+                  }
+                  required
+                  placeholder="Enter new password (min 6 characters)"
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => toggleShow('new')}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword.new ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              {form.newPassword && (
+                <div className="password-strength">
+                  <div className="strength-bar">
+                    <div
+                      className={`strength-fill ${getStrengthClass(form.newPassword)}`}
+                    />
+                  </div>
+                  <span className={`strength-label ${getStrengthClass(form.newPassword)}`}>
+                    {getStrengthLabel(form.newPassword)}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="form-group">
               <label>Confirm New Password</label>
-              <input
-                type="password"
-                className="form-control"
-                value={form.confirmPassword}
-                onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-                required
-                placeholder="Confirm new password"
-              />
+              <div className="password-input-wrap">
+                <input
+                  type={showPassword.confirm ? 'text' : 'password'}
+                  className="form-control"
+                  value={form.confirmPassword}
+                  onChange={(e) =>
+                    setForm({ ...form, confirmPassword: e.target.value })
+                  }
+                  required
+                  placeholder="Confirm new password"
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => toggleShow('confirm')}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword.confirm ? (
+                    <EyeOff size={16} />
+                  ) : (
+                    <Eye size={16} />
+                  )}
+                </button>
+              </div>
+              {form.confirmPassword &&
+                form.newPassword !== form.confirmPassword && (
+                  <div className="form-error">Passwords do not match</div>
+                )}
             </div>
 
-            <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', marginTop: 8 }}>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+              style={{ width: '100%', marginTop: 8 }}
+            >
               {loading ? 'Updating...' : 'Update Password'}
             </button>
           </form>
@@ -154,4 +267,29 @@ export default function AdminProfile() {
       </div>
     </div>
   );
+}
+
+/* ============ Password Strength Helpers ============ */
+function getStrength(pwd) {
+  let score = 0;
+  if (pwd.length >= 6) score++;
+  if (pwd.length >= 10) score++;
+  if (/[A-Z]/.test(pwd)) score++;
+  if (/[0-9]/.test(pwd)) score++;
+  if (/[^A-Za-z0-9]/.test(pwd)) score++;
+  return score;
+}
+
+function getStrengthClass(pwd) {
+  const s = getStrength(pwd);
+  if (s <= 2) return 'weak';
+  if (s <= 3) return 'medium';
+  return 'strong';
+}
+
+function getStrengthLabel(pwd) {
+  const s = getStrength(pwd);
+  if (s <= 2) return 'Weak';
+  if (s <= 3) return 'Medium';
+  return 'Strong';
 }
