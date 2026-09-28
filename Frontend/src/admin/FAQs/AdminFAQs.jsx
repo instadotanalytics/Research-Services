@@ -3,7 +3,7 @@ import { Plus, Edit, Trash2, X, MoreVertical, HelpCircle } from 'lucide-react';
 import { getFAQs, createFAQ, updateFAQ, deleteFAQ } from '../../services/contentApi.js';
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal.jsx';
-import LoadingSpinner from '../../components/Loading/LoadingSpinner.jsx';
+import { TableSkeletonRows } from '../../components/Skeleton/Skeleton.jsx';
 import './AdminFAQs.css';
 
 const empty = { question: '', answer: '', status: true, order: 0 };
@@ -27,7 +27,6 @@ export default function AdminFAQs() {
 
   useEffect(load, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => setActiveDropdown(null);
     document.addEventListener('click', handleClickOutside);
@@ -112,9 +111,7 @@ export default function AdminFAQs() {
       </div>
 
       {/* Content */}
-      {loading ? (
-        <LoadingSpinner fullScreen />
-      ) : items.length === 0 ? (
+      {!loading && items.length === 0 ? (
         <div className="empty-wrapper">
           <HelpCircle size={48} strokeWidth={1.5} className="empty-icon" />
           <h3>No FAQs yet</h3>
@@ -129,60 +126,63 @@ export default function AdminFAQs() {
             <thead>
               <tr>
                 <th style={{ width: '70px' }}>Order</th>
-                <th>Question & Answer</th>
+                <th>Question &amp; Answer</th>
                 <th style={{ width: '120px' }}>Status</th>
                 <th style={{ textAlign: 'right', width: '80px' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {items.map((f) => (
-                <tr key={f._id}>
-                  <td>
-                    <span className="order-badge">{f.order}</span>
-                  </td>
-                  <td>
-                    <div className="faq-question-cell">
-                      <strong>{f.question}</strong>
-                      <span className="faq-answer-preview">{f.answer}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span
-                      className={`status-badge ${
-                        f.status ? 'status-active' : 'status-disabled'
-                      }`}
-                    >
-                      {f.status ? 'Active' : 'Disabled'}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: 'right', position: 'relative' }}>
-                    <button
-                      className="kebab-btn"
-                      onClick={(e) => toggleDropdown(e, f._id)}
-                      aria-label="Actions"
-                    >
-                      <MoreVertical size={18} />
-                    </button>
-
-                    {activeDropdown === f._id && (
-                      <div className="dropdown-menu">
-                        <button onClick={() => openEdit(f)}>
-                          <Edit size={14} /> Edit
-                        </button>
-                        <button
-                          className="danger"
-                          onClick={() => {
-                            setConfirm(f);
-                            setActiveDropdown(null);
-                          }}
-                        >
-                          <Trash2 size={14} /> Delete
-                        </button>
+              {loading ? (
+                <TableSkeletonRows rows={6} cols={4} />
+              ) : (
+                items.map((f) => (
+                  <tr key={f._id}>
+                    <td>
+                      <span className="order-badge">{f.order}</span>
+                    </td>
+                    <td>
+                      <div className="faq-question-cell">
+                        <strong>{f.question}</strong>
+                        <span className="faq-answer-preview">{f.answer}</span>
                       </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td>
+                      <span
+                        className={`status-badge ${f.status ? 'status-active' : 'status-disabled'
+                          }`}
+                      >
+                        {f.status ? 'Active' : 'Disabled'}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'right', position: 'relative' }}>
+                      <button
+                        className="kebab-btn"
+                        onClick={(e) => toggleDropdown(e, f._id)}
+                        aria-label="Actions"
+                      >
+                        <MoreVertical size={18} />
+                      </button>
+
+                      {activeDropdown === f._id && (
+                        <div className="dropdown-menu">
+                          <button onClick={() => openEdit(f)}>
+                            <Edit size={14} /> Edit
+                          </button>
+                          <button
+                            className="danger"
+                            onClick={() => {
+                              setConfirm(f);
+                              setActiveDropdown(null);
+                            }}
+                          >
+                            <Trash2 size={14} /> Delete
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

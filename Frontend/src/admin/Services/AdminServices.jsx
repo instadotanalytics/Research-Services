@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import { getServices, createService, updateService, deleteService } from '../../services/serviceApi.js';
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal.jsx';
-import LoadingSpinner from '../../components/Loading/LoadingSpinner.jsx';
+import { TableSkeletonRows } from '../../components/Skeleton/Skeleton.jsx';
 import { slugify } from '../../utils/slugify.js';
 import './AdminServices.css';
 
@@ -122,10 +122,10 @@ export default function AdminServices() {
   // Filtered by search
   const filtered = search
     ? items.filter(
-        (s) =>
-          s.title.toLowerCase().includes(search.toLowerCase()) ||
-          s.slug.toLowerCase().includes(search.toLowerCase())
-      )
+      (s) =>
+        s.title.toLowerCase().includes(search.toLowerCase()) ||
+        s.slug.toLowerCase().includes(search.toLowerCase())
+    )
     : items;
 
   return (
@@ -170,9 +170,7 @@ export default function AdminServices() {
       )}
 
       {/* ============ Content ============ */}
-      {loading ? (
-        <LoadingSpinner fullScreen />
-      ) : items.length === 0 ? (
+      {!loading && items.length === 0 ? (
         <div className="empty-wrapper">
           <Briefcase size={48} strokeWidth={1.5} className="empty-icon" />
           <h3>No services yet</h3>
@@ -181,7 +179,7 @@ export default function AdminServices() {
             <Plus size={16} /> Add Your First Service
           </button>
         </div>
-      ) : filtered.length === 0 ? (
+      ) : !loading && filtered.length === 0 ? (
         <div className="empty-wrapper">
           <Search size={48} strokeWidth={1.5} className="empty-icon" />
           <h3>No matches found</h3>
@@ -203,67 +201,70 @@ export default function AdminServices() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((s) => (
-                <tr key={s._id}>
-                  <td>
-                    <span className="order-badge">{s.order}</span>
-                  </td>
-                  <td>
-                    <div className="service-title-cell">
-                      <strong>{s.title}</strong>
-                      <span className="service-desc-preview">
-                        {s.shortDescription}
-                      </span>
-                    </div>
-                  </td>
-                  <td>
-                    <code className="slug-code">{s.slug}</code>
-                  </td>
-                  <td>
-                    <span
-                      className={`status-badge ${
-                        s.status ? 'status-active' : 'status-disabled'
-                      }`}
-                    >
-                      {s.status ? 'Active' : 'Disabled'}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: 'right', position: 'relative' }}>
-                    <button
-                      className="kebab-btn"
-                      onClick={(e) => toggleDropdown(e, s._id)}
-                      aria-label="Actions"
-                    >
-                      <MoreVertical size={18} />
-                    </button>
-
-                    {activeDropdown === s._id && (
-                      <div className="dropdown-menu">
-                        <Link
-                          to={`/services/${s.slug}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          onClick={() => setActiveDropdown(null)}
-                        >
-                          <ExternalLink size={14} /> View on Site
-                        </Link>
-                        <button onClick={() => openEdit(s)}>
-                          <Edit size={14} /> Edit Service
-                        </button>
-                        <button
-                          className="danger"
-                          onClick={() => {
-                            setConfirm(s);
-                            setActiveDropdown(null);
-                          }}
-                        >
-                          <Trash2 size={14} /> Delete
-                        </button>
+              {loading ? (
+                <TableSkeletonRows rows={6} cols={5} />
+              ) : (
+                filtered.map((s) => (
+                  <tr key={s._id}>
+                    <td>
+                      <span className="order-badge">{s.order}</span>
+                    </td>
+                    <td>
+                      <div className="service-title-cell">
+                        <strong>{s.title}</strong>
+                        <span className="service-desc-preview">
+                          {s.shortDescription}
+                        </span>
                       </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td>
+                      <code className="slug-code">{s.slug}</code>
+                    </td>
+                    <td>
+                      <span
+                        className={`status-badge ${s.status ? 'status-active' : 'status-disabled'
+                          }`}
+                      >
+                        {s.status ? 'Active' : 'Disabled'}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'right', position: 'relative' }}>
+                      <button
+                        className="kebab-btn"
+                        onClick={(e) => toggleDropdown(e, s._id)}
+                        aria-label="Actions"
+                      >
+                        <MoreVertical size={18} />
+                      </button>
+
+                      {activeDropdown === s._id && (
+                        <div className="dropdown-menu">
+                          <Link
+                            to={`/services/${s.slug}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            <ExternalLink size={14} /> View on Site
+                          </Link>
+                          <button onClick={() => openEdit(s)}>
+                            <Edit size={14} /> Edit Service
+                          </button>
+                          <button
+                            className="danger"
+                            onClick={() => {
+                              setConfirm(s);
+                              setActiveDropdown(null);
+                            }}
+                          >
+                            <Trash2 size={14} /> Delete
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

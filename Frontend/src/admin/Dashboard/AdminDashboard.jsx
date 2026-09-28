@@ -1,21 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Briefcase,
-  MessageSquare,
-  Mail,
-  Star,
-  HelpCircle,
-  BarChart3,
-  TrendingUp,
-  MoreVertical,
-  Users,
-} from 'lucide-react';
+import { Briefcase, MessageSquare, Star, HelpCircle, MoreVertical } from 'lucide-react';
 import { getEnquiries } from '../../services/enquiryApi.js';
 import { getServices } from '../../services/serviceApi.js';
-import { getContacts } from '../../services/contactApi.js';
 import { getTestimonials, getFAQs, getStatistics } from '../../services/contentApi.js';
-import LoadingSpinner from '../../components/Loading/LoadingSpinner.jsx';
+import { Skeleton as Skel } from '../../components/Skeleton/Skeleton.jsx';
 import './AdminDashboard.css';
 
 export default function AdminDashboard() {
@@ -27,95 +16,44 @@ export default function AdminDashboard() {
     Promise.all([
       getEnquiries(),
       getServices(true),
-      getContacts(),
       getTestimonials(true),
       getFAQs(true),
       getStatistics(true),
     ])
-      .then(([e, s, c, t, f, st]) => {
+      .then(([e, s, t, f, st]) => {
         setCounts({
           enquiries: e.data.length,
           services: s.data.length,
-          messages: c.data.length,
           testimonials: t.data.length,
           faqs: f.data.length,
           statistics: st.data.length,
           newEnquiries: e.data.filter((x) => x.status === 'New').length,
-          unreadMessages: c.data.filter((x) => x.status === 'unread').length,
         });
         setRecent(e.data.slice(0, 6));
       })
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <LoadingSpinner fullScreen />;
-
-  /* ============ Stat Cards (6 cards) ============ */
   const statCards = [
-    {
-      title: 'Total Enquiries',
-      value: counts.enquiries,
-      icon: MessageSquare,
-      color: '#2563eb',
-      link: '/admin/enquiries',
-    },
-    {
-      title: 'New Enquiries',
-      value: counts.newEnquiries,
-      icon: TrendingUp,
-      color: '#f59e0b',
-      link: '/admin/enquiries',
-    },
-    {
-      title: 'Services',
-      value: counts.services,
-      icon: Briefcase,
-      color: '#16a34a',
-      link: '/admin/services',
-    },
-    {
-      title: 'Contact Messages',
-      value: counts.messages,
-      icon: Mail,
-      color: '#8b5cf6',
-      link: '/admin/messages',
-    },
-    {
-      title: 'Testimonials',
-      value: counts.testimonials,
-      icon: Star,
-      color: '#ec4899',
-      link: '/admin/testimonials',
-    },
-    {
-      title: 'FAQs',
-      value: counts.faqs,
-      icon: HelpCircle,
-      color: '#06b6d4',
-      link: '/admin/faqs',
-    },
+    { title: 'Total Enquiries', value: counts.enquiries, icon: MessageSquare, color: '#2563eb', link: '/admin/enquiries' },
+    { title: 'Total Services', value: counts.services, icon: Briefcase, color: '#16a34a', link: '/admin/services' },
+    { title: 'Total Testimonials', value: counts.testimonials, icon: Star, color: '#ec4899', link: '/admin/testimonials' },
+    { title: 'Total FAQs', value: counts.faqs, icon: HelpCircle, color: '#8b5cf6', link: '/admin/faqs' },
   ];
 
-  /* ============ Bar Chart Data ============ */
-  const maxValue = Math.max(
-    counts.enquiries || 1,
-    counts.services || 1,
-    counts.messages || 1,
-    counts.faqs || 1,
-    counts.statistics || 1
-  );
-
+  const max = Math.max(counts.enquiries || 1, counts.services || 1, counts.faqs || 1, counts.statistics || 1);
   const chartData = [
-    { label: 'Enquiries', value: counts.enquiries || 0 },
-    { label: 'Services', value: counts.services || 0 },
-    { label: 'Messages', value: counts.messages || 0 },
-    { label: 'FAQs', value: counts.faqs || 0 },
-    { label: 'Stats', value: counts.statistics || 0 },
+    { label: 'Enquiries', value: counts.enquiries || 0, max },
+    { label: 'Services', value: counts.services || 0, max },
+    { label: 'FAQs', value: counts.faqs || 0, max },
+    { label: 'Stats', value: counts.statistics || 0, max },
   ];
+  const skeletonBarHeights = [70, 45, 30, 55];
 
   return (
     <div className="dashboard-container">
-      {/* ============ Top Stat Cards ============ */}
+      {/* Top Stat Cards */}
       <div className="stat-cards-grid">
         {statCards.map((card, index) => (
           <Link to={card.link} key={index} className="stat-card">
@@ -126,7 +64,11 @@ export default function AdminDashboard() {
               <card.icon size={22} />
             </div>
             <div className="stat-card-info">
-              <span className="stat-card-value">{card.value ?? 0}</span>
+              {loading ? (
+                <Skel w={48} h={24} style={{ marginBottom: 6 }} />
+              ) : (
+                <span className="stat-card-value">{card.value ?? 0}</span>
+              )}
               <span className="stat-card-title">{card.title}</span>
             </div>
           </Link>
@@ -135,9 +77,8 @@ export default function AdminDashboard() {
 
       {/* ============ Dashboard Grid ============ */}
       <div className="dashboard-grid">
-        {/* ============ LEFT COLUMN ============ */}
         <div className="dashboard-main">
-          {/* Performance Card */}
+          {/* Performance */}
           <div className="dash-card-section">
             <div className="dash-section-header">
               <h3>Performance</h3>
@@ -149,23 +90,33 @@ export default function AdminDashboard() {
             <div className="performance-content">
               <div className="performance-stat">
                 <span className="stat-label">Total Enquiries</span>
-                <span className="stat-value">{counts.enquiries || 0}</span>
-                <span className="stat-change positive">
-                  +{counts.newEnquiries || 0} new this month
-                </span>
+                {loading ? (
+                  <>
+                    <Skel w={90} h={40} r={8} style={{ margin: '4px 0' }} />
+                    <Skel w={70} h={14} />
+                  </>
+                ) : (
+                  <>
+                    <span className="stat-value">{counts.enquiries || 0}</span>
+                    <span className="stat-change positive">+{counts.newEnquiries || 0} new</span>
+                  </>
+                )}
               </div>
 
               <div className="bar-chart">
                 {chartData.map((item, index) => (
                   <div key={index} className="bar-wrapper">
-                    <div
-                      className="bar"
-                      style={{
-                        height: `${Math.max((item.value / maxValue) * 100, 8)}%`,
-                        background: index === 0 ? '#2563eb' : '#bfdbfe',
-                      }}
-                      title={`${item.label}: ${item.value}`}
-                    />
+                    {loading ? (
+                      <div className="bar skeleton" style={{ height: `${skeletonBarHeights[index]}%` }} />
+                    ) : (
+                      <div
+                        className="bar"
+                        style={{
+                          height: `${(item.value / item.max) * 100}%`,
+                          background: index === 0 ? '#2563eb' : '#bfdbfe',
+                        }}
+                      />
+                    )}
                     <span className="bar-label">{item.label}</span>
                   </div>
                 ))}
@@ -173,7 +124,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Recent Enquiries Table */}
+          {/* Recent Enquiries */}
           <div className="dash-card-section">
             <div className="dash-section-header">
               <h3>Recent Enquiries</h3>
@@ -193,29 +144,30 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {recent.length === 0 ? (
+                  {loading ? (
+                    [...Array(5)].map((_, i) => (
+                      <tr key={i}>
+                        <td><Skel w="70%" h={14} /></td>
+                        <td><Skel w="80%" h={14} /></td>
+                        <td><Skel w={70} h={22} r={999} /></td>
+                        <td><Skel w={80} h={14} /></td>
+                        <td><Skel w={70} h={14} /></td>
+                      </tr>
+                    ))
+                  ) : recent.length === 0 ? (
                     <tr>
-                      <td
-                        colSpan="5"
-                        style={{ textAlign: 'center', padding: 30, color: '#64748b' }}
-                      >
+                      <td colSpan="5" style={{ textAlign: 'center', padding: 30, color: '#64748b' }}>
                         No enquiries yet
                       </td>
                     </tr>
                   ) : (
                     recent.map((e) => (
                       <tr key={e._id}>
-                        <td>
-                          <strong>{e.name}</strong>
-                        </td>
+                        <td><strong>{e.name}</strong></td>
                         <td>{e.email}</td>
                         <td>{e.service}</td>
                         <td>
-                          <span
-                            className={`status-badge status-${e.status
-                              .replace(/\s/g, '')
-                              .toLowerCase()}`}
-                          >
+                          <span className={`status-badge status-${e.status.replace(/\s/g, '').toLowerCase()}`}>
                             {e.status}
                           </span>
                         </td>
@@ -229,9 +181,8 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* ============ RIGHT COLUMN ============ */}
+        {/* Right Column */}
         <div className="dashboard-side">
-          {/* Calendar Widget */}
           <div className="dash-card-section">
             <div className="dash-section-header">
               <h3>Calendar</h3>
@@ -239,26 +190,16 @@ export default function AdminDashboard() {
             </div>
             <div className="calendar-widget">
               <div className="calendar-header">
-                <span>Mon</span>
-                <span>Tue</span>
-                <span>Wed</span>
-                <span>Thu</span>
-                <span>Fri</span>
+                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
               </div>
               <div className="calendar-days">
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d) => (
-                  <div
-                    key={d}
-                    className={`calendar-day ${d === 4 ? 'active' : ''}`}
-                  >
-                    {d}
-                  </div>
+                  <div key={d} className={`calendar-day ${d === 4 ? 'active' : ''}`}>{d}</div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Upcoming List */}
           <div className="dash-card-section">
             <div className="dash-section-header">
               <h3>Upcoming</h3>
@@ -267,58 +208,32 @@ export default function AdminDashboard() {
               </Link>
             </div>
             <div className="upcoming-list">
-              {recent.slice(0, 3).map((e, i) => (
-                <div key={i} className="upcoming-item">
-                  <div className="upcoming-dot" />
-                  <div className="upcoming-info">
-                    <span className="upcoming-title">{e.name}</span>
-                    <span className="upcoming-time">
-                      {new Date(e.createdAt).toLocaleDateString()}
-                    </span>
+              {loading ? (
+                [...Array(3)].map((_, i) => (
+                  <div key={i} className="upcoming-item">
+                    <Skel w={10} h={10} r={999} style={{ marginTop: 6, flexShrink: 0 }} />
+                    <div className="upcoming-info" style={{ gap: 6, flex: 1 }}>
+                      <Skel w="60%" h={14} />
+                      <Skel w="35%" h={11} />
+                    </div>
                   </div>
-                </div>
-              ))}
-              {recent.length === 0 && (
-                <p style={{ color: '#64748b', fontSize: '0.85rem' }}>
-                  No upcoming events
-                </p>
+                ))
+              ) : (
+                <>
+                  {recent.slice(0, 3).map((e, i) => (
+                    <div key={i} className="upcoming-item">
+                      <div className="upcoming-dot"></div>
+                      <div className="upcoming-info">
+                        <span className="upcoming-title">{e.name}</span>
+                        <span className="upcoming-time">{new Date(e.createdAt).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  ))}
+                  {recent.length === 0 && (
+                    <p style={{ color: '#64748b', fontSize: '0.85rem' }}>No upcoming events</p>
+                  )}
+                </>
               )}
-            </div>
-          </div>
-
-          {/* Quick Stats Widget */}
-          <div className="dash-card-section">
-            <div className="dash-section-header">
-              <h3>Quick Summary</h3>
-            </div>
-            <div className="upcoming-list">
-              <div className="upcoming-item">
-                <div className="upcoming-dot" style={{ background: '#16a34a' }} />
-                <div className="upcoming-info">
-                  <span className="upcoming-title">
-                    {counts.services || 0} Active Services
-                  </span>
-                  <span className="upcoming-time">All services published</span>
-                </div>
-              </div>
-              <div className="upcoming-item">
-                <div className="upcoming-dot" style={{ background: '#8b5cf6' }} />
-                <div className="upcoming-info">
-                  <span className="upcoming-title">
-                    {counts.unreadMessages || 0} Unread Messages
-                  </span>
-                  <span className="upcoming-time">Contact form messages</span>
-                </div>
-              </div>
-              <div className="upcoming-item">
-                <div className="upcoming-dot" style={{ background: '#ec4899' }} />
-                <div className="upcoming-info">
-                  <span className="upcoming-title">
-                    {counts.testimonials || 0} Testimonials
-                  </span>
-                  <span className="upcoming-time">Published reviews</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
