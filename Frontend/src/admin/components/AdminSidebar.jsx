@@ -13,6 +13,7 @@ import {
   LogOut,
   GraduationCap,
   X,
+  Menu,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import './AdminSidebar.css';
@@ -78,11 +79,11 @@ export default function AdminSidebar({ open: externalOpen, onClose } = {}) {
     <>
       {/* Mobile menu toggle button */}
       <button
-        className="admin-menu-btn"
+        className={`admin-menu-btn ${open ? 'is-open' : ''}`}
         onClick={toggleMenu}
         aria-label={open ? 'Close menu' : 'Open menu'}
       >
-        {open ? <X size={20} /> : '☰'}
+        {open ? <X size={24} /> : <Menu size={26} strokeWidth={2.2} />}
       </button>
 
       {/* Mobile backdrop */}

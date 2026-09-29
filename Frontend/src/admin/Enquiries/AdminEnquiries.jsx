@@ -4,6 +4,7 @@ import { getEnquiries, updateEnquiry, deleteEnquiry } from '../../services/enqui
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal.jsx';
 import { TableSkeletonRows } from '../../components/Skeleton/Skeleton.jsx';
+import { withMinDelay } from '../../utils/minDelay.js';
 import EmptyState from '../../components/Loading/EmptyState.jsx';
 import { ENQUIRY_STATUSES } from '../../utils/constants.js';
 import './AdminEnquiries.css';
@@ -23,12 +24,11 @@ export default function AdminEnquiries() {
     const params = {};
     if (search) params.search = search;
     if (statusFilter !== 'all') params.status = statusFilter;
-    getEnquiries(params)
+    withMinDelay(getEnquiries(params), 300)
       .then((r) => setItems(r.data))
       .finally(() => setLoading(false));
   };
 
-  // Debounced search + filter
   useEffect(() => {
     const t = setTimeout(load, 300);
     return () => clearTimeout(t);
@@ -41,7 +41,6 @@ export default function AdminEnquiries() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  // Prevent body scroll when modal open
   useEffect(() => {
     document.body.style.overflow = selected || confirm ? 'hidden' : '';
     return () => {
@@ -90,7 +89,6 @@ export default function AdminEnquiries() {
 
   return (
     <div className="admin-enquiries-page">
-      {/* Page Header */}
       <div className="admin-page-header">
         <div>
           <h1>Enquiries</h1>
@@ -103,7 +101,6 @@ export default function AdminEnquiries() {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="admin-filters">
         <div className="admin-search-box">
           <Search size={18} className="search-icon" />
@@ -137,7 +134,6 @@ export default function AdminEnquiries() {
         </select>
       </div>
 
-      {/* Content */}
       {!loading && items.length === 0 ? (
         <div className="empty-wrapper">
           <EmptyState
@@ -253,7 +249,6 @@ export default function AdminEnquiries() {
         </div>
       )}
 
-      {/* View Details Modal */}
       {selected && (
         <div className="modal-overlay" onClick={() => setSelected(null)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
@@ -271,7 +266,6 @@ export default function AdminEnquiries() {
             </div>
 
             <div className="modal-body">
-              {/* Contact Info */}
               <div className="detail-section">
                 <div className="section-label">Contact Information</div>
                 <div className="detail-grid">
@@ -305,7 +299,6 @@ export default function AdminEnquiries() {
                 </div>
               </div>
 
-              {/* Enquiry Info */}
               <div className="detail-section">
                 <div className="section-label">Enquiry Details</div>
                 <div className="detail-grid">
@@ -340,7 +333,6 @@ export default function AdminEnquiries() {
                 </div>
               </div>
 
-              {/* Message */}
               <div className="detail-section">
                 <div className="section-label">Message</div>
                 <div className="message-box">
@@ -348,7 +340,6 @@ export default function AdminEnquiries() {
                 </div>
               </div>
 
-              {/* Status Update */}
               <div className="detail-section">
                 <div className="section-label">Update Status</div>
                 <div className="status-update-row">
@@ -369,7 +360,6 @@ export default function AdminEnquiries() {
         </div>
       )}
 
-      {/* Delete Confirmation */}
       <ConfirmModal
         open={!!confirm}
         title="Delete Enquiry"
