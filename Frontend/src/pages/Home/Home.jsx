@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -10,6 +10,7 @@ import {
 import SEO from '../../components/SEO.jsx';
 import { getTestimonials, getFAQs } from '../../services/contentApi.js';
 import herobanner from '../../assets/herobanner.png';
+import herobanner2 from '../../assets/herobanner2.png';
 import heroimg from '../../assets/heroimg.png';
 import './Home.css';
 
@@ -97,8 +98,6 @@ function useIsMobile(query = '(max-width: 768px)') {
   return isMobile;
 }
 
-/* ---------- COMPONENT ---------- */
-
 export default function Home() {
   const isMobile = useIsMobile();
   const [testimonials, setTestimonials] = useState(defaultTestimonials);
@@ -106,7 +105,6 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState(null);
   const [tIndex, setTIndex] = useState(0);
   const [sIndex, setSIndex] = useState(0);
-  const servicesScrollRef = useRef(null);
 
   useEffect(() => {
     Promise.all([getTestimonials(), getFAQs()])
@@ -117,29 +115,22 @@ export default function Home() {
       .catch(console.error);
   }, []);
 
-  // Testimonials logic
-  const visibleCount = Math.min(3, testimonials.length);
+  // Testimonials
+  const visibleCount = isMobile ? 1 : Math.min(3, testimonials.length);
   const visibleTestimonials = Array.from({ length: visibleCount }, (_, i) =>
     testimonials[(tIndex + i) % testimonials.length]
   );
   const prevT = () => setTIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
   const nextT = () => setTIndex((i) => (i + 1) % testimonials.length);
 
-  // Services scroll logic (mobile only)
-  const scrollToService = (index) => {
-    if (servicesScrollRef.current) {
-      const cardWidth = servicesScrollRef.current.children[0]?.offsetWidth || 0;
-      servicesScrollRef.current.scrollTo({
-        left: index * (cardWidth + 16), // 16px gap
-        behavior: 'smooth',
-      });
-      setSIndex(index);
-    }
-  };
-  const prevS = () => scrollToService(Math.max(0, sIndex - 1));
-  const nextS = () => scrollToService(Math.min(services.length - 1, sIndex + 1));
+  // Services (mobile: 1 at a time)
+  const visibleServicesCount = isMobile ? 1 : services.length;
+  const visibleServices = Array.from({ length: visibleServicesCount }, (_, i) =>
+    services[(sIndex + i) % services.length]
+  );
+  const prevS = () => setSIndex((i) => (i - 1 + services.length) % services.length);
+  const nextS = () => setSIndex((i) => (i + 1) % services.length);
 
-  // Reset services index on desktop
   useEffect(() => {
     if (!isMobile) setSIndex(0);
   }, [isMobile]);
@@ -152,8 +143,6 @@ export default function Home() {
   );
 
   const shownFaqs = faqs.slice(0, 8);
-  const half = Math.ceil(shownFaqs.length / 2);
-  const faqCols = [shownFaqs.slice(0, half), shownFaqs.slice(half)];
 
   const renderFaq = (f) => {
     const open = openFaq === f._id;
@@ -183,7 +172,11 @@ export default function Home() {
       {/* ========== HERO ========== */}
       <section
         className="home-section hero"
-        style={isMobile ? undefined : { '--hero-bg': `url(${herobanner})` }}
+        style={
+          isMobile
+            ? { backgroundImage: `url(${herobanner2})` }
+            : { '--hero-bg': `url(${herobanner})` }
+        }
       >
         <div className="container hero-inner">
           <motion.div
@@ -221,7 +214,7 @@ export default function Home() {
       </section>
 
       {/* ========== SERVICES ========== */}
-      <section className="home-section section-alt">
+      <section className="home-section section-alt services-section">
         <div className="container">
           <div className="section-head-row">
             <div>
@@ -237,25 +230,43 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Mobile scroll with arrows, desktop grid */}
           <div className="services-grid-wrapper">
-            <div className="services-grid" ref={servicesScrollRef}>
-              {services.map((s, i) => (
-                <motion.div key={s.title} className="service-card" {...fadeUp} transition={{ delay: i * 0.05 }}>
-                  <div className="icon-box"><s.icon size={22} /></div>
+            {isMobile && (
+              <button
+                type="button"
+                className="mobile-arrow mobile-arrow-left"
+                onClick={prevS}
+                aria-label="Previous service"
+              >
+                <ChevronLeft size={18} />
+              </button>
+            )}
+
+            <div className="services-grid">
+              {visibleServices.map((s) => (
+                <div key={s.title} className="service-card">
+                  <div className="icon-box"><s.icon size={20} /></div>
                   <h3>{s.title}</h3>
                   <p>{s.desc}</p>
                   <Link to="/services" className="learn-more">
                     Learn More <ArrowRight size={13} />
                   </Link>
-                </motion.div>
+                </div>
               ))}
             </div>
-            {/* Mobile arrows (only visible on mobile) */}
-            <div className="services-arrows-mobile">
-              {renderArrows('arrows', prevS, nextS)}
-            </div>
+
+            {isMobile && (
+              <button
+                type="button"
+                className="mobile-arrow mobile-arrow-right"
+                onClick={nextS}
+                aria-label="Next service"
+              >
+                <ChevronRight size={18} />
+              </button>
+            )}
           </div>
+          {/* Desktop arrows removed per request */}
         </div>
       </section>
 
@@ -291,7 +302,7 @@ export default function Home() {
       </section>
 
       {/* ========== PROCESS ========== */}
-      <section className="home-section section-alt">
+      <section className="home-section section-alt process-section">
         <div className="container">
           <div className="section-head">
             <span className="pill">Our Process</span>
@@ -312,7 +323,7 @@ export default function Home() {
       </section>
 
       {/* ========== AUDIENCE ========== */}
-      <section className="home-section">
+      <section className="home-section audience-section">
         <div className="container">
           <div className="section-head">
             <span className="pill">Who We Work With</span>
@@ -332,38 +343,60 @@ export default function Home() {
       </section>
 
       {/* ========== TESTIMONIALS ========== */}
-      <section className="home-section section-alt">
+      <section className="home-section section-alt testimonials-section">
         <div className="container">
-          <div className="section-head-row">
-            <div>
-              <span className="pill">Testimonials</span>
-              <h2>What Our Clients Say</h2>
-              <p>Trusted by students, researchers and institutions for quality and reliability.</p>
-            </div>
-            {renderArrows('arrows arrows-top', prevT, nextT)}
+          <div className="section-head">
+            <span className="pill">Testimonials</span>
+            <h2>What Our Clients Say</h2>
+            <p>Trusted by students, researchers and institutions for quality and reliability.</p>
           </div>
 
-          <div className="testimonial-grid">
-            {visibleTestimonials.map((t) => (
-              <div key={t._id} className="testimonial-card">
-                <div className="testimonial-top">
-                  <div className="testimonial-avatar">{t.name.charAt(0).toUpperCase()}</div>
-                  <div>
-                    <strong>{t.name}</strong>
-                    <span>{t.designation}{t.institution ? `, ${t.institution}` : ''}</span>
-                    <div className="stars">{'★'.repeat(t.rating || 5)}</div>
+          <div className="testimonials-grid-wrapper">
+            {isMobile && (
+              <button
+                type="button"
+                className="mobile-arrow mobile-arrow-left"
+                onClick={prevT}
+                aria-label="Previous testimonial"
+              >
+                <ChevronLeft size={18} />
+              </button>
+            )}
+
+            <div className="testimonial-grid">
+              {visibleTestimonials.map((t) => (
+                <div key={t._id} className="testimonial-card">
+                  <div className="testimonial-top">
+                    <div className="testimonial-avatar">{t.name.charAt(0).toUpperCase()}</div>
+                    <div>
+                      <strong>{t.name}</strong>
+                      <span>{t.designation}{t.institution ? `, ${t.institution}` : ''}</span>
+                      <div className="stars">{'★'.repeat(t.rating || 5)}</div>
+                    </div>
                   </div>
+                  <p>“{t.review}”</p>
                 </div>
-                <p>“{t.review}”</p>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {isMobile && (
+              <button
+                type="button"
+                className="mobile-arrow mobile-arrow-right"
+                onClick={nextT}
+                aria-label="Next testimonial"
+              >
+                <ChevronRight size={18} />
+              </button>
+            )}
           </div>
-          {renderArrows('arrows arrows-bottom', prevT, nextT)}
+
+          {!isMobile && renderArrows('arrows arrows-bottom-desktop', prevT, nextT)}
         </div>
       </section>
 
       {/* ========== FAQ ========== */}
-      <section className="home-section">
+      <section className="home-section faq-section">
         <div className="container">
           <div className="section-head-row">
             <div>
@@ -376,9 +409,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="faq-grid">
-            {faqCols.map((col, i) => (
-              <div key={i} className="faq-col">{col.map(renderFaq)}</div>
-            ))}
+            {shownFaqs.map(renderFaq)}
           </div>
         </div>
       </section>
