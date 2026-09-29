@@ -12,6 +12,9 @@ import {
 } from 'lucide-react';
 import './Navbar.css';
 
+// Logo image import
+import logo from '../../assets/logo.png';
+
 const links = [
   { to: '/', label: 'Home' },
   { to: '/about', label: 'About Us' },
@@ -40,13 +43,13 @@ export default function Navbar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  // Close mobile menu on route change
+  // Close mobile menu & search on route change
   useEffect(() => {
     setOpen(false);
     setSearchOpen(false);
   }, [pathname]);
 
-  // Smooth Scroll Detection
+  // Smooth Scroll Detection (requestAnimationFrame — no jitter)
   useEffect(() => {
     let ticking = false;
     const onScroll = () => {
@@ -146,7 +149,7 @@ export default function Navbar() {
             </div>
             <div className="top-bar-right">
               <ShieldCheck size={16} />
-              <span>Trusted by 500+ Researchers & Institutions</span>
+              <span>Trusted by 500+ Researchers &amp; Institutions</span>
             </div>
           </div>
         </div>
@@ -154,15 +157,14 @@ export default function Navbar() {
         {/* --- Main Navigation --- */}
         <div className="main-nav">
           <div className="container navbar-inner">
+            {/* Logo with text */}
             <Link to="/" className="navbar-logo" aria-label="ResearchPlus Home">
-              <div className="logo-icon">
-                <GraduationCap size={20} strokeWidth={2.5} />
-              </div>
+              <img src={logo} alt="ResearchPlus" className="logo-img" />
               <div className="logo-text">
                 <span className="logo-title">
                   Research<span className="logo-highlight">Plus</span>
                 </span>
-                <span className="logo-sub">Research & Academic Services</span>
+                <span className="logo-sub">Research &amp; Academic Services</span>
               </div>
             </Link>
 

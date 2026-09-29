@@ -9,6 +9,9 @@
   --text-muted: #64748b;
   --border-light: #e2e8f0;
   --top-bar-height: 40px;
+
+  /* Premium subtle blue gradient (used as a soft tint behind white content) */
+  --navbar-gradient: linear-gradient(135deg, #e0ecff 0%, #b8d4ff 45%, #7fb3ff 100%);
 }
 
 /* ============ Wrapper ============ */
@@ -28,7 +31,7 @@
   will-change: transform;
 }
 
-/* ============ Top Bar ============ */
+/* ============ Top Bar (desktop only) ============ */
 .top-bar {
   background-color: #0f2557;
   color: #ffffff;
@@ -38,8 +41,7 @@
   align-items: center;
   overflow: hidden;
   flex-shrink: 0;
-  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.25s ease;
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
 }
 
 /* Desktop: collapse height when scrolled */
@@ -101,11 +103,24 @@
   transition: height 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   z-index: 2;
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.06);
+}
+
+/* Subtle top highlight for a glossy feel */
+.main-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.15), transparent);
+  pointer-events: none;
 }
 
 .navbar-wrapper.scrolled .main-nav {
   height: 70px;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
 }
 
 .navbar-inner {
@@ -120,11 +135,20 @@
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
   text-decoration: none;
 }
 
+/* Option A — Image logo (if you have an image file) */
+.logo-img {
+  height: 46px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Option B — CSS-drawn logo (used when no image file) */
 .logo-icon {
   width: 44px;
   height: 44px;
@@ -173,13 +197,13 @@
 .logo-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
 .logo-title {
   font-family: 'Poppins', sans-serif;
   font-weight: 800;
-  font-size: 1.45rem;
+  font-size: 1.35rem;
   color: #0f2557;
   letter-spacing: -0.5px;
 }
@@ -189,11 +213,12 @@
 }
 
 .logo-sub {
-  font-size: 0.65rem;
-  color: #64748b;
-  letter-spacing: 0.5px;
-  font-weight: 600;
+  font-size: 0.6rem;
+  color: #1e40af;
+  letter-spacing: 0.6px;
+  font-weight: 700;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* ============ Desktop Nav ============ */
@@ -217,7 +242,7 @@
   margin: 0 12px;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #1e293b;
+  color: #0f2557;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -253,7 +278,7 @@
   color: #2563eb;
 }
 
-/* ============ Actions (no left border) ============ */
+/* ============ Actions ============ */
 .navbar-actions {
   display: flex;
   align-items: center;
@@ -265,7 +290,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #1e293b;
+  color: #0f2557;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -289,13 +314,13 @@
   color: #ffffff;
   text-decoration: none;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
 }
 
 .nav-cta:hover {
   background-color: #1d4ed8;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.45);
   color: #ffffff;
 }
 
@@ -425,10 +450,7 @@
   line-height: 1;
 }
 
-/*
-  Default state (idle, waiting to enter):
-  Word sits ABOVE the visible area → will slide DOWN from top into view
-*/
+/* Idle state — word sits above visible area */
 .search-bar-anim-item {
   position: absolute;
   left: 0;
@@ -447,15 +469,13 @@
   white-space: nowrap;
 }
 
-/* Active word: centered & visible */
+/* Active word — centered & visible */
 .search-bar-anim-item.active {
   opacity: 1;
   transform: translateY(0);
 }
 
-/*
-  Exiting word: slides DOWN out of view (to the bottom).
-*/
+/* Exiting word — slides down out of view */
 .search-bar-anim-item.exit {
   opacity: 0;
   transform: translateY(100%);
@@ -489,7 +509,7 @@
   height: 44px;
   border-radius: 8px;
   background: transparent;
-  color: #1e293b;
+  color: #0f2557;
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
@@ -499,7 +519,7 @@
 }
 
 .hamburger:hover {
-  background: #f1f5f9;
+  background: rgba(37, 99, 235, 0.1);
 }
 
 .hamburger-box {
@@ -565,7 +585,7 @@
   to { opacity: 1; }
 }
 
-/* ============ Responsive ============ */
+/* ============ Tablet (1200px) ============ */
 @media (max-width: 1200px) {
   .nav-link {
     margin: 0 8px;
@@ -573,6 +593,12 @@
   }
   .nav-cta {
     padding: 10px 18px;
+  }
+  .logo-title {
+    font-size: 1.2rem;
+  }
+  .logo-sub {
+    font-size: 0.55rem;
   }
 }
 
@@ -582,14 +608,14 @@
   }
 }
 
-/* ============ MOBILE ============ */
+/* ============ MOBILE (960px) ============ */
 @media (max-width: 960px) {
   /* Hide top bar entirely on mobile */
   .top-bar {
     display: none !important;
   }
 
-  /* Fixed-height, GPU-accelerated main nav — no jitter while scrolling */
+  /* Fixed-height, GPU-accelerated main nav */
   .main-nav {
     height: 64px;
     transform: translateZ(0);
@@ -604,15 +630,11 @@
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
   }
 
-  .navbar-wrapper.scrolled .top-bar {
-    height: 0;
-    opacity: 0;
-  }
-
   .hamburger {
     display: flex;
   }
 
+  /* Mobile menu panel */
   .navbar-nav {
     position: fixed;
     top: 64px;
@@ -729,6 +751,11 @@
     height: 1.25em;
   }
 
+  /* Smaller logo on mobile */
+  .logo-img {
+    height: 38px;
+  }
+
   .logo-icon {
     width: 38px;
     height: 38px;
@@ -751,21 +778,18 @@
   }
 
   .logo-title {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   .logo-sub {
-    font-size: 0.62rem;
+    font-size: 0.55rem;
   }
 }
 
+/* ============ Small Mobile (500px) ============ */
 @media (max-width: 500px) {
-  .logo-title {
-    font-size: 1.25rem;
-  }
-
-  .logo-sub {
-    font-size: 0.6rem;
+  .logo-img {
+    height: 34px;
   }
 
   .logo-icon {
@@ -779,13 +803,16 @@
     margin-top: -4px;
   }
 
-  .logo-icon::before {
-    height: 14px;
-    bottom: 2px;
-  }
-
   .logo-icon::after {
     height: 14px;
     bottom: -2px;
+  }
+
+  .logo-title {
+    font-size: 1rem;
+  }
+
+  .logo-sub {
+    font-size: 0.48rem;
   }
 }
