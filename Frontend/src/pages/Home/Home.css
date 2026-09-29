@@ -289,11 +289,10 @@
 .why-visual { position: relative; }
 .side-img {
   width: 100%;
-  height: min(70vh, 580px);
+  height: min(49vh, 580px);
   object-fit: cover;
   border-radius: 28px;
   display: block;
-  box-shadow: 0 30px 60px rgba(29, 78, 216, 0.15);
 }
 
 /* ---------- PROCESS ---------- */
