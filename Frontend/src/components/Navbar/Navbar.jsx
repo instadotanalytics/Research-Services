@@ -7,7 +7,6 @@ import {
   ShieldCheck,
   Search,
   ArrowRight,
-  GraduationCap,
   X,
 } from 'lucide-react';
 import './Navbar.css';
@@ -34,7 +33,6 @@ const SEARCH_TERMS = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -43,28 +41,11 @@ export default function Navbar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  // Close mobile menu & search on route change
+  // Close mobile menu on route change
   useEffect(() => {
     setOpen(false);
     setSearchOpen(false);
   }, [pathname]);
-
-  // Smooth Scroll Detection (requestAnimationFrame — no jitter)
-  useEffect(() => {
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 10);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -122,8 +103,8 @@ export default function Navbar() {
 
   return (
     <>
-      <header className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
-        {/* --- Top Bar --- */}
+      <header className="navbar-wrapper">
+        {/* --- Top Bar (Sticky) --- */}
         <div className="top-bar">
           <div className="container top-bar-inner">
             <div className="top-bar-left">
@@ -149,7 +130,7 @@ export default function Navbar() {
             </div>
             <div className="top-bar-right">
               <ShieldCheck size={16} />
-              <span>Trusted by 500+ Researchers &amp; Institutions</span>
+              <span>Trusted by 500+ Researchers & Institutions</span>
             </div>
           </div>
         </div>
@@ -164,7 +145,7 @@ export default function Navbar() {
                 <span className="logo-title">
                   Research<span className="logo-highlight">Plus</span>
                 </span>
-                <span className="logo-sub">Research &amp; Academic Services</span>
+                <span className="logo-sub">Research & Academic Services</span>
               </div>
             </Link>
 
