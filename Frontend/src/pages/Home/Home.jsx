@@ -14,7 +14,6 @@ import herobanner2 from '../../assets/herobanner2.png';
 import heroimg from '../../assets/heroimg.png';
 import './Home.css';
 
-/* ---------- STATIC CONTENT ---------- */
 const heroStats = [
   { icon: FolderOpen, value: '500+', label: 'Research Projects Supported' },
   { icon: FileText, value: '200+', label: 'Research Papers Assisted' },
@@ -115,7 +114,6 @@ export default function Home() {
       .catch(console.error);
   }, []);
 
-  // Testimonials
   const visibleCount = isMobile ? 1 : Math.min(3, testimonials.length);
   const visibleTestimonials = Array.from({ length: visibleCount }, (_, i) =>
     testimonials[(tIndex + i) % testimonials.length]
@@ -123,7 +121,6 @@ export default function Home() {
   const prevT = () => setTIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
   const nextT = () => setTIndex((i) => (i + 1) % testimonials.length);
 
-  // Services (mobile: 1 at a time)
   const visibleServicesCount = isMobile ? 1 : services.length;
   const visibleServices = Array.from({ length: visibleServicesCount }, (_, i) =>
     services[(sIndex + i) % services.length]
@@ -169,14 +166,12 @@ export default function Home() {
         description="Professional research and academic support services for students, researchers, scholars and educational institutions."
       />
 
-      {/* ========== HERO ========== */}
+      {/* HERO */}
       <section
         className="home-section hero"
-        style={
-          isMobile
-            ? { backgroundImage: `url(${herobanner2})` }
-            : { '--hero-bg': `url(${herobanner})` }
-        }
+        style={isMobile
+          ? { backgroundImage: `url(${herobanner2})` }
+          : { '--hero-bg': `url(${herobanner})` }}
       >
         <div className="container hero-inner">
           <motion.div
@@ -213,7 +208,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== SERVICES ========== */}
+      {/* SERVICES */}
       <section className="home-section section-alt services-section">
         <div className="container">
           <div className="section-head-row">
@@ -245,7 +240,7 @@ export default function Home() {
             <div className="services-grid">
               {visibleServices.map((s) => (
                 <div key={s.title} className="service-card">
-                  <div className="icon-box"><s.icon size={20} /></div>
+                  <div className="icon-box"><s.icon size={18} /></div>
                   <h3>{s.title}</h3>
                   <p>{s.desc}</p>
                   <Link to="/services" className="learn-more">
@@ -266,12 +261,11 @@ export default function Home() {
               </button>
             )}
           </div>
-          {/* Desktop arrows removed per request */}
         </div>
       </section>
 
-      {/* ========== WHY CHOOSE US ========== */}
-      <section className="home-section">
+      {/* WHY CHOOSE US */}
+      <section className="home-section section-gradient why-section">
         <div className="container why-inner">
           <div className="why-content">
             <span className="pill">Why Choose Us</span>
@@ -301,8 +295,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== PROCESS ========== */}
-      <section className="home-section section-alt process-section">
+      {/* PROCESS */}
+      <section className="home-section section-gradient process-section">
         <div className="container">
           <div className="section-head">
             <span className="pill">Our Process</span>
@@ -322,8 +316,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== AUDIENCE ========== */}
-      <section className="home-section audience-section">
+      {/* AUDIENCE */}
+      <section className="home-section section-gradient audience-section">
         <div className="container">
           <div className="section-head">
             <span className="pill">Who We Work With</span>
@@ -342,7 +336,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== TESTIMONIALS ========== */}
+      {/* TESTIMONIALS */}
       <section className="home-section section-alt testimonials-section">
         <div className="container">
           <div className="section-head">
@@ -395,8 +389,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== FAQ ========== */}
-      <section className="home-section faq-section">
+      {/* FAQ */}
+      <section className="home-section section-gradient faq-section">
         <div className="container">
           <div className="section-head-row">
             <div>
@@ -414,7 +408,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== CTA ========== */}
+      {/* CTA */}
       <section className="home-section cta-wrap">
         <div className="container">
           <div className="cta-banner">
