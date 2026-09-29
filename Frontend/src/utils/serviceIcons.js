@@ -1,0 +1,31 @@
+import {
+  GraduationCap,
+  FileText,
+  Send,
+  BookOpen,
+  ClipboardList,
+  BarChart3,
+  Users,
+  Lightbulb,
+  School,
+  Newspaper,
+  Database,
+  PenLine,
+  UserCheck,
+} from "lucide-react";
+
+export const iconMap = {
+  GraduationCap,
+  FileText,
+  Send,
+  BookOpen,
+  ClipboardList,
+  BarChart3,
+  Users,
+  Lightbulb,
+  School,
+  Newspaper,
+  Database,
+  PenLine,
+  UserCheck,
+};
