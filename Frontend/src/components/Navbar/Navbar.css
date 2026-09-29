@@ -307,7 +307,7 @@
   transform: translateX(3px);
 }
 
-/* ============ Search Bar Overlay (Modern Pill) ============ */
+/* ============ Search Bar Overlay (Modern Pill + Animated Placeholder) ============ */
 .search-bar-overlay {
   position: absolute;
   top: 100%;
@@ -367,10 +367,19 @@
   color: var(--secondary);
 }
 
-.search-bar-input {
+/* Input wrapper holds input + animated placeholder */
+.search-bar-input-wrap {
   position: relative;
   z-index: 2;
   flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 46px;
+}
+
+.search-bar-input {
+  flex: 1;
+  width: 100%;
   border: none;
   outline: none;
   font-size: 0.98rem;
@@ -378,11 +387,78 @@
   background: transparent;
   color: var(--text-dark);
   font-weight: 500;
+  position: relative;
+  z-index: 2;
 }
 
 .search-bar-input::placeholder {
+  color: transparent; /* hide native placeholder */
+}
+
+/* Animated placeholder overlay */
+.search-bar-placeholder {
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
   color: #94a3b8;
+  font-size: 0.98rem;
   font-weight: 400;
+  pointer-events: none;
+  z-index: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 1;
+}
+
+/* Vertical slide container for each word */
+.search-bar-anim {
+  position: relative;
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  vertical-align: baseline;
+  margin: 0 5px;
+  min-width: 130px;
+  line-height: 1;
+}
+
+/*
+  Default state (idle, waiting to enter):
+  Word sits ABOVE the visible area → will slide DOWN from top into view
+*/
+.search-bar-anim-item {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.45s ease;
+  color: var(--secondary);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Active word: centered & visible */
+.search-bar-anim-item.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/*
+  Exiting word: slides DOWN out of view (to the bottom).
+*/
+.search-bar-anim-item.exit {
+  opacity: 0;
+  transform: translateY(100%);
 }
 
 .search-bar-close {
@@ -642,6 +718,15 @@
   .search-bar-input {
     font-size: 0.92rem;
     padding: 12px 4px;
+  }
+
+  .search-bar-placeholder {
+    font-size: 0.92rem;
+  }
+
+  .search-bar-anim {
+    min-width: 110px;
+    height: 1.25em;
   }
 
   .logo-icon {
