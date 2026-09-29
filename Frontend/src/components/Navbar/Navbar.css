@@ -10,8 +10,13 @@
   --border-light: #e2e8f0;
   --top-bar-height: 40px;
 
-  /* Premium subtle blue gradient (used as a soft tint behind white content) */
-  --navbar-gradient: linear-gradient(135deg, #e0ecff 0%, #b8d4ff 45%, #7fb3ff 100%);
+  /* Premium 3-Color Blue Gradient */
+  --navbar-gradient: linear-gradient(
+    135deg,
+    #e0ecff 0%,
+    #b8d4ff 45%,
+    #7fb3ff 100%
+  );
 }
 
 /* ============ Wrapper ============ */
@@ -22,8 +27,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-
-  /* GPU layer — prevents jitter on scroll (esp. mobile) */
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   backface-visibility: hidden;
@@ -31,7 +34,7 @@
   will-change: transform;
 }
 
-/* ============ Top Bar (desktop only) ============ */
+/* ============ Top Bar (Sticky - desktop only) ============ */
 .top-bar {
   background-color: #0f2557;
   color: #ffffff;
@@ -41,15 +44,6 @@
   align-items: center;
   overflow: hidden;
   flex-shrink: 0;
-  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
-}
-
-/* Desktop: collapse height when scrolled */
-.navbar-wrapper.scrolled .top-bar {
-  height: 0;
-  opacity: 0;
-  pointer-events: none;
-  border-bottom: none;
 }
 
 .top-bar-inner {
@@ -95,15 +89,14 @@
 
 /* ============ Main Nav ============ */
 .main-nav {
-  background: #ffffff;
+  background: var(--navbar-gradient);
   height: 80px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--border-light);
-  transition: height 0.3s ease, box-shadow 0.3s ease;
+  border-bottom: 1px solid rgba(37, 99, 235, 0.15);
   position: relative;
   z-index: 2;
-  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.06);
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.1);
 }
 
 /* Subtle top highlight for a glossy feel */
@@ -114,13 +107,13 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.15), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
   pointer-events: none;
-}
-
-.navbar-wrapper.scrolled .main-nav {
-  height: 70px;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
 }
 
 .navbar-inner {
@@ -131,7 +124,7 @@
   gap: 20px;
 }
 
-/* ============ Logo ============ */
+/* ============ Logo (Image + Text) ============ */
 .navbar-logo {
   display: flex;
   align-items: center;
@@ -140,58 +133,11 @@
   text-decoration: none;
 }
 
-/* Option A — Image logo (if you have an image file) */
 .logo-img {
   height: 46px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
-}
-
-/* Option B — CSS-drawn logo (used when no image file) */
-.logo-icon {
-  width: 44px;
-  height: 44px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-icon svg {
-  position: relative;
-  z-index: 3;
-  color: #ffffff;
-  width: 22px;
-  height: 22px;
-  margin-top: -6px;
-}
-
-.logo-icon::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 4px;
-  right: 4px;
-  height: 18px;
-  background: #2563eb;
-  border-radius: 3px 3px 6px 6px;
-  transform: perspective(8px) rotateX(3deg);
-  z-index: 2;
-}
-
-.logo-icon::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 6px;
-  right: 6px;
-  height: 18px;
-  background: #0f2557;
-  border-radius: 3px 3px 6px 6px;
-  transform: perspective(8px) rotateX(3deg);
-  z-index: 1;
-  opacity: 0.9;
 }
 
 .logo-text {
@@ -332,7 +278,7 @@
   transform: translateX(3px);
 }
 
-/* ============ Search Bar Overlay (Modern Pill + Animated Placeholder) ============ */
+/* ============ Search Bar Overlay ============ */
 .search-bar-overlay {
   position: absolute;
   top: 100%;
@@ -361,7 +307,6 @@
   padding: 0 24px;
 }
 
-/* Rounded pill background */
 .search-bar-form::before {
   content: '';
   position: absolute;
@@ -392,7 +337,6 @@
   color: var(--secondary);
 }
 
-/* Input wrapper holds input + animated placeholder */
 .search-bar-input-wrap {
   position: relative;
   z-index: 2;
@@ -417,10 +361,9 @@
 }
 
 .search-bar-input::placeholder {
-  color: transparent; /* hide native placeholder */
+  color: transparent;
 }
 
-/* Animated placeholder overlay */
 .search-bar-placeholder {
   position: absolute;
   left: 6px;
@@ -438,7 +381,6 @@
   line-height: 1;
 }
 
-/* Vertical slide container for each word */
 .search-bar-anim {
   position: relative;
   display: inline-block;
@@ -450,7 +392,6 @@
   line-height: 1;
 }
 
-/* Idle state — word sits above visible area */
 .search-bar-anim-item {
   position: absolute;
   left: 0;
@@ -469,13 +410,11 @@
   white-space: nowrap;
 }
 
-/* Active word — centered & visible */
 .search-bar-anim-item.active {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Exiting word — slides down out of view */
 .search-bar-anim-item.exit {
   opacity: 0;
   transform: translateY(100%);
@@ -585,7 +524,7 @@
   to { opacity: 1; }
 }
 
-/* ============ Tablet (1200px) ============ */
+/* ============ Responsive ============ */
 @media (max-width: 1200px) {
   .nav-link {
     margin: 0 8px;
@@ -608,33 +547,21 @@
   }
 }
 
-/* ============ MOBILE (960px) ============ */
+/* ============ MOBILE ============ */
 @media (max-width: 960px) {
   /* Hide top bar entirely on mobile */
   .top-bar {
     display: none !important;
   }
 
-  /* Fixed-height, GPU-accelerated main nav */
   .main-nav {
     height: 64px;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    will-change: transform;
-  }
-
-  .navbar-wrapper.scrolled .main-nav {
-    height: 64px;
-    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
   }
 
   .hamburger {
     display: flex;
   }
 
-  /* Mobile menu panel */
   .navbar-nav {
     position: fixed;
     top: 64px;
@@ -751,61 +678,22 @@
     height: 1.25em;
   }
 
-  /* Smaller logo on mobile */
   .logo-img {
     height: 38px;
-  }
-
-  .logo-icon {
-    width: 38px;
-    height: 38px;
-  }
-
-  .logo-icon svg {
-    width: 20px;
-    height: 20px;
-    margin-top: -4px;
-  }
-
-  .logo-icon::before {
-    height: 15px;
-    bottom: 2px;
-  }
-
-  .logo-icon::after {
-    height: 15px;
-    bottom: -2px;
   }
 
   .logo-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
   .logo-sub {
-    font-size: 0.55rem;
+    font-size: 0.5rem;
   }
 }
 
-/* ============ Small Mobile (500px) ============ */
 @media (max-width: 500px) {
   .logo-img {
     height: 34px;
-  }
-
-  .logo-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .logo-icon svg {
-    width: 18px;
-    height: 18px;
-    margin-top: -4px;
-  }
-
-  .logo-icon::after {
-    height: 14px;
-    bottom: -2px;
   }
 
   .logo-title {
