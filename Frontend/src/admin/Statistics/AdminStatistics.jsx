@@ -3,7 +3,7 @@ import { Plus, Edit, Trash2, X, MoreVertical, BarChart3, Award } from 'lucide-re
 import { getStatistics, createStatistic, updateStatistic, deleteStatistic } from '../../services/contentApi.js';
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal.jsx';
-import LoadingSpinner from '../../components/Loading/LoadingSpinner.jsx';
+import { TableSkeletonRows } from '../../components/Skeleton/Skeleton.jsx';
 import './AdminStatistics.css';
 
 const empty = { title: '', value: '', icon: 'Award', status: true, order: 0 };
@@ -27,7 +27,6 @@ export default function AdminStatistics() {
 
   useEffect(load, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => setActiveDropdown(null);
     document.addEventListener('click', handleClickOutside);
@@ -112,9 +111,7 @@ export default function AdminStatistics() {
       </div>
 
       {/* ============ Content ============ */}
-      {loading ? (
-        <LoadingSpinner fullScreen />
-      ) : items.length === 0 ? (
+      {!loading && items.length === 0 ? (
         <div className="empty-wrapper">
           <BarChart3 size={48} strokeWidth={1.5} className="empty-icon" />
           <h3>No statistics yet</h3>
@@ -136,62 +133,65 @@ export default function AdminStatistics() {
               </tr>
             </thead>
             <tbody>
-              {items.map((s) => (
-                <tr key={s._id}>
-                  <td>
-                    <span className="order-badge">{s.order}</span>
-                  </td>
-                  <td>
-                    <div className="stat-title-cell">
-                      <div className="stat-icon-preview">
-                        <Award size={14} />
+              {loading ? (
+                <TableSkeletonRows rows={6} cols={5} />
+              ) : (
+                items.map((s) => (
+                  <tr key={s._id}>
+                    <td>
+                      <span className="order-badge">{s.order}</span>
+                    </td>
+                    <td>
+                      <div className="stat-title-cell">
+                        <div className="stat-icon-preview">
+                          <Award size={14} />
+                        </div>
+                        <div>
+                          <strong>{s.title}</strong>
+                          <span className="stat-icon-name">Icon: {s.icon}</span>
+                        </div>
                       </div>
-                      <div>
-                        <strong>{s.title}</strong>
-                        <span className="stat-icon-name">Icon: {s.icon}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span className="stat-value-badge">{s.value}</span>
-                  </td>
-                  <td>
-                    <span
-                      className={`status-badge ${
-                        s.status ? 'status-active' : 'status-disabled'
-                      }`}
-                    >
-                      {s.status ? 'Active' : 'Disabled'}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: 'right', position: 'relative' }}>
-                    <button
-                      className="kebab-btn"
-                      onClick={(e) => toggleDropdown(e, s._id)}
-                      aria-label="Actions"
-                    >
-                      <MoreVertical size={18} />
-                    </button>
+                    </td>
+                    <td>
+                      <span className="stat-value-badge">{s.value}</span>
+                    </td>
+                    <td>
+                      <span
+                        className={`status-badge ${s.status ? 'status-active' : 'status-disabled'
+                          }`}
+                      >
+                        {s.status ? 'Active' : 'Disabled'}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'right', position: 'relative' }}>
+                      <button
+                        className="kebab-btn"
+                        onClick={(e) => toggleDropdown(e, s._id)}
+                        aria-label="Actions"
+                      >
+                        <MoreVertical size={18} />
+                      </button>
 
-                    {activeDropdown === s._id && (
-                      <div className="dropdown-menu">
-                        <button onClick={() => openEdit(s)}>
-                          <Edit size={14} /> Edit
-                        </button>
-                        <button
-                          className="danger"
-                          onClick={() => {
-                            setConfirm(s);
-                            setActiveDropdown(null);
-                          }}
-                        >
-                          <Trash2 size={14} /> Delete
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                      {activeDropdown === s._id && (
+                        <div className="dropdown-menu">
+                          <button onClick={() => openEdit(s)}>
+                            <Edit size={14} /> Edit
+                          </button>
+                          <button
+                            className="danger"
+                            onClick={() => {
+                              setConfirm(s);
+                              setActiveDropdown(null);
+                            }}
+                          >
+                            <Trash2 size={14} /> Delete
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

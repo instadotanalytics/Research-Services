@@ -1,8 +1,20 @@
-
 /* =========================================================
-   CONTACT PAGE — ResearchEdge
+   CONTACT PAGE — ResearchPlus
    All classes are prefixed "ct-" so nothing leaks into or
    collides with the rest of the site.
+
+   ALIGNMENT: this page has no container of its own.
+   Every section uses the site's global ".container" class
+   (the same one the Navbar uses), so the left edge of the
+   logo lines up exactly with the hero text and the content
+   below at every screen size.
+
+   HERO (matches the reference design):
+   - the photo is FULL-BLEED, anchored to the right edge of the
+     screen and fading softly into the page colour on its left
+   - the copy sits on the left, aligned to the .container edge
+   - features have a title + small caption
+   - the "reply within 24 hours" pill is solid blue with an arrow
    ========================================================= */
 
 .ct-hero,
@@ -10,7 +22,7 @@
 .ct-why,
 .ct-map,
 .ct-cta {
-  --ct-primary: var(--primary, #1e3a8a);
+  --ct-primary: var(--primary, #0f2557);
   --ct-secondary: var(--secondary, #2563eb);
   --ct-accent: #f59e0b;
   --ct-bg: #f8fafc;
@@ -23,14 +35,6 @@
   --ct-body: 'Inter', system-ui, sans-serif;
   font-family: var(--ct-body);
   color: var(--ct-text);
-}
-
-.ct-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  box-sizing: border-box;
 }
 
 .ct-hero h1,
@@ -49,17 +53,17 @@
 /* ============================ HERO ============================ */
 .ct-hero {
   --ct-hero-bg: #f4f8ff;
-  /* Left part of the photo that is covered by the page colour.
-     If your image has NO text on its left side, set these to 0% and 18%. */
-  --ct-fade-solid: 46%;
-  --ct-fade-end: 60%;
+  /* How much of the photo's left side is covered by the page colour.
+     "solid" = fully covered up to here, "end" = fully visible from here. */
+  --ct-fade-solid: 44%;
+  --ct-fade-end: 64%;
   position: relative;
   overflow: hidden;
   background: var(--ct-hero-bg);
   color: var(--ct-text);
 }
 
-/* Right-anchored photo box that always keeps the picture's proportions */
+/* Full-bleed photo anchored to the right edge; keeps the picture's proportions */
 .ct-hero__media {
   position: absolute;
   top: 0;
@@ -68,7 +72,7 @@
   aspect-ratio: 1920 / 820;
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  background-position: right center;
   pointer-events: none;
 }
 
@@ -84,18 +88,20 @@
   );
 }
 
-.ct-hero__inner {
+/* The global .container gives the left/right padding, so the copy's left edge
+   matches the logo exactly. Vertical spacing is set here. */
+.ct-hero .ct-hero__inner {
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
-  min-height: clamp(520px, 42vw, 640px);
-  padding-top: 72px;
+  min-height: clamp(500px, 36vw, 660px);
+  padding-top: 56px;
   padding-bottom: 72px;
 }
 
 .ct-hero__copy {
-  max-width: 600px;
+  max-width: 640px;
 }
 
 .ct-eyebrow-row {
@@ -139,28 +145,27 @@
 
 .ct-hero__copy > p {
   max-width: 540px;
-  margin: 0 0 28px;
+  margin: 0 0 30px;
   font-size: 1.05rem;
   line-height: 1.75;
   color: #475569;
 }
 
+/* Features: icon + title + caption, separated by thin dividers */
 .ct-hero__features {
   list-style: none;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  margin: 0 0 28px;
+  margin: 0 0 32px;
   padding: 0;
 }
 
 .ct-hero__features li {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 22px;
-  font-size: 0.92rem;
-  color: #334155;
+  gap: 12px;
+  padding: 0 24px;
 }
 
 .ct-hero__features li:first-child {
@@ -176,16 +181,53 @@
   flex-shrink: 0;
 }
 
+.ct-hero__feature-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.ct-hero__feature-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ct-primary);
+}
+
+.ct-hero__feature-sub {
+  font-size: 0.8rem;
+  color: var(--ct-muted);
+}
+
+/* Solid blue pill with clock + arrow */
 .ct-hero__badge {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 13px 22px;
+  gap: 14px;
+  padding: 15px 28px;
   border-radius: 999px;
-  background: #e3ecfd;
+  background: linear-gradient(135deg, #1d4ed8, var(--ct-secondary));
+  color: #fff;
   font-size: 0.95rem;
-  font-weight: 500;
-  color: #1d4ed8;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ct-hero__badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.36);
+}
+
+.ct-hero__badge:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.45);
+  outline-offset: 3px;
+}
+
+.ct-hero__badge svg {
+  flex-shrink: 0;
 }
 
 /* ============================ MAIN ============================ */
@@ -194,7 +236,7 @@
   padding: 56px 0 64px;
 }
 
-.ct-main__grid {
+.ct-main .ct-main__grid {
   display: grid;
   grid-template-columns: 2fr 3fr; /* 40 / 60 */
   gap: 40px;
@@ -207,7 +249,7 @@
   flex-direction: column;
   gap: 16px;
   position: sticky;
-  top: 96px;
+  top: 110px; /* clears the sticky header (80px) + breathing room */
 }
 
 .ct-info h2 {
@@ -315,7 +357,6 @@ a.ct-method:hover .ct-method__arrow {
   padding: 14px 16px;
   background: #fff;
   border: 1px solid var(--ct-border);
-
   border-radius: 14px;
 }
 
@@ -346,7 +387,7 @@ a.ct-method:hover .ct-method__arrow {
   border-radius: 18px;
   padding: 26px 28px;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.07);
-  scroll-margin-top: 96px;
+  scroll-margin-top: 110px;
 }
 
 .ct-form__header {
@@ -415,7 +456,7 @@ a.ct-method:hover .ct-method__arrow {
   min-height: 44px;
   padding: 10px 14px;
   font: inherit;
-  font-size: 1rem; /* prevents iOS zoom on focus */
+  font-size: 1rem;
   color: var(--ct-text);
   background: #fff;
   border: 1.5px solid var(--ct-border);
@@ -853,11 +894,25 @@ textarea.ct-input {
 /* ========================== RESPONSIVE ========================== */
 @media (max-width: 1100px) and (min-width: 901px) {
   .ct-hero {
-    --ct-fade-solid: 54%;
-    --ct-fade-end: 68%;
+    --ct-fade-solid: 52%;
+    --ct-fade-end: 70%;
   }
   .ct-hero__copy {
-    max-width: 52%;
+    max-width: 56%;
+  }
+  .ct-hero__features li {
+    padding: 0 14px;
+    gap: 9px;
+  }
+  .ct-hero__features svg {
+    width: 24px;
+    height: 24px;
+  }
+  .ct-hero__feature-title {
+    font-size: 0.88rem;
+  }
+  .ct-hero__feature-sub {
+    font-size: 0.74rem;
   }
 }
 
@@ -865,7 +920,7 @@ textarea.ct-input {
   .ct-why__grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .ct-main__grid {
+  .ct-main .ct-main__grid {
     gap: 32px;
   }
 }
@@ -875,15 +930,19 @@ textarea.ct-input {
     display: flex;
     flex-direction: column;
   }
-  .ct-hero__inner {
+  .ct-hero .ct-hero__inner {
     order: 1;
     display: block;
     min-height: 0;
-    padding-top: 56px;
+    padding-top: 48px;
     padding-bottom: 0;
   }
   .ct-hero__copy {
     max-width: 640px;
+  }
+  .ct-hero__features {
+    flex-wrap: wrap;
+    gap: 16px 0;
   }
   /* Photo moves below the copy and is cropped to its right side */
   .ct-hero__media {
@@ -904,11 +963,14 @@ textarea.ct-input {
   .ct-main {
     padding: 44px 0 52px;
   }
-  .ct-main__grid {
+  .ct-main .ct-main__grid {
     grid-template-columns: 1fr;
   }
   .ct-info {
     position: static;
+  }
+  .ct-form {
+    scroll-margin-top: 90px;
   }
   .ct-map__card {
     grid-template-columns: 1fr;
@@ -925,11 +987,8 @@ textarea.ct-input {
 }
 
 @media (max-width: 600px) {
-  .ct-container {
-    padding: 0 16px;
-  }
-  .ct-hero__inner {
-    padding-top: 44px;
+  .ct-hero .ct-hero__inner {
+    padding-top: 40px;
   }
   .ct-eyebrow-row {
     margin-bottom: 18px;
@@ -944,11 +1003,11 @@ textarea.ct-input {
   }
   .ct-hero__copy > p {
     font-size: 0.98rem;
-    margin-bottom: 22px;
+    margin-bottom: 24px;
   }
   .ct-hero__features {
-    gap: 12px 20px;
-    margin-bottom: 22px;
+    gap: 16px 24px;
+    margin-bottom: 24px;
   }
   .ct-hero__features li,
   .ct-hero__features li:first-child {
@@ -956,7 +1015,7 @@ textarea.ct-input {
     border-left: 0 !important;
   }
   .ct-hero__badge {
-    padding: 11px 18px;
+    padding: 13px 22px;
     font-size: 0.9rem;
   }
   .ct-form {
@@ -997,6 +1056,7 @@ textarea.ct-input {
   a.ct-method:hover,
   .ct-why__item:hover,
   .ct-submit:not(:disabled):hover,
+  .ct-hero__badge:hover,
   .ct-cta__btn:hover {
     transform: none;
   }

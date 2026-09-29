@@ -1,6 +1,17 @@
+
 import SEO from '../../components/SEO.jsx';
 import CTASection from '../../components/CTA/CTASection.jsx';
-import { Target, Eye, Heart, Shield, Users, TrendingUp, CheckCircle } from 'lucide-react';
+import {
+  Target,
+  Eye,
+  Heart,
+  Shield,
+  Users,
+  TrendingUp,
+  CheckCircle,
+  ArrowRight,
+} from 'lucide-react';
+import './About.css';
 
 const values = [
   { icon: Shield, title: 'Integrity', desc: 'Ethical, transparent support with no misleading claims.' },
@@ -18,71 +29,157 @@ const whyUs = [
   'Timely, dependable assistance',
 ];
 
+const stats = [
+  { value: '500+', label: 'Researchers supported' },
+  { value: '50+', label: 'Disciplines covered' },
+  { value: '10+', label: 'Years of combined experience' },
+  { value: '24h', label: 'Average response time' },
+];
+
 export default function About() {
   return (
     <>
-      <SEO title="About Us" description="Learn about our mission to support researchers, scholars, and academic institutions with professional research guidance." />
+      <SEO
+        title="About Us"
+        description="Learn about our mission to support researchers, scholars, and academic institutions with professional research guidance."
+      />
 
-      <section className="page-hero">
-        <div className="container">
-          <span className="eyebrow">About Us</span>
-          <h1>Dedicated to Academic Excellence</h1>
+      {/* ============================ HERO ============================ */}
+      <section className="ab-hero">
+        <div className="container ab-hero__inner">
+          <span className="ab-eyebrow">About ResearchPlus</span>
+
+          <h1>
+            Dedicated to
+            <span className="ab-hero__accent"> Academic Excellence</span>
+          </h1>
+
           <p>
-            We provide professional research and academic support to students, researchers, scholars, faculty members and
-            institutions — with a focus on structure, ethics and quality.
+            We provide professional research and academic support to students, researchers, scholars,
+            faculty members and institutions — with a focus on structure, ethics and quality.
           </p>
+
+          <ul className="ab-stats">
+            {stats.map((s) => (
+              <li key={s.label}>
+                <strong>{s.value}</strong>
+                <span>{s.label}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container" style={{ maxWidth: 900 }}>
-          <h2 style={{ marginBottom: 16 }}>Who We Are</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: 40 }}>
-            We are a research and academic support service built to help researchers and academic professionals succeed
-            in their academic journey. Our team assists with dissertation, thesis, research papers, data analysis,
-            proposals, faculty development and academic documentation — providing expert guidance while ensuring the
-            work remains your original contribution.
-          </p>
+      {/* ============================ STORY ============================ */}
+      <section className="ab-story">
+        <div className="container ab-story__grid">
+          <div className="ab-story__text">
+            <span className="ab-kicker">Who We Are</span>
+            <h2>
+              Research support built around <em>your</em> work
+            </h2>
+            <p>
+              We are a research and academic support service built to help researchers and academic
+              professionals succeed in their academic journey. Our team assists with dissertations,
+              theses, research papers, data analysis, proposals, faculty development and academic
+              documentation.
+            </p>
+            <p>
+              We provide expert guidance at every stage while making sure the work you submit remains
+              your own original contribution.
+            </p>
 
-          <div className="grid grid-2 mb-3">
-            <div className="card">
-              <Target size={28} color="#2563eb" style={{ marginBottom: 14 }} />
-              <h3 style={{ marginBottom: 10 }}>Our Mission</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-                To empower researchers and academic professionals with structured, ethical and high-quality support
-                that helps them achieve their academic goals.
+            <ul className="ab-story__points">
+              <li>
+                <CheckCircle size={18} aria-hidden="true" />
+                <span>Your research remains your own</span>
+              </li>
+              <li>
+                <CheckCircle size={18} aria-hidden="true" />
+                <span>Ethical guidance, never shortcuts</span>
+              </li>
+              <li>
+                <CheckCircle size={18} aria-hidden="true" />
+                <span>A transparent process, start to finish</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="ab-story__panel">
+            <div className="ab-mv-card">
+              <span className="ab-mv-icon">
+                <Target size={24} aria-hidden="true" />
+              </span>
+              <h3>Our Mission</h3>
+              <p>
+                To empower researchers and academic professionals with structured, ethical and
+                high-quality support that helps them achieve their academic goals.
               </p>
             </div>
-            <div className="card">
-              <Eye size={28} color="#2563eb" style={{ marginBottom: 14 }} />
-              <h3 style={{ marginBottom: 10 }}>Our Vision</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-                To become a trusted academic support partner for researchers, scholars and institutions across
-                disciplines.
+
+            <div className="ab-mv-card ab-mv-card--alt">
+              <span className="ab-mv-icon">
+                <Eye size={24} aria-hidden="true" />
+              </span>
+              <h3>Our Vision</h3>
+              <p>
+                To become a trusted academic support partner for researchers, scholars and institutions
+                across disciplines.
               </p>
             </div>
           </div>
+        </div>
+      </section>
 
-          <h2 style={{ marginTop: 40, marginBottom: 24 }}>Our Values</h2>
-          <div className="grid grid-4">
-            {values.map((v, i) => (
-              <div key={i} className="card" style={{ textAlign: 'center' }}>
-                <v.icon size={26} color="#2563eb" style={{ margin: '0 auto 12px' }} />
-                <h3 style={{ fontSize: '1rem', marginBottom: 6 }}>{v.title}</h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{v.desc}</p>
+      {/* ============================ VALUES ============================ */}
+      <section className="ab-values">
+        <div className="container">
+          <div className="ab-section-head">
+            <span className="ab-kicker">What Drives Us</span>
+            <h2>Our Values</h2>
+            <p>The principles that shape how we work with every researcher we support.</p>
+          </div>
+
+          <div className="ab-values__grid">
+            {values.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="ab-value">
+                <span className="ab-value__icon">
+                  <Icon size={22} aria-hidden="true" />
+                </span>
+                <h3>{title}</h3>
+                <p>{desc}</p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <h2 style={{ marginTop: 50, marginBottom: 24 }}>Why Choose Us</h2>
-          <div className="grid grid-2">
-            {whyUs.map((w, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <CheckCircle size={20} color="#16a34a" style={{ flexShrink: 0 }} />
-                <span style={{ fontSize: '0.95rem' }}>{w}</span>
-              </div>
-            ))}
+      {/* ============================ WHY CHOOSE US ============================ */}
+      <section className="ab-why">
+        <div className="container ab-why__grid">
+          <div className="ab-why__side">
+            <span className="ab-kicker">Why Choose Us</span>
+            <h2>Support you can rely on</h2>
+            <p>
+              From your first enquiry to your final submission, we keep the process clear, honest and
+              focused on your success.
+            </p>
+            <a href="/contact" className="ab-why__cta">
+              Get in touch
+              <ArrowRight size={18} aria-hidden="true" />
+            </a>
           </div>
+
+          <ul className="ab-why__list">
+            {whyUs.map((w) => (
+              <li key={w}>
+                <span className="ab-why__check">
+                  <CheckCircle size={18} aria-hidden="true" />
+                </span>
+                <span>{w}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
