@@ -114,6 +114,7 @@ export default function Home() {
       .catch(console.error);
   }, []);
 
+  // Testimonials
   const visibleCount = isMobile ? 1 : Math.min(3, testimonials.length);
   const visibleTestimonials = Array.from({ length: visibleCount }, (_, i) =>
     testimonials[(tIndex + i) % testimonials.length]
@@ -121,6 +122,7 @@ export default function Home() {
   const prevT = () => setTIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
   const nextT = () => setTIndex((i) => (i + 1) % testimonials.length);
 
+  // Services
   const visibleServicesCount = isMobile ? 1 : services.length;
   const visibleServices = Array.from({ length: visibleServicesCount }, (_, i) =>
     services[(sIndex + i) % services.length]
@@ -166,12 +168,14 @@ export default function Home() {
         description="Professional research and academic support services for students, researchers, scholars and educational institutions."
       />
 
-      {/* HERO */}
+      {/* ========== HERO ========== */}
       <section
         className="home-section hero"
-        style={isMobile
-          ? { backgroundImage: `url(${herobanner2})` }
-          : { '--hero-bg': `url(${herobanner})` }}
+        style={
+          isMobile
+            ? { backgroundImage: `url(${herobanner2})` }
+            : { '--hero-bg': `url(${herobanner})` }
+        }
       >
         <div className="container hero-inner">
           <motion.div
@@ -208,7 +212,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SERVICES */}
+      {/* ========== SERVICES ========== */}
       <section className="home-section section-alt services-section">
         <div className="container">
           <div className="section-head-row">
@@ -264,7 +268,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHY CHOOSE US */}
+      {/* ========== WHY CHOOSE US ========== */}
       <section className="home-section section-gradient why-section">
         <div className="container why-inner">
           <div className="why-content">
@@ -295,7 +299,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PROCESS */}
+      {/* ========== PROCESS ========== */}
       <section className="home-section section-gradient process-section">
         <div className="container">
           <div className="section-head">
@@ -316,7 +320,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AUDIENCE */}
+      {/* ========== AUDIENCE ========== */}
       <section className="home-section section-gradient audience-section">
         <div className="container">
           <div className="section-head">
@@ -336,7 +340,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
+      {/* ========== TESTIMONIALS ========== */}
       <section className="home-section section-alt testimonials-section">
         <div className="container">
           <div className="section-head">
@@ -389,8 +393,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="home-section section-gradient faq-section">
+      {/* ========== FAQ ========== */}
+      <section className="home-section faq-section">
         <div className="container">
           <div className="section-head-row">
             <div>
@@ -408,7 +412,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* ========== CTA ========== */}
       <section className="home-section cta-wrap">
         <div className="container">
           <div className="cta-banner">
