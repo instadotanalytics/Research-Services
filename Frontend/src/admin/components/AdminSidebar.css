@@ -1,104 +1,330 @@
+/* ============================
+   ADMIN SIDEBAR — Premium
+   ============================ */
+
+/* ============ Sidebar Container ============ */
 .admin-sidebar {
   width: 260px;
-  background: #0f172a;
-  color: #cbd5e1;
+  background: linear-gradient(180deg, #1e3a8a 0%, #172554 100%);
+  color: #ffffff;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  border-right: none;
+  position: relative;
+  overflow: hidden;
+  /* Subtle radial glow for depth */
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
+    linear-gradient(180deg, #1e3a8a 0%, #172554 100%);
 }
+
+/* ============ Brand Header ============ */
 .admin-sidebar-brand {
-  padding: 20px;
+  padding: 24px 20px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+  position: relative;
 }
+
 .admin-logo-icon {
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #2563eb, #1e3a8a);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  backdrop-filter: blur(6px);
+  transition: all 0.25s ease;
 }
-.admin-sidebar-brand strong {
-  display: block;
-  color: #fff;
-  font-size: 0.95rem;
+
+.admin-sidebar-brand:hover .admin-logo-icon {
+  background: rgba(255, 255, 255, 0.25);
+  transform: rotate(-6deg) scale(1.05);
 }
-.admin-sidebar-brand span {
-  font-size: 0.72rem;
-  color: #94a3b8;
-  text-transform: uppercase;
+
+.admin-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.admin-sidebar-brand strong,
+.admin-sidebar-brand span:first-of-type {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
   letter-spacing: 0.5px;
 }
+
+.admin-sidebar-brand span {
+  font-size: 0.7rem;
+  color: #bfdbfe;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Close button (mobile only) */
+.admin-close-btn {
+  display: none;
+  position: absolute;
+  top: 18px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ============ Navigation ============ */
 .admin-sidebar-nav {
   flex: 1;
   overflow-y: auto;
-  padding: 16px 12px;
+  padding: 10px 0 20px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
+
+.admin-sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
 .admin-nav-section {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
+
 .admin-nav-section-title {
   display: block;
   font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #64748b;
+  letter-spacing: 1.2px;
+  color: #93c5fd;
   font-weight: 700;
-  padding: 0 12px 8px;
+  padding: 4px 24px 8px;
+  opacity: 0.7;
 }
+
+/* ============ Nav Link ============ */
 .admin-nav-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: 8px;
+  padding: 0;
   font-size: 0.9rem;
-  color: #cbd5e1;
-  transition: all 0.15s;
+  color: #bfdbfe;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  position: relative;
+  border-radius: 0 30px 30px 0;
+  margin-right: 20px;
+  height: 48px;
+  font-family: inherit;
+  background: transparent;
+  border: none;
+  width: calc(100% - 20px);
+  cursor: pointer;
   text-align: left;
 }
+
+/* Left icon strip */
+.nav-icon-wrap {
+  width: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.2s;
+  height: 100%;
+  position: relative;
+}
+
+/* Vertical accent bar on active */
+.nav-icon-wrap::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleY(0);
+  width: 4px;
+  height: 24px;
+  background: #ffffff;
+  border-radius: 0 4px 4px 0;
+  transition: transform 0.25s ease;
+}
+
+/* Label text */
+.nav-label {
+  font-weight: 500;
+  transition: color 0.2s;
+  flex: 1;
+}
+
+/* Hover state */
 .admin-nav-link:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
 }
+
+.admin-nav-link:hover .nav-icon-wrap::before {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+/* Active state — white tab */
 .admin-nav-link.active {
-  background: linear-gradient(135deg, #2563eb, #1e3a8a);
-  color: #fff;
+  background: #ffffff;
+  color: #1e3a8a;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
 }
+
+.admin-nav-link.active .nav-icon-wrap {
+  color: #1e3a8a;
+}
+
+.admin-nav-link.active .nav-icon-wrap::before {
+  background: #1e3a8a;
+  transform: translateY(-50%) scaleY(1);
+}
+
+.admin-nav-link.active .nav-label {
+  font-weight: 700;
+}
+
+/* ============ Logout Button ============ */
+.admin-sidebar-footer {
+  padding: 16px 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-logout,
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.admin-logout:hover,
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fecaca;
+  transform: translateY(-1px);
+}
+
+/* ============ Mobile Menu Button ============ */
 .admin-menu-btn {
   display: none;
   position: fixed;
   top: 14px;
   left: 14px;
-  z-index: 200;
-  background: #0f172a;
+  z-index: 1300;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
   color: #fff;
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   font-size: 20px;
   align-items: center;
   justify-content: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(30, 58, 138, 0.35);
+  transition: all 0.2s;
 }
+
+.admin-menu-btn:hover {
+  transform: scale(1.05);
+}
+
+.admin-menu-btn:active {
+  transform: scale(0.98);
+}
+
+/* ============ Backdrop (mobile) ============ */
+.admin-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 1150;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ============ Responsive ============ */
 @media (max-width: 900px) {
   .admin-menu-btn {
     display: flex;
   }
+
   .admin-sidebar {
     position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
-    z-index: 150;
+    z-index: 1200;
     transform: translateX(-100%);
-    transition: transform 0.3s;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+    width: 280px;
   }
+
   .admin-sidebar.open {
     transform: translateX(0);
+  }
+
+  .admin-close-btn {
+    display: flex;
+  }
+
+  .admin-sidebar-backdrop {
+    display: block;
   }
 }
