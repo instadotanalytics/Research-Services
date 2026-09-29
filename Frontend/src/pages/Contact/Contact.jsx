@@ -20,13 +20,14 @@ import {
   ListChecks,
   MessagesSquare,
   ArrowUpRight,
+  ArrowRight,
 } from 'lucide-react';
 import SEO from '../../components/SEO.jsx';
 import api from '../../services/api.js';
 import { createEnquiry } from '../../services/enquiryApi.js';
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import { validateEmail, validatePhone, required } from '../../utils/validation.js';
-import heroImage from '../../assets/contact-heroimage.png';
+import heroImage from '../../assets/contact heroimage.png';
 import './Contact.css';
 
 /* ------------------------------------------------------------------ */
@@ -59,7 +60,7 @@ const SERVICE_OPTIONS = [
 // Used only if Site Settings cannot be loaded (same values the page used before).
 const FALLBACK_SETTINGS = {
   phone: '+91 98765 43210',
-  email: 'info@research.com',
+  email: 'info@researchplus.com',
   whatsapp: '+91 98765 43210',
   address: 'India',
   hours: 'Mon – Sat: 9:00 AM – 7:00 PM',
@@ -253,14 +254,15 @@ export default function Contact() {
 
       {/* ============================ HERO ============================ */}
       <section className="ct-hero" aria-labelledby="ct-hero-title">
-        {/* Right-side hero image (CSS background, so no global <img> rules can affect it) */}
+        {/* Full-bleed hero photo, anchored to the right edge of the screen */}
         <div
           className="ct-hero__media"
           aria-hidden="true"
           style={{ backgroundImage: `url("${heroImage}")` }}
         />
 
-        <div className="ct-container ct-hero__inner">
+        {/* Same global "container" as the Navbar, so the copy lines up with the logo */}
+        <div className="container ct-hero__inner">
           <motion.div
             className="ct-hero__copy"
             {...(reduce
@@ -288,30 +290,40 @@ export default function Contact() {
 
             <ul className="ct-hero__features">
               <li>
-                <BookOpen size={22} aria-hidden="true" />
-                <span>Research Support</span>
+                <BookOpen size={30} strokeWidth={1.6} aria-hidden="true" />
+                <span className="ct-hero__feature-text">
+                  <span className="ct-hero__feature-title">Research Support</span>
+                  <span className="ct-hero__feature-sub">Get expert guidance</span>
+                </span>
               </li>
               <li>
-                <GraduationCap size={22} aria-hidden="true" />
-                <span>Academic Guidance</span>
+                <GraduationCap size={30} strokeWidth={1.6} aria-hidden="true" />
+                <span className="ct-hero__feature-text">
+                  <span className="ct-hero__feature-title">Academic Guidance</span>
+                  <span className="ct-hero__feature-sub">For your success</span>
+                </span>
               </li>
               <li>
-                <BarChart3 size={22} aria-hidden="true" />
-                <span>Data Analysis</span>
+                <BarChart3 size={30} strokeWidth={1.6} aria-hidden="true" />
+                <span className="ct-hero__feature-text">
+                  <span className="ct-hero__feature-title">Data Analysis</span>
+                  <span className="ct-hero__feature-sub">Insights that matter</span>
+                </span>
               </li>
             </ul>
 
-            <div className="ct-hero__badge">
-              <Clock size={18} aria-hidden="true" />
+            <a href="#enquiry-form" className="ct-hero__badge" onClick={focusForm}>
+              <Clock size={20} aria-hidden="true" />
               <span>We aim to reply within 24 hours</span>
-            </div>
+              <ArrowRight size={18} aria-hidden="true" />
+            </a>
           </motion.div>
         </div>
       </section>
 
       {/* ===================== INFO + FORM ===================== */}
       <section className="ct-main" aria-label="Contact details and enquiry form">
-        <div className="ct-container ct-main__grid">
+        <div className="container ct-main__grid">
           {/* LEFT — contact information */}
           <aside className="ct-info">
             <motion.div {...reveal()}>
@@ -560,9 +572,9 @@ export default function Contact() {
 
       {/* ===================== WHY REACH OUT ===================== */}
       <section className="ct-why" aria-labelledby="ct-why-title">
-        <div className="ct-container">
+        <div className="container">
           <motion.div className="ct-section-head" {...reveal()}>
-            <h2 id="ct-why-title">Why Reach Out to ResearchEdge?</h2>
+            <h2 id="ct-why-title">Why Reach Out to ResearchPlus?</h2>
             <p>Support designed around how researchers and students actually work.</p>
           </motion.div>
 
@@ -586,7 +598,7 @@ export default function Contact() {
       {/* ===================== MAP / LOCATION ===================== */}
       {mapSrc && (
         <section className="ct-map" aria-labelledby="ct-map-title">
-          <div className="ct-container">
+          <div className="container">
             <motion.div className="ct-map__card" {...reveal()}>
               <div className="ct-map__text">
                 <h2 id="ct-map-title">Our Location</h2>
@@ -602,7 +614,7 @@ export default function Contact() {
               </div>
               <div className="ct-map__frame">
                 <iframe
-                  title="ResearchEdge office location"
+                  title="ResearchPlus office location"
                   src={mapSrc}
                   loading="lazy"
                   allowFullScreen
@@ -616,7 +628,7 @@ export default function Contact() {
 
       {/* ===================== FINAL CTA ===================== */}
       <section className="ct-cta" aria-labelledby="ct-cta-title">
-        <div className="ct-container">
+        <div className="container">
           <motion.div className="ct-cta__card" {...reveal()}>
             <div>
               <h2 id="ct-cta-title">Not Sure Where to Start?</h2>
