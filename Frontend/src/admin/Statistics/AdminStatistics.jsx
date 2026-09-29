@@ -4,6 +4,7 @@ import { getStatistics, createStatistic, updateStatistic, deleteStatistic } from
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal.jsx';
 import { TableSkeletonRows } from '../../components/Skeleton/Skeleton.jsx';
+import { withMinDelay } from '../../utils/minDelay.js';
 import './AdminStatistics.css';
 
 const empty = { title: '', value: '', icon: 'Award', status: true, order: 0 };
@@ -20,7 +21,7 @@ export default function AdminStatistics() {
 
   const load = () => {
     setLoading(true);
-    getStatistics(true)
+    withMinDelay(getStatistics(true))
       .then((r) => setItems(r.data))
       .finally(() => setLoading(false));
   };
@@ -33,7 +34,6 @@ export default function AdminStatistics() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  // Body scroll lock when modal open
   useEffect(() => {
     document.body.style.overflow = showModal || confirm ? 'hidden' : '';
     return () => {
@@ -94,7 +94,6 @@ export default function AdminStatistics() {
 
   return (
     <div className="admin-statistics-page">
-      {/* ============ Header ============ */}
       <div className="admin-page-header">
         <div>
           <h1>Statistics</h1>
@@ -110,7 +109,6 @@ export default function AdminStatistics() {
         </button>
       </div>
 
-      {/* ============ Content ============ */}
       {!loading && items.length === 0 ? (
         <div className="empty-wrapper">
           <BarChart3 size={48} strokeWidth={1.5} className="empty-icon" />
@@ -197,7 +195,6 @@ export default function AdminStatistics() {
         </div>
       )}
 
-      {/* ============ Add/Edit Modal ============ */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
@@ -318,7 +315,6 @@ export default function AdminStatistics() {
         </div>
       )}
 
-      {/* ============ Delete Confirmation ============ */}
       <ConfirmModal
         open={!!confirm}
         title="Delete Statistic"

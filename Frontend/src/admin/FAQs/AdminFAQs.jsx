@@ -4,6 +4,7 @@ import { getFAQs, createFAQ, updateFAQ, deleteFAQ } from '../../services/content
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal.jsx';
 import { TableSkeletonRows } from '../../components/Skeleton/Skeleton.jsx';
+import { withMinDelay } from '../../utils/minDelay.js';
 import './AdminFAQs.css';
 
 const empty = { question: '', answer: '', status: true, order: 0 };
@@ -20,7 +21,7 @@ export default function AdminFAQs() {
 
   const load = () => {
     setLoading(true);
-    getFAQs(true)
+    withMinDelay(getFAQs(true))
       .then((r) => setItems(r.data))
       .finally(() => setLoading(false));
   };
@@ -33,7 +34,6 @@ export default function AdminFAQs() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  // Prevent body scroll when modal open
   useEffect(() => {
     document.body.style.overflow = showModal || confirm ? 'hidden' : '';
     return () => {
@@ -94,7 +94,6 @@ export default function AdminFAQs() {
 
   return (
     <div className="admin-faqs-page">
-      {/* Page Header */}
       <div className="admin-page-header">
         <div>
           <h1>FAQs</h1>
@@ -110,7 +109,6 @@ export default function AdminFAQs() {
         </button>
       </div>
 
-      {/* Content */}
       {!loading && items.length === 0 ? (
         <div className="empty-wrapper">
           <HelpCircle size={48} strokeWidth={1.5} className="empty-icon" />
@@ -188,7 +186,6 @@ export default function AdminFAQs() {
         </div>
       )}
 
-      {/* Add/Edit Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
@@ -286,7 +283,6 @@ export default function AdminFAQs() {
         </div>
       )}
 
-      {/* Delete Confirmation */}
       <ConfirmModal
         open={!!confirm}
         title="Delete FAQ"

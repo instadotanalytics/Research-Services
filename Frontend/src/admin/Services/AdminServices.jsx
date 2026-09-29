@@ -14,6 +14,7 @@ import { getServices, createService, updateService, deleteService } from '../../
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal.jsx';
 import { TableSkeletonRows } from '../../components/Skeleton/Skeleton.jsx';
+import { withMinDelay } from '../../utils/minDelay.js';
 import { slugify } from '../../utils/slugify.js';
 import './AdminServices.css';
 
@@ -41,14 +42,13 @@ export default function AdminServices() {
 
   const load = () => {
     setLoading(true);
-    getServices(true)
+    withMinDelay(getServices(true))
       .then((r) => setItems(r.data))
       .finally(() => setLoading(false));
   };
 
   useEffect(load, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => setActiveDropdown(null);
     document.addEventListener('click', handleClickOutside);
@@ -119,7 +119,6 @@ export default function AdminServices() {
     setActiveDropdown(activeDropdown === id ? null : id);
   };
 
-  // Filtered by search
   const filtered = search
     ? items.filter(
       (s) =>
@@ -130,7 +129,6 @@ export default function AdminServices() {
 
   return (
     <div className="admin-services-page">
-      {/* ============ Header ============ */}
       <div className="admin-page-header">
         <div>
           <h1>Services</h1>
@@ -146,7 +144,6 @@ export default function AdminServices() {
         </button>
       </div>
 
-      {/* ============ Search ============ */}
       {items.length > 0 && (
         <div className="admin-filters">
           <div className="admin-search-box">
@@ -169,7 +166,6 @@ export default function AdminServices() {
         </div>
       )}
 
-      {/* ============ Content ============ */}
       {!loading && items.length === 0 ? (
         <div className="empty-wrapper">
           <Briefcase size={48} strokeWidth={1.5} className="empty-icon" />
@@ -270,7 +266,6 @@ export default function AdminServices() {
         </div>
       )}
 
-      {/* ============ Add/Edit Modal ============ */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
@@ -427,7 +422,6 @@ export default function AdminServices() {
         </div>
       )}
 
-      {/* ============ Delete Confirmation ============ */}
       <ConfirmModal
         open={!!confirm}
         title="Delete Service"

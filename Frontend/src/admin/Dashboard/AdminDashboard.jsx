@@ -1,39 +1,145 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Briefcase, MessageSquare, Star, HelpCircle, MoreVertical } from 'lucide-react';
+import {
+  Briefcase,
+  MessageSquare,
+  Star,
+  HelpCircle,
+  BarChart3,
+  ArrowUpRight,
+  ChevronRight,
+} from 'lucide-react';
 import { getEnquiries } from '../../services/enquiryApi.js';
 import { getServices } from '../../services/serviceApi.js';
 import { getTestimonials, getFAQs, getStatistics } from '../../services/contentApi.js';
 import { Skeleton as Skel } from '../../components/Skeleton/Skeleton.jsx';
+import { withMinDelay } from '../../utils/minDelay.js';
+import GoogleCalendar from './GoogleCalendar.jsx';
 import './AdminDashboard.css';
 
+/* Blue-family shades, dark -> light, so it stays on-theme */
+const STATUS_COLORS = {
+  new: '#1e3a8a',
+  contacted: '#2563eb',
+  inprogress: '#60a5fa',
+  completed: '#93c5fd',
+  closed: '#cbd5e1',
+};
+const statusColor = (s) =>
+  STATUS_COLORS[String(s || '').toLowerCase().replace(/\s/g, '')] || '#94a3b8';
+
+const initials = (name) =>
+  !name
+    ? '?'
+    : name
+      .split(' ')
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase();
+
 export default function AdminDashboard() {
-  const [counts, setCounts] = useState({});
-  const [recent, setRecent] = useState([]);
+  const [data, setData] = useState({
+    enquiries: [],
+    services: [],
+    testimonials: [],
+    faqs: [],
+    statistics: [],
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      getEnquiries(),
-      getServices(true),
-      getTestimonials(true),
-      getFAQs(true),
-      getStatistics(true),
-    ])
+    withMinDelay(
+      Promise.all([
+        getEnquiries(),
+        getServices(true),
+        getTestimonials(true),
+        getFAQs(true),
+        getStatistics(true),
+      ])
+    )
       .then(([e, s, t, f, st]) => {
-        setCounts({
-          enquiries: e.data.length,
-          services: s.data.length,
-          testimonials: t.data.length,
-          faqs: f.data.length,
-          statistics: st.data.length,
-          newEnquiries: e.data.filter((x) => x.status === 'New').length,
+        setData({
+          enquiries: e.data,
+          services: s.data,
+          testimonials: t.data,
+          faqs: f.data,
+          statistics: st.data,
         });
-        setRecent(e.data.slice(0, 6));
       })
       .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
+
+  /* ---------- derived numbers ---------- */
+  const counts = {
+    enquiries: data.enquiries.length,
+    services: data.services.length,
+    testimonials: data.testimonials.length,
+    faqs: data.faqs.length,
+    statistics: data.statistics.length,
+    newEnquiries: data.enquiries.filter((x) => x.status === 'New').length,
+  };
+  const recent = data.enquiries.slice(0, 6);
+
+  const statusBreakdown = useMemo(() => {
+    const total = data.enquiries.length;
+    const map = {};
+    data.enquiries.forEach((e) => {
+      map[e.status] = (map[e.status] || 0) + 1;
+    });
+    return Object.entries(map)
+      .map(([label, count]) => ({
+        label,
+        count,
+        pct: Math.round((count / total) * 100),
+        color: statusColor(label),
+      }))
+      .sort((a, b) => b.count - a.count);
+  }, [data.enquiries]);
+
+  /* every service is listed (even with 0 enquiries) so the card is always full */
+  const topServices = useMemo(() => {
+    const counted = {};
+    data.enquiries.forEach((e) => {
+      if (e.service) counted[e.service] = (counted[e.service] || 0) + 1;
+    });
+    const names = new Set([...data.services.map((s) => s.title), ...Object.keys(counted)]);
+    const list = [...names]
+      .filter(Boolean)
+      .map((name) => ({ name, count: counted[name] || 0 }))
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+      .slice(0, 5);
+    const max = Math.max(...list.map((s) => s.count), 1);
+    return list.map((s) => ({ ...s, pct: (s.count / max) * 100 }));
+  }, [data.enquiries, data.services]);
+
+  const latestTestimonials = useMemo(
+    () =>
+      [...data.testimonials]
+        .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+        .slice(0, 3),
+    [data.testimonials]
+  );
+  const avgRating = data.testimonials.length
+    ? (
+      data.testimonials.reduce((sum, t) => sum + (Number(t.rating) || 0), 0) /
+      data.testimonials.length
+    ).toFixed(1)
+    : null;
+
+  const contentOverview = [
+    { label: 'Services', items: data.services, link: '/admin/services' },
+    { label: 'Testimonials', items: data.testimonials, link: '/admin/testimonials' },
+    { label: 'FAQs', items: data.faqs, link: '/admin/faqs' },
+    { label: 'Statistics', items: data.statistics, link: '/admin/statistics' },
+  ].map((c) => ({
+    ...c,
+    total: c.items.length,
+    active: c.items.filter((i) => i.status !== false).length,
+  }));
+  const totalContent = contentOverview.reduce((s, c) => s + c.total, 0);
+  const liveContent = contentOverview.reduce((s, c) => s + c.active, 0);
 
   const statCards = [
     { title: 'Total Enquiries', value: counts.enquiries, icon: MessageSquare, color: '#2563eb', link: '/admin/enquiries' },
@@ -42,21 +148,28 @@ export default function AdminDashboard() {
     { title: 'Total FAQs', value: counts.faqs, icon: HelpCircle, color: '#8b5cf6', link: '/admin/faqs' },
   ];
 
+  const quickLinks = [
+    { label: 'Services', count: counts.services, icon: Briefcase, to: '/admin/services' },
+    { label: 'Testimonials', count: counts.testimonials, icon: Star, to: '/admin/testimonials' },
+    { label: 'FAQs', count: counts.faqs, icon: HelpCircle, to: '/admin/faqs' },
+    { label: 'Statistics', count: counts.statistics, icon: BarChart3, to: '/admin/statistics' },
+  ];
+
   const max = Math.max(counts.enquiries || 1, counts.services || 1, counts.faqs || 1, counts.statistics || 1);
   const chartData = [
-    { label: 'Enquiries', value: counts.enquiries || 0, max },
-    { label: 'Services', value: counts.services || 0, max },
-    { label: 'FAQs', value: counts.faqs || 0, max },
-    { label: 'Stats', value: counts.statistics || 0, max },
+    { label: 'Enquiries', value: counts.enquiries, max },
+    { label: 'Services', value: counts.services, max },
+    { label: 'FAQs', value: counts.faqs, max },
+    { label: 'Stats', value: counts.statistics, max },
   ];
   const skeletonBarHeights = [70, 45, 30, 55];
 
   return (
     <div className="dashboard-container">
-      {/* Top Stat Cards */}
+      {/* ============ Stat cards ============ */}
       <div className="stat-cards-grid">
-        {statCards.map((card, index) => (
-          <Link to={card.link} key={index} className="stat-card">
+        {statCards.map((card) => (
+          <Link to={card.link} key={card.title} className="stat-card">
             <div
               className="stat-card-icon"
               style={{ background: `${card.color}15`, color: card.color }}
@@ -75,16 +188,13 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      {/* ============ Dashboard Grid ============ */}
       <div className="dashboard-grid">
+        {/* ================= MAIN COLUMN ================= */}
         <div className="dashboard-main">
-          {/* Performance */}
+          {/* ---- Performance ---- */}
           <div className="dash-card-section">
             <div className="dash-section-header">
               <h3>Performance</h3>
-              <button className="icon-btn-sm" aria-label="More options">
-                <MoreVertical size={16} />
-              </button>
             </div>
 
             <div className="performance-content">
@@ -97,15 +207,15 @@ export default function AdminDashboard() {
                   </>
                 ) : (
                   <>
-                    <span className="stat-value">{counts.enquiries || 0}</span>
-                    <span className="stat-change positive">+{counts.newEnquiries || 0} new</span>
+                    <span className="stat-value">{counts.enquiries}</span>
+                    <span className="stat-change positive">+{counts.newEnquiries} new</span>
                   </>
                 )}
               </div>
 
               <div className="bar-chart">
                 {chartData.map((item, index) => (
-                  <div key={index} className="bar-wrapper">
+                  <div key={item.label} className="bar-wrapper">
                     {loading ? (
                       <div className="bar skeleton" style={{ height: `${skeletonBarHeights[index]}%` }} />
                     ) : (
@@ -124,7 +234,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Recent Enquiries */}
+          {/* ---- Recent Enquiries ---- */}
           <div className="dash-card-section">
             <div className="dash-section-header">
               <h3>Recent Enquiries</h3>
@@ -181,61 +291,190 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Right Column */}
+        {/* ================= SIDE COLUMN ================= */}
         <div className="dashboard-side">
-          <div className="dash-card-section">
-            <div className="dash-section-header">
-              <h3>Calendar</h3>
-              <span className="today-badge">Today</span>
-            </div>
-            <div className="calendar-widget">
-              <div className="calendar-header">
-                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
-              </div>
-              <div className="calendar-days">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d) => (
-                  <div key={d} className={`calendar-day ${d === 4 ? 'active' : ''}`}>{d}</div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <GoogleCalendar />
 
+          {/* ---- Enquiry status ---- */}
           <div className="dash-card-section">
             <div className="dash-section-header">
-              <h3>Upcoming</h3>
+              <h3>Enquiry Status</h3>
               <Link to="/admin/enquiries" className="view-all-link">
-                See all
+                Manage
               </Link>
             </div>
-            <div className="upcoming-list">
-              {loading ? (
-                [...Array(3)].map((_, i) => (
-                  <div key={i} className="upcoming-item">
-                    <Skel w={10} h={10} r={999} style={{ marginTop: 6, flexShrink: 0 }} />
-                    <div className="upcoming-info" style={{ gap: 6, flex: 1 }}>
-                      <Skel w="60%" h={14} />
-                      <Skel w="35%" h={11} />
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <>
-                  {recent.slice(0, 3).map((e, i) => (
-                    <div key={i} className="upcoming-item">
-                      <div className="upcoming-dot"></div>
-                      <div className="upcoming-info">
-                        <span className="upcoming-title">{e.name}</span>
-                        <span className="upcoming-time">{new Date(e.createdAt).toLocaleDateString()}</span>
-                      </div>
-                    </div>
+
+            {loading ? (
+              <>
+                <Skel w="100%" h={12} r={999} style={{ marginBottom: 16 }} />
+                <Skel w="80%" h={14} style={{ marginBottom: 10 }} />
+                <Skel w="65%" h={14} />
+              </>
+            ) : statusBreakdown.length === 0 ? (
+              <p className="empty-note">No enquiries yet.</p>
+            ) : (
+              <>
+                <div className="status-stack">
+                  {statusBreakdown.map((s) => (
+                    <span
+                      key={s.label}
+                      style={{ width: `${s.pct}%`, background: s.color }}
+                      title={`${s.label}: ${s.count}`}
+                    />
                   ))}
-                  {recent.length === 0 && (
-                    <p style={{ color: '#64748b', fontSize: '0.85rem' }}>No upcoming events</p>
-                  )}
-                </>
-              )}
+                </div>
+                <ul className="status-legend">
+                  {statusBreakdown.map((s) => (
+                    <li key={s.label}>
+                      <i style={{ background: s.color }} />
+                      <span className="legend-label">{s.label}</span>
+                      <b>{s.count}</b>
+                      <em>{s.pct}%</em>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+
+          {/* ---- Quick access (stretches to fill the column) ---- */}
+          <div className="dash-card-section quick-card">
+            <div className="dash-section-header">
+              <h3>Quick Access</h3>
+            </div>
+            <div className="quick-grid">
+              {quickLinks.map((q) => (
+                <Link key={q.label} to={q.to} className="quick-tile">
+                  <span className="quick-icon">
+                    <q.icon size={18} />
+                  </span>
+                  <ArrowUpRight size={15} className="quick-arrow" />
+                  <span className="quick-label">{q.label}</span>
+                  <span className="quick-count">{loading ? '—' : `${q.count} items`}</span>
+                </Link>
+              ))}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* ================= BOTTOM ROW ================= */}
+      <div className="dashboard-bottom">
+        {/* ---- Top requested services ---- */}
+        <div className="dash-card-section">
+          <div className="dash-section-header">
+            <h3>Top Requested Services</h3>
+            <Link to="/admin/services" className="view-all-link">
+              Services
+            </Link>
+          </div>
+          {loading ? (
+            [...Array(4)].map((_, i) => (
+              <Skel key={i} w="100%" h={14} style={{ marginBottom: 16 }} />
+            ))
+          ) : topServices.length === 0 ? (
+            <p className="empty-note">Add services to see how often each one is requested.</p>
+          ) : (
+            <ul className="rank-list">
+              {topServices.map((s, i) => (
+                <li key={s.name}>
+                  <div className="rank-top">
+                    <span className="rank-name">
+                      <b>{i + 1}</b>
+                      {s.name}
+                    </span>
+                    <span className="rank-count">{s.count}</span>
+                  </div>
+                  <div className="rank-track">
+                    <span style={{ width: `${s.pct}%` }} />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* ---- Latest testimonials ---- */}
+        <div className="dash-card-section">
+          <div className="dash-section-header">
+            <h3>Latest Testimonials</h3>
+            {avgRating ? (
+              <span className="rating-pill">
+                <Star size={12} fill="currentColor" /> {avgRating} avg
+              </span>
+            ) : (
+              <Link to="/admin/testimonials" className="view-all-link">
+                View
+              </Link>
+            )}
+          </div>
+          {loading ? (
+            [...Array(3)].map((_, i) => (
+              <Skel key={i} w="100%" h={44} r={10} style={{ marginBottom: 12 }} />
+            ))
+          ) : latestTestimonials.length === 0 ? (
+            <p className="empty-note">No testimonials yet.</p>
+          ) : (
+            <div className="mini-testimonials">
+              {latestTestimonials.map((t) => (
+                <div key={t._id} className="mini-testimonial">
+                  <div className="mini-avatar">{initials(t.name)}</div>
+                  <div className="mini-body">
+                    <div className="mini-head">
+                      <strong>{t.name}</strong>
+                      <span className="mini-stars">
+                        {'★'.repeat(Number(t.rating) || 0)}
+                        <s>{'★'.repeat(5 - (Number(t.rating) || 0))}</s>
+                      </span>
+                    </div>
+                    {t.institution && <span className="mini-inst">{t.institution}</span>}
+                    <p>{t.review}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ---- Content overview (theme blue only) ---- */}
+        <div className="dash-card-section">
+          <div className="dash-section-header">
+            <h3>Content Overview</h3>
+          </div>
+          {loading ? (
+            [...Array(4)].map((_, i) => (
+              <Skel key={i} w="100%" h={14} style={{ marginBottom: 18 }} />
+            ))
+          ) : (
+            <>
+              <ul className="content-list">
+                {contentOverview.map((c) => (
+                  <li key={c.label}>
+                    <Link to={c.link} className="content-row">
+                      <div className="content-top">
+                        <span>{c.label}</span>
+                        <span className="content-count">
+                          <b>{c.active}</b> / {c.total} live
+                          <ChevronRight size={14} />
+                        </span>
+                      </div>
+                      <div className="rank-track">
+                        <span
+                          style={{ width: `${c.total ? (c.active / c.total) * 100 : 0}%` }}
+                        />
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <div className="content-foot">
+                <span>Published items</span>
+                <b>
+                  {liveContent} of {totalContent}
+                </b>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
