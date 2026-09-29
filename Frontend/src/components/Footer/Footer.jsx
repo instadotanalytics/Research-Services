@@ -7,6 +7,8 @@ export default function Footer() {
     <footer className="footer">
       <div className="container">
         <div className="footer-grid">
+
+          {/* Brand */}
           <div className="footer-brand">
             <div className="footer-logo">
               <div className="logo-icon">
@@ -26,7 +28,8 @@ export default function Footer() {
             </div>
           </div>
 
-          <div>
+          {/* Quick Links */}
+          <div className="footer-col footer-col-quick">
             <h4>Quick Links</h4>
             <ul>
               <li><Link to="/">Home</Link></li>
@@ -37,7 +40,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          {/* Our Services */}
+          <div className="footer-col footer-col-services">
             <h4>Our Services</h4>
             <ul>
               <li><Link to="/services/dissertation-writing">Dissertation Writing</Link></li>
@@ -48,7 +52,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          {/* Contact */}
+          <div className="footer-col footer-col-contact">
             <h4>Contact</h4>
             <ul className="footer-contact">
               <li><Mail size={16} /> info@research.com</li>
@@ -56,13 +61,28 @@ export default function Footer() {
               <li><MapPin size={16} /> India</li>
             </ul>
           </div>
+
+          {/* Copyright + Legal — desktop pe footer-bottom, mobile pe Contact ke saath 2nd row */}
+          <div className="footer-col footer-col-copyright">
+            <p className="footer-copy">
+              © {new Date().getFullYear()} ResearchEdge. All rights reserved.
+            </p>
+            <div className="footer-legal">
+              <Link to="/privacy-policy">Privacy Policy</Link>
+              <Link to="/terms-and-conditions">Terms &amp; Conditions</Link>
+              <Link to="/refund-policy">Refund Policy</Link>
+              <Link to="/disclaimer">Disclaimer</Link>
+            </div>
+          </div>
+
         </div>
 
+        {/* Desktop footer bottom — copyright + legal (original look) */}
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} ResearchEdge. All rights reserved.</p>
           <div className="footer-legal">
             <Link to="/privacy-policy">Privacy Policy</Link>
-            <Link to="/terms-and-conditions">Terms & Conditions</Link>
+            <Link to="/terms-and-conditions">Terms &amp; Conditions</Link>
             <Link to="/refund-policy">Refund Policy</Link>
             <Link to="/disclaimer">Disclaimer</Link>
           </div>
