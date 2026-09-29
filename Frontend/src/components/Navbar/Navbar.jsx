@@ -1,53 +1,65 @@
-import { useState, useEffect } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import { 
-  Mail, 
-  Phone, 
-  MessageCircle, 
-  ShieldCheck, 
-  Search, 
-  ArrowRight, 
-  ChevronDown,
-  GraduationCap 
+import { useState, useEffect, useRef } from 'react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Mail,
+  Phone,
+  MessageCircle,
+  ShieldCheck,
+  Search,
+  ArrowRight,
+  GraduationCap,
+  X,
 } from 'lucide-react';
 import './Navbar.css';
 
 const links = [
   { to: '/', label: 'Home' },
   { to: '/about', label: 'About Us' },
-  { to: '/services', label: 'Services', hasDropdown: true },
+  { to: '/services', label: 'Services' },
   { to: '/faq', label: 'FAQ' },
   { to: '/contact', label: 'Contact' },
+];
+
+const SEARCH_TERMS = [
+  'services',
+  'topics',
+  'resources',
+  'dissertations',
+  'research papers',
+  'thesis writing',
 ];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [prevIndex, setPrevIndex] = useState(-1);
+  const searchInputRef = useRef(null);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   // Close mobile menu on route change
   useEffect(() => {
     setOpen(false);
+    setSearchOpen(false);
   }, [pathname]);
 
   // Smooth Scroll Detection
   useEffect(() => {
     let ticking = false;
-
     const onScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          // Trigger at 5px for instant response
-          setScrolled(window.scrollY > 5);
+          setScrolled(window.scrollY > 10);
           ticking = false;
         });
         ticking = true;
       }
     };
-
-    onScroll(); 
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -59,10 +71,55 @@ export default function Navbar() {
     };
   }, [open]);
 
+  // Focus search input when opened
+  useEffect(() => {
+    if (searchOpen && searchInputRef.current) {
+      setTimeout(() => searchInputRef.current?.focus(), 50);
+    }
+  }, [searchOpen]);
+
+  // Cycle through the animated placeholder words
+  useEffect(() => {
+    if (!searchOpen) return;
+    const interval = setInterval(() => {
+      setPrevIndex(placeholderIndex);
+      setPlaceholderIndex((i) => (i + 1) % SEARCH_TERMS.length);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, [searchOpen, placeholderIndex]);
+
+  // Reset placeholder cycle when search opens
+  useEffect(() => {
+    if (searchOpen) {
+      setPlaceholderIndex(0);
+      setPrevIndex(-1);
+    }
+  }, [searchOpen]);
+
+  // Handle search submit
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (!q) return;
+    navigate(`/search?q=${encodeURIComponent(q)}`);
+    setSearchOpen(false);
+    setSearchQuery('');
+  };
+
+  const toggleSearch = () => {
+    setSearchOpen((s) => !s);
+  };
+
+  // Determine class for each anim item
+  const getAnimClass = (i) => {
+    if (i === placeholderIndex) return 'search-bar-anim-item active';
+    if (i === prevIndex) return 'search-bar-anim-item exit';
+    return 'search-bar-anim-item';
+  };
+
   return (
     <>
       <header className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
-        
         {/* --- Top Bar --- */}
         <div className="top-bar">
           <div className="container top-bar-inner">
@@ -77,7 +134,12 @@ export default function Navbar() {
                 <span>+91 98765 43210</span>
               </a>
               <span className="divider">|</span>
-              <a href="https://wa.me/919876543210" className="top-item" target="_blank" rel="noreferrer">
+              <a
+                href="https://wa.me/919876543210"
+                className="top-item"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <MessageCircle size={14} />
                 <span>WhatsApp Us</span>
               </a>
@@ -92,19 +154,22 @@ export default function Navbar() {
         {/* --- Main Navigation --- */}
         <div className="main-nav">
           <div className="container navbar-inner">
-            {/* Logo */}
             <Link to="/" className="navbar-logo" aria-label="ResearchPlus Home">
               <div className="logo-icon">
                 <GraduationCap size={20} strokeWidth={2.5} />
               </div>
               <div className="logo-text">
-                <span className="logo-title">Research<span className="logo-highlight">Plus</span></span>
+                <span className="logo-title">
+                  Research<span className="logo-highlight">Plus</span>
+                </span>
                 <span className="logo-sub">Research & Academic Services</span>
               </div>
             </Link>
 
-            {/* Desktop Nav */}
-            <nav className={`navbar-nav ${open ? 'open' : ''}`} aria-label="Main navigation">
+            <nav
+              className={`navbar-nav ${open ? 'open' : ''}`}
+              aria-label="Main navigation"
+            >
               <div className="navbar-nav-links">
                 {links.map((l) => (
                   <NavLink
@@ -116,15 +181,19 @@ export default function Navbar() {
                     }
                   >
                     {l.label}
-                    {l.hasDropdown && <ChevronDown size={14} className="nav-chevron" />}
                   </NavLink>
                 ))}
               </div>
 
               <div className="navbar-actions">
-                <button className="nav-search-btn" aria-label="Search">
+                <button
+                  className="nav-search-btn"
+                  aria-label="Search"
+                  onClick={toggleSearch}
+                >
                   <Search size={20} />
                 </button>
+
                 <Link to="/contact" className="btn btn-primary nav-cta">
                   Get Started
                   <ArrowRight size={16} />
@@ -132,7 +201,6 @@ export default function Navbar() {
               </div>
             </nav>
 
-            {/* Hamburger */}
             <button
               className={`hamburger ${open ? 'active' : ''}`}
               onClick={() => setOpen(!open)}
@@ -145,9 +213,47 @@ export default function Navbar() {
             </button>
           </div>
         </div>
+
+        {/* --- Search Overlay --- */}
+        {searchOpen && (
+          <div className="search-bar-overlay">
+            <form className="search-bar-form" onSubmit={handleSearchSubmit}>
+              <Search size={20} className="search-bar-icon" />
+              <div className="search-bar-input-wrap">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="search-bar-input"
+                  aria-label="Search"
+                />
+                {!searchQuery && (
+                  <div className="search-bar-placeholder" aria-hidden="true">
+                    <span>Search&nbsp;</span>
+                    <span className="search-bar-anim">
+                      {SEARCH_TERMS.map((term, i) => (
+                        <span key={term} className={getAnimClass(i)}>
+                          {term}
+                        </span>
+                      ))}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <button
+                type="button"
+                className="search-bar-close"
+                onClick={() => setSearchOpen(false)}
+                aria-label="Close search"
+              >
+                <X size={20} />
+              </button>
+            </form>
+          </div>
+        )}
       </header>
 
-      {/* Mobile menu backdrop */}
       {open && (
         <div
           className="navbar-backdrop"

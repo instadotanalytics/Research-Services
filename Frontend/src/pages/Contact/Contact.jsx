@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
@@ -477,7 +476,10 @@ export default function Contact() {
                 <label htmlFor="ct-service">
                   <FileText size={14} aria-hidden="true" /> Service *
                 </label>
-                <select {...fieldProps('service')} className={`ct-input ct-select${errors.service ? ' ct-input--error' : ''}`}>
+                <select
+                  {...fieldProps('service')}
+                  className={`ct-input ct-select${errors.service ? ' ct-input--error' : ''}`}
+                >
                   <option value="">Select a service</option>
                   {SERVICE_OPTIONS.map((s) => (
                     <option key={s} value={s}>
@@ -541,7 +543,12 @@ export default function Contact() {
               </div>
             </div>
 
-            <button type="submit" className="ct-submit" disabled={submitting} aria-busy={submitting}>
+            <button
+              type="submit"
+              className="ct-submit"
+              disabled={submitting}
+              aria-busy={submitting}
+            >
               {submitting ? (
                 <>
                   <span className="ct-spinner" aria-hidden="true" />
@@ -556,7 +563,8 @@ export default function Contact() {
             </button>
 
             <p className="ct-note">
-              By submitting this form, you agree to our <Link to="/privacy-policy">Privacy Policy</Link>.
+              By submitting this form, you agree to our{' '}
+              <Link to="/privacy-policy">Privacy Policy</Link>.
             </p>
           </motion.form>
         </div>

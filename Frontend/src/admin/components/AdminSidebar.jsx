@@ -37,13 +37,11 @@ const menu = [
     section: 'Enquiries',
     items: [
       { to: '/admin/enquiries', label: 'All Enquiries', icon: MessageSquare },
-      { to: '/admin/messages', label: 'Contact Messages', icon: Mail },
     ],
   },
   {
     section: 'System',
     items: [
-      { to: '/admin/settings', label: 'Site Settings', icon: Settings },
       { to: '/admin/profile', label: 'My Profile', icon: User },
     ],
   },

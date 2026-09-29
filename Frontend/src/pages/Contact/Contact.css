@@ -1,4 +1,3 @@
-
 /* =========================================================
    CONTACT PAGE — ResearchPlus
    All classes are prefixed "ct-" so nothing leaks into or
@@ -457,7 +456,7 @@ a.ct-method:hover .ct-method__arrow {
   min-height: 44px;
   padding: 10px 14px;
   font: inherit;
-  font-size: 1rem; /* prevents iOS zoom on focus */
+  font-size: 1rem;
   color: var(--ct-text);
   background: #fff;
   border: 1.5px solid var(--ct-border);
