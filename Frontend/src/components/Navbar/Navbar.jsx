@@ -7,10 +7,12 @@ import {
   ShieldCheck,
   Search,
   ArrowRight,
-  GraduationCap,
   X,
 } from 'lucide-react';
 import './Navbar.css';
+
+// Logo image import
+import logo from '../../assets/logo.png';
 
 const links = [
   { to: '/', label: 'Home' },
@@ -31,7 +33,6 @@ const SEARCH_TERMS = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -45,23 +46,6 @@ export default function Navbar() {
     setOpen(false);
     setSearchOpen(false);
   }, [pathname]);
-
-  // Smooth Scroll Detection
-  useEffect(() => {
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 10);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -119,8 +103,8 @@ export default function Navbar() {
 
   return (
     <>
-      <header className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
-        {/* --- Top Bar --- */}
+      <header className="navbar-wrapper">
+        {/* --- Top Bar (Sticky) --- */}
         <div className="top-bar">
           <div className="container top-bar-inner">
             <div className="top-bar-left">
@@ -154,10 +138,9 @@ export default function Navbar() {
         {/* --- Main Navigation --- */}
         <div className="main-nav">
           <div className="container navbar-inner">
+            {/* Logo with text */}
             <Link to="/" className="navbar-logo" aria-label="ResearchPlus Home">
-              <div className="logo-icon">
-                <GraduationCap size={20} strokeWidth={2.5} />
-              </div>
+              <img src={logo} alt="ResearchPlus" className="logo-img" />
               <div className="logo-text">
                 <span className="logo-title">
                   Research<span className="logo-highlight">Plus</span>
