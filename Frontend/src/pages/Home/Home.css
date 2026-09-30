@@ -11,6 +11,7 @@
   --h-muted: #5b6785;
   --h-orange: #f5a10a;
   --h-orange-dark: #e08f00;
+  --h-gradient-soft: linear-gradient(180deg, #eff7ff 0%, #e0efff 100%);
 }
 
 .home-section {
@@ -28,7 +29,9 @@
 .home-section.section-alt {
   background: linear-gradient(180deg, #f6f9ff 0%, #eef4ff 100%);
 }
-
+.home-section.section-gradient {
+  background: var(--h-gradient-soft);
+}
 .home-section.cta-wrap,
 .home-section.audience-section,
 .home-section.testimonials-section,
@@ -38,6 +41,7 @@
   min-height: auto;
 }
 
+/* ---------- Section paddings ---------- */
 .home-section.services-section {
   padding: 60px 0 40px;
 }
@@ -50,12 +54,14 @@
 .home-section.faq-section {
   padding: 60px 0 40px;
 }
-
 .home-section.cta-wrap {
   padding: 20px 0 20px;
 }
 .home-section.audience-section {
   padding: 40px 0;
+}
+.home-section.why-section {
+  padding: 60px 0;
 }
 
 /* ---------- Shared bits ---------- */
@@ -83,7 +89,7 @@
 }
 
 .home-section h2 {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: clamp(1.6rem, 3vw, 2.3rem);
   line-height: 1.2;
   color: var(--h-navy);
@@ -191,7 +197,7 @@
   max-width: 660px;
 }
 .hero h1 {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: clamp(1.9rem, 3.3vw, 3.1rem);
   line-height: 1.15;
   color: var(--h-blue);
@@ -223,7 +229,7 @@
 }
 .hero-stat strong {
   display: block;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 1.35rem;
   color: var(--h-navy);
   line-height: 1.1;
@@ -236,7 +242,7 @@
   line-height: 1.3;
 }
 
-/* ---------- SERVICES (compact desktop) ---------- */
+/* ---------- SERVICES ---------- */
 .services-grid-wrapper {
   position: relative;
 }
@@ -279,7 +285,7 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: var(--h-blue-soft);
+  background: #fff;
   color: var(--h-blue);
   display: flex;
   align-items: center;
@@ -289,7 +295,7 @@
   margin: 0 0 4px;
   font-size: 0.9rem;
   color: var(--h-navy);
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 .why-item p {
   margin: 0;
@@ -312,16 +318,19 @@
 .process-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 16px;
+  gap: 14px;
+  align-items: stretch;
 }
 .process-card {
   position: relative;
-  background: #fff;
-  border: 1px solid var(--h-border);
+  background: transparent;
+  border: 1px solid rgba(37, 99, 235, 0.18);
   border-radius: 14px;
-  padding: 34px 16px 22px;
+  padding: 32px 14px 20px;
   text-align: center;
-  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.06);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .process-num {
   position: absolute;
@@ -336,11 +345,11 @@
   border-radius: 999px;
 }
 .process-icon {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 14px;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 12px;
   border-radius: 14px;
-  background: var(--h-blue-soft);
+  background: #fff;
   color: var(--h-blue);
   display: flex;
   align-items: center;
@@ -350,7 +359,7 @@
   font-size: 0.92rem;
   color: var(--h-navy);
   margin: 0 0 8px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 .process-card p {
   font-size: 0.78rem;
@@ -362,26 +371,29 @@
 .audience-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 18px;
+  gap: 16px;
+  align-items: stretch;
 }
 .audience-card {
   position: relative;
-  background: #fff;
-  border: 1px solid var(--h-border);
+  background: transparent;
+  border: 1px solid rgba(37, 99, 235, 0.18);
   border-radius: 14px;
-  padding: 28px 12px 22px;
+  padding: 26px 12px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   color: var(--h-blue);
-  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.06);
+  height: 100%;
   transition: all 0.2s;
 }
 .audience-card:hover {
   background: var(--h-blue);
   color: #fff;
   transform: translateY(-4px);
+  border-color: var(--h-blue);
 }
 .audience-card:hover .audience-title {
   color: #fff;
@@ -447,6 +459,9 @@
   border-radius: 14px;
   padding: 22px;
   box-shadow: 0 6px 18px rgba(29, 78, 216, 0.06);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .testimonial-top {
   display: flex;
@@ -488,19 +503,23 @@
   font-size: 0.88rem;
   line-height: 1.65;
   color: var(--h-text);
+  flex: 1;
 }
 
 /* ---------- FAQ ---------- */
+.faq-section {
+  background: var(--h-gradient-soft);
+}
 .faq-grid {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-width: 780px;
+  max-width: 650px;
   margin: 0 auto;
 }
 .faq-item {
-  background: #fff;
-  border: 1px solid var(--h-border);
+  background: transparent;
+  border: 1px solid rgba(37, 99, 235, 0.2);
   border-radius: 10px;
   overflow: hidden;
   transition: border-color 0.2s;
@@ -512,9 +531,9 @@
   align-items: center;
   gap: 12px;
   padding: 16px 20px;
-  background: none;
+  background: transparent;
   border: 0;
-  text-align: center;
+  text-align: left;
   font: inherit;
   font-size: 0.9rem;
   font-weight: 600;
@@ -523,7 +542,7 @@
 }
 .faq-q > span {
   flex: 1;
-  text-align: center;
+  text-align: left;
 }
 .faq-q:focus-visible {
   outline: 2px solid var(--h-blue);
@@ -537,10 +556,10 @@
   padding: 0 20px 18px;
   font-size: 0.85rem;
   line-height: 1.6;
-  text-align: center;
+  text-align: left;
 }
 
-/* ---------- CTA (light blue theme) ---------- */
+/* ---------- CTA ---------- */
 .cta-wrap {
   background: #fff;
 }
@@ -548,10 +567,9 @@
   padding-top: 0;
   padding-bottom: 0;
 }
-
 .cta-banner {
   background: linear-gradient(135deg, #eaf3ff 0%, #d8ecff 40%, #bfdbfe 100%);
-  border: 1px solid rgba(37, 99, 235, 0.15);
+  border: none;
   border-radius: 20px;
   padding: 48px;
   display: flex;
@@ -564,7 +582,7 @@
   box-shadow: 0 16px 32px rgba(37, 99, 235, 0.08);
 }
 .cta-banner::after {
-  content: "";
+  content: '';
   position: absolute;
   right: -60px;
   top: 50%;
@@ -583,7 +601,7 @@
 .cta-content h2 {
   color: var(--h-navy);
   font-size: clamp(1.5rem, 2.6vw, 2rem);
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   line-height: 1.25;
   margin: 0 0 10px;
 }
@@ -625,7 +643,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 22px;
-  background: #fff;
+  background: transparent;
   color: var(--h-blue);
   border: 1.5px solid var(--h-blue);
   border-radius: 8px;
@@ -668,6 +686,9 @@
   }
 }
 
+/* ================================================
+   MOBILE
+   ================================================ */
 @media (max-width: 768px) {
   .home-section {
     min-height: 0;
@@ -692,6 +713,9 @@
   .home-section.cta-wrap {
     padding: 20px 0 20px;
   }
+  .home-section.why-section {
+    padding: 40px 0;
+  }
 
   .home-section h2 {
     font-size: 1.45rem;
@@ -709,7 +733,7 @@
     margin-bottom: 22px;
   }
 
-  /* HERO: girl image as full background, content on top */
+  /* HERO */
   .hero {
     background-repeat: no-repeat;
     background-position: center bottom;
@@ -717,7 +741,7 @@
     background-color: #eaf3ff;
     aspect-ratio: auto;
     min-height: 0;
-    padding: 28px 0 340px; /* leaves space for the girl image at bottom */
+    padding: 28px 0 340px;
     position: relative;
   }
   .hero-inner {
@@ -759,8 +783,6 @@
     white-space: nowrap;
     transition: none;
   }
-
-  /* Hero stats: 2x2 grid, transparent */
   .hero-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -793,31 +815,32 @@
     flex-shrink: 0;
   }
 
-  /* ===== SERVICES ===== */
+  /* ========== SERVICES ========== */
   .services-section .section-head-row {
     text-align: center;
   }
   .services-grid-wrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
-    position: relative;
+    justify-content: center;
+    gap: 10px;
   }
   .services-grid {
     display: block;
-    grid-template-columns: none;
-    gap: 0;
-    flex: 1;
     width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+    height: 236px;
+    min-height: 236px;
+    max-height: 236px;
   }
 
-  /* Mobile arrow - no hover */
   .mobile-arrow {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     border: 1px solid var(--h-border);
     background: #fff;
@@ -836,7 +859,7 @@
     height: 16px;
   }
 
-  /* Why choose us */
+  /* WHY */
   .why-inner {
     grid-template-columns: 1fr;
     gap: 0;
@@ -859,11 +882,10 @@
     align-items: flex-start;
     gap: 12px;
     text-align: left;
-    background: #fff;
-    border: 1px solid var(--h-border);
+    background: transparent;
+    border: 1px solid rgba(37, 99, 235, 0.18);
     border-radius: 12px;
-    padding: 14px;
-    box-shadow: 0 4px 14px rgba(29, 78, 216, 0.05);
+    padding: 12px 14px;
   }
   .why-icon {
     flex-shrink: 0;
@@ -878,7 +900,7 @@
     margin: 0;
   }
 
-  /* Process - no hover */
+  /* PROCESS */
   .process-grid {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -890,6 +912,10 @@
     align-items: center;
     text-align: left;
     padding: 14px;
+    background: transparent;
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    border-radius: 12px;
+    height: auto;
   }
   .process-icon {
     width: 48px;
@@ -910,19 +936,25 @@
     display: none;
   }
 
-  /* Audience - no hover */
+  /* AUDIENCE */
   .audience-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px 12px;
   }
   .audience-card {
-    padding: 20px 10px 16px;
+    padding: 18px 10px 14px;
+    background: transparent;
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    border-radius: 12px;
     transition: none;
+    height: 100px;
+    box-sizing: border-box;
   }
   .audience-card:hover {
-    background: #fff;
+    background: transparent;
     color: var(--h-blue);
     transform: none;
+    border-color: rgba(37, 99, 235, 0.18);
   }
   .audience-card:hover .audience-title {
     color: var(--h-navy);
@@ -931,32 +963,63 @@
     display: none;
   }
 
-  /* Testimonials - 1 card at a time */
+  /* TESTIMONIALS */
   .testimonials-grid-wrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
-    position: relative;
+    justify-content: center;
+    gap: 10px;
   }
   .testimonial-grid {
     display: block;
-    grid-template-columns: none;
-    gap: 0;
-    flex: 1;
     width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    height: 250px;
+    min-height: 250px;
+    max-height: 250px;
   }
   .testimonial-card {
     width: 100%;
-    padding: 18px;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
   }
-  .testimonial-card:nth-child(n + 2) {
-    display: block;
+  .testimonial-top {
+    flex-shrink: 0;
+    margin-bottom: 8px;
+  }
+  .testimonial-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  .testimonial-top strong {
+    font-size: 0.86rem;
+  }
+  .testimonial-top span {
+    font-size: 0.7rem;
+  }
+  .testimonial-card p {
+    flex: 1;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .arrows-bottom-desktop {
     display: none;
   }
-
   .side-img,
   .cta-img,
   .why-visual {
@@ -973,23 +1036,21 @@
     font-size: 0.88rem;
   }
   .faq-q > span {
-    text-align: center;
+    text-align: left;
   }
   .faq-a {
     padding: 0 16px 14px;
     font-size: 0.83rem;
-    text-align: center;
+    text-align: left;
   }
 
-  /* CTA - full width light blue theme */
+  /* CTA */
   .cta-wrap .container {
     padding: 0;
     max-width: 100%;
   }
   .cta-banner {
     border-radius: 0;
-    border-left: none;
-    border-right: none;
     padding: 30px 20px;
     flex-direction: column;
     align-items: center;
@@ -1030,6 +1091,16 @@
   .hero .hero-actions .btn-orange,
   .hero .hero-actions .btn-ghost {
     flex-basis: 100%;
+  }
+  .services-grid {
+    height: 244px;
+    min-height: 244px;
+    max-height: 244px;
+  }
+  .testimonial-grid {
+    height: 220px;
+    min-height: 220px;
+    max-height: 220px;
   }
 }
 
