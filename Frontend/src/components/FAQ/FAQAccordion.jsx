@@ -1,6 +1,7 @@
+
 import { useId, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Plus, Minus } from 'lucide-react';
+import { FiPlus, FiMinus } from 'react-icons/fi';
 import './FAQ.css';
 
 export default function FAQAccordion({ faqs = [] }) {
@@ -29,12 +30,9 @@ export default function FAQAccordion({ faqs = [] }) {
                 aria-controls={answerId}
                 onClick={() => setOpen(isOpen ? null : key)}
               >
-                <span className="faq-num" aria-hidden="true">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
                 <span className="faq-q-text">{f.question}</span>
                 <span className="faq-toggle" aria-hidden="true">
-                  {isOpen ? <Minus size={16} /> : <Plus size={16} />}
+                  {isOpen ? <FiMinus size={20} strokeWidth={3} /> : <FiPlus size={20} strokeWidth={3} />}
                 </span>
               </button>
             </h3>

@@ -5,15 +5,30 @@
    collides with the rest of the site. Every section uses the
    site's global ".container" class (the same one the Navbar
    uses) so everything lines up with the header at every size.
+
+   LATEST UPDATE:
+   - "Why Choose Us" redesigned to match the desktop + mobile
+     references (photo background aboutlastimage.png on desktop,
+     white check cards, gradient background on phones).
+   - "What Drives Us" (Our Values) redesigned to match the
+     desktop + mobile references:
+       desktop : photo background (aboutimage.png), centred heading,
+                 4 glass cards with corner shape + arrow button
+       mobile  : light gradient background, stacked horizontal cards
+                 (icon | text | arrow)
    ========================================================= */
 
 .ab-hero,
 .ab-story,
 .ab-values,
-.ab-why {
+.ab-why,
+.ab-cta {
   --ab-primary: var(--primary, #0f2557);
   --ab-secondary: var(--secondary, #2563eb);
+  --ab-accent: #f59e0b;
   --ab-bg: #f8fafc;
+  --ab-card: #eff6ff;
+  --ab-card-border: #dbeafe;
   --ab-text: var(--text, #0f172a);
   --ab-muted: var(--text-muted, #64748b);
   --ab-border: var(--border, #e2e8f0);
@@ -29,359 +44,780 @@
 .ab-story h3,
 .ab-values h2,
 .ab-values h3,
-.ab-why h2 {
+.ab-why h2,
+.ab-cta h2 {
   font-family: var(--ab-head);
   color: var(--ab-text);
   margin: 0;
   letter-spacing: -0.01em;
 }
 
-.ab-kicker {
-  display: inline-block;
-  margin-bottom: 14px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ab-secondary);
-}
-
 /* ============================ HERO ============================ */
+/* Sizes are tuned to the design reference (1600px-wide artboard):
+   heading ~56px, paragraph ~19px, stats card ~840px wide, hero height
+   = 1600x622 ratio. Everything scales with the viewport (vw) and is
+   capped, so the hero keeps the same proportions at every width.
+
+   NOTE: vertical padding is set on ".ab-hero .ab-hero__inner" (2 classes)
+   so the global ".container { padding: ... }" can no longer wipe it out. */
 .ab-hero {
+  --ab-hero-h: clamp(460px, 38.9vw, 700px);
   position: relative;
+  display: flex;
+  align-items: center;
+  min-height: var(--ab-hero-h);
   overflow: hidden;
-  background: linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%);
-  text-align: center;
+  isolation: isolate;
+  background: #f4f8ff; /* fallback while the image loads */
 }
 
-.ab-hero::before {
-  content: '';
+/* Full-bleed background image */
+.ab-hero__bg {
   position: absolute;
-  top: -140px;
-  left: 50%;
-  width: 720px;
-  height: 420px;
-  transform: translateX(-50%);
-  background: radial-gradient(closest-side, rgba(37, 99, 235, 0.14), transparent);
+  inset: 0;
+  z-index: 0;
+  display: block;
   pointer-events: none;
 }
 
-.ab-hero__inner {
-  position: relative;
-  z-index: 1;
-  padding: 76px 0 64px;
+.ab-hero__bg img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
 }
 
+.ab-hero .ab-hero__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-top: clamp(48px, 5.2vw, 84px);
+  padding-bottom: clamp(40px, 4vw, 64px);
+}
+
+.ab-hero__copy {
+  min-width: 0;
+}
+
+/* Eyebrow:  ---- ABOUT RESEARCHPLUS ----  */
 .ab-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  margin-bottom: 22px;
-  border-radius: 999px;
-  background: #e3ecfd;
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  gap: 9px;
+  margin-bottom: 14px;
+  font-family: var(--ab-head);
+  font-size: clamp(0.72rem, 0.92vw, 0.92rem);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ab-primary);
-  padding-top: 25px;
+  line-height: 1;
+  color: var(--ab-secondary);
 }
 
+.ab-eyebrow::before,
+.ab-eyebrow::after {
+  content: '';
+  display: block;
+  width: clamp(20px, 1.8vw, 30px);
+  height: 1px;
+  background: var(--ab-secondary);
+}
 
-.ab-hero h1 {
-  font-size: clamp(2rem, 4.6vw, 3.2rem);
+.ab-eyebrow__light {
+  font-weight: 400;
+}
+
+.ab-eyebrow strong {
   font-weight: 700;
-  line-height: 1.14;
+}
+
+/* Heading breaks after "Academic":  Dedicated to Academic / Excellence */
+.ab-hero h1 {
+  max-width: 12.6em;
+  font-size: clamp(2rem, 3.5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--ab-primary);
-  max-width: 780px;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .ab-hero__accent {
   color: var(--ab-secondary);
 }
 
-.ab-hero__inner > p {
-  max-width: 620px;
-  margin: 20px auto 0;
+/* Paragraph breaks after "students," / "focus on" like the reference */
+.ab-hero__copy > p {
+  max-width: 35.5em;
+  margin: clamp(16px, 1.5vw, 24px) 0 0;
   color: var(--ab-muted);
-  font-size: 1.05rem;
-  line-height: 1.75;
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  line-height: 1.5;
 }
 
+/* Stats card */
 .ab-stats {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
-  max-width: 780px;
-  margin: 48px auto 0;
-  padding: 26px 12px;
-  background: #fff;
-  border: 1px solid var(--ab-border);
-  border-radius: 20px;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+  width: min(100%, max(52.5vw, 640px), 840px);
+  margin: clamp(28px, 2.5vw, 40px) 0 0; /* left-aligned with text + header */
+  padding: clamp(16px, 1.6vw, 24px) 8px;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: clamp(16px, 1.5vw, 24px);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
 }
 
 .ab-stats li {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 8px 12px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
   text-align: center;
-  border-left: 1px solid var(--ab-border);
 }
 
-.ab-stats li:first-child {
-  border-left: 0;
+/* short vertical dividers */
+.ab-stats li + li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8%;
+  bottom: 8%;
+  width: 1px;
+  background: #e5eaf3;
 }
 
 .ab-stats strong {
   font-family: var(--ab-head);
-  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  font-size: clamp(1.25rem, 1.7vw, 1.75rem);
   font-weight: 700;
-  color: var(--ab-primary);
+  line-height: 1.1;
+  color: #0b3fc4;
 }
 
 .ab-stats span {
-  font-size: 0.82rem;
+  font-size: clamp(0.72rem, 0.88vw, 0.9rem);
+  line-height: 1.45;
   color: var(--ab-muted);
 }
 
 /* ============================ STORY ============================ */
+/* "Who We Are" – tuned to the design reference:
+   - desktop: photo background + text left, Mission (solid blue) and
+     Vision (white) cards right, both with soft shadows
+   - mobile : light-blue gradient background, everything stacked      */
 .ab-story {
-  background: #fff;
-  padding: 88px 0;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #f4f8ff; /* fallback while the image loads */
+  padding: clamp(56px, 6vw, 96px) 0;
 }
 
-.ab-story__grid {
+.ab-story__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+  pointer-events: none;
+}
+
+.ab-story .ab-story__grid {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 56px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(32px, 4.5vw, 72px);
   align-items: center;
 }
 
-.ab-story__text h2 {
-  font-size: clamp(1.6rem, 3vw, 2.1rem);
-  font-weight: 600;
-  line-height: 1.25;
-  margin-bottom: 18px;
+.ab-story__text {
+  min-width: 0;
 }
 
-.ab-story__text h2 em {
-  font-style: normal;
+/* Eyebrow:  ----  WHO WE ARE  */
+.ab-story__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-family: var(--ab-head);
+  font-size: clamp(0.72rem, 0.9vw, 0.9rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: #1d4ed8;
+}
+
+.ab-story__eyebrow::before {
+  content: '';
+  display: block;
+  width: clamp(24px, 2.2vw, 34px);
+  height: 1.5px;
+  background: var(--ab-secondary);
+}
+
+/* Heading breaks after "built":  Research support built / around your work */
+.ab-story .ab-story__text h2 {
+  max-width: 13em;
+  margin: 0 0 clamp(18px, 1.8vw, 26px);
+  font-size: clamp(1.9rem, 3.2vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ab-primary);
+}
+
+/* "your work" – blue with a hand-drawn underline */
+.ab-story__hl {
+  position: relative;
+  display: inline-block;
   color: var(--ab-secondary);
 }
 
+.ab-story__swoosh {
+  position: absolute;
+  left: 0;
+  bottom: -0.3em;
+  width: 100%;
+  height: 0.32em;
+  overflow: visible;
+  color: var(--ab-secondary);
+  pointer-events: none;
+}
+
 .ab-story__text > p {
-  margin: 0 0 16px;
-  color: var(--ab-muted);
-  font-size: 1rem;
-  line-height: 1.75;
+  max-width: 31.5em;
+  margin: 0 0 14px;
+  color: #475569;
+  font-size: clamp(0.95rem, 1.28vw, 1.15rem);
+  line-height: 1.65;
 }
 
 .ab-story__points {
   list-style: none;
-  margin: 26px 0 0;
+  margin: clamp(20px, 2vw, 28px) 0 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .ab-story__points li {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.95rem;
+  gap: 12px;
+  font-size: clamp(0.9rem, 1.1vw, 1.02rem);
   font-weight: 500;
-  color: var(--ab-text);
+  color: #1e293b;
 }
 
-.ab-story__points svg {
-  color: var(--ab-success);
+/* filled blue circle with a white tick */
+.ab-story__tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--ab-secondary);
+  color: #fff;
 }
 
+/* ---- Mission / Vision cards ----
+   Base sizes (tablet / phone) are plain rem/px values.
+   On desktop (>= 901px) every size is written in "cqw" (1% of the card
+   width) and was measured from the design reference, so the cards keep
+   the exact same proportions at any screen size.                       */
 .ab-story__panel {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+  width: 100%;
+  max-width: 500px;
+  justify-self: end;
 }
 
 .ab-mv-card {
   position: relative;
-  padding: 28px 26px;
-  border-radius: 18px;
-  background: var(--ab-primary);
-  color: #fff;
   overflow: hidden;
+  isolation: isolate;
+  padding: 22px 22px 24px;
+  border-radius: 20px;
 }
 
+.ab-mv-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* decorative round shape (top-right on Mission, right edge on Vision) */
 .ab-mv-card::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.12), transparent 60%);
+  z-index: 0;
+  border-radius: 50%;
   pointer-events: none;
 }
 
-.ab-mv-card--alt {
-  background: linear-gradient(135deg, var(--ab-secondary), #1d4ed8);
-}
-
 .ab-mv-icon {
-  position: relative;
-  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
-  margin-bottom: 16px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  color: #fff;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 14px;
+  border-radius: 14px;
+}
+
+.ab-mv-icon svg {
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+
+.ab-mv-card--vision .ab-mv-icon svg {
+  height: auto;
 }
 
 .ab-mv-card h3 {
-  position: relative;
-  z-index: 1;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 8px;
+  margin: 0 0 6px;
+  font-family: var(--ab-head);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
 .ab-mv-card p {
-  position: relative;
-  z-index: 1;
   margin: 0;
   font-size: 0.9rem;
-  line-height: 1.65;
-  color: #dbe4ff;
+  line-height: 1.55;
 }
 
-/* ============================ VALUES ============================ */
+/* forced line breaks only exist on desktop */
+.ab-br {
+  display: none;
+}
+
+/* ---- Mission: deep blue, lighter round shape top-right ---- */
+.ab-mv-card--mission {
+  background: linear-gradient(115deg, #0b3ba8 0%, #0552c6 50%, #0a63e0 100%);
+  box-shadow: 0 24px 48px rgba(29, 78, 216, 0.3);
+}
+
+.ab-mv-card--mission::after {
+  width: 200px;
+  height: 200px;
+  right: -110px;
+  top: -130px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.ab-mv-card--mission .ab-mv-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.ab-story .ab-mv-card--mission h3 {
+  color: #fff;
+}
+
+.ab-mv-card--mission p {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* ---- Vision: white, soft blue shape on the right edge ---- */
+.ab-mv-card--vision {
+  background: #fff;
+  box-shadow:
+    0 22px 50px rgba(37, 99, 235, 0.18),
+    0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.ab-mv-card--vision::after {
+  width: 150px;
+  height: 150px;
+  right: -75px;
+  top: 20px;
+  background: #e6f1ff;
+}
+
+.ab-mv-card--vision .ab-mv-icon {
+  background: #dcebfd;
+  color: #1a72f5;
+}
+
+.ab-story .ab-mv-card--vision h3 {
+  color: #0b1f4e;
+}
+
+.ab-mv-card--vision p {
+  color: #405d98;
+}
+
+/* ---- Desktop: everything proportional to the card width ---- */
+@media (min-width: 901px) {
+  .ab-story__panel {
+    container-type: inline-size;
+    gap: 0;
+  }
+  .ab-mv-card + .ab-mv-card {
+    margin-top: 4.9cqw;
+  }
+  .ab-mv-card {
+    border-radius: 5.6cqw;
+  }
+  .ab-mv-card--mission {
+    padding: 5.7cqw 6.8cqw 5.4cqw;
+  }
+  .ab-mv-card--vision {
+    padding: 4.9cqw 6.8cqw 7.6cqw;
+  }
+
+  .ab-mv-icon {
+    width: 15cqw;
+    height: 15cqw;
+    margin-bottom: 2.7cqw;
+    border-radius: 3cqw;
+  }
+  .ab-mv-icon svg {
+    width: 8.6cqw;
+    height: 8.6cqw;
+  }
+  .ab-mv-card--vision .ab-mv-icon svg {
+    width: 8.9cqw;
+    height: auto;
+  }
+
+  .ab-mv-card h3 {
+    margin-bottom: 2.3cqw;
+    font-size: 5.8cqw;
+    line-height: 1.2;
+  }
+  .ab-mv-card--vision h3 {
+    font-size: 5.6cqw;
+  }
+  .ab-mv-card p {
+    font-size: 3.8cqw;
+    line-height: 1.5;
+  }
+  .ab-mv-card--vision p {
+    font-size: 3.9cqw;
+  }
+
+  .ab-mv-card--mission::after {
+    width: 52cqw;
+    height: 52cqw;
+    right: -32cqw;
+    top: -34cqw;
+  }
+  .ab-mv-card--vision::after {
+    width: 32cqw;
+    height: 32cqw;
+    right: -16cqw;
+    top: 4.4cqw;
+  }
+
+  .ab-br {
+    display: inline;
+  }
+}
+
+/* ============================ VALUES (What Drives Us) ============================ */
+/* Desktop: photo background (aboutimage.png) with a centred heading and
+   four glass cards sitting on top of it. The extra bottom padding leaves
+   room for the wave / dots at the bottom of the photo.
+   Mobile : no photo – soft blue gradient, cards stacked full width.     */
 .ab-values {
-  background: var(--ab-bg);
-  padding: 88px 0;
-  border-top: 1px solid var(--ab-border);
-  border-bottom: 1px solid var(--ab-border);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #f4f8ff; /* fallback while the image loads */
+  padding: clamp(56px, 5.4vw, 88px) 0 clamp(96px, 11vw, 176px);
 }
 
-.ab-section-head {
-  max-width: 600px;
-  margin: 0 auto 44px;
+.ab-values__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+}
+
+.ab-values .ab-values__inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Heading block ---- */
+.ab-values__head {
+  max-width: 760px;
+  margin: 0 auto clamp(36px, 4vw, 60px);
   text-align: center;
 }
 
-.ab-section-head h2 {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+/* ----  WHAT DRIVES US  ---- */
+.ab-values__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(12px, 1.4vw, 20px);
+  margin-bottom: clamp(10px, 1.2vw, 16px);
+  font-family: var(--ab-head);
+  font-size: clamp(0.78rem, 1.05vw, 1.05rem);
   font-weight: 600;
-  margin-bottom: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: #0a5cf0;
 }
 
-.ab-section-head p {
+.ab-values__eyebrow::before,
+.ab-values__eyebrow::after {
+  content: '';
+  display: block;
+  width: clamp(28px, 3.6vw, 56px);
+  height: 1.5px;
+  background: #0a5cf0;
+}
+
+.ab-values .ab-values__head h2 {
+  margin: 0 0 clamp(10px, 1.2vw, 16px);
+  font-size: clamp(2.4rem, 4.6vw, 4.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #0b1f4e;
+}
+
+.ab-values__hl {
+  color: #0a5cf0;
+}
+
+.ab-values__head p {
   margin: 0;
-  color: var(--ab-muted);
-  font-size: 1rem;
-  line-height: 1.6;
+  color: #3a5288;
+  font-size: clamp(0.95rem, 1.35vw, 1.3rem);
+  line-height: 1.55;
 }
 
+/* ---- Cards ---- */
 .ab-values__grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 1.5vw, 24px);
 }
 
 .ab-value {
-  padding: 28px 24px;
-  background: #fff;
-  border: 1px solid var(--ab-border);
-  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(20px, 2vw, 30px) clamp(18px, 1.8vw, 28px) clamp(20px, 2vw, 28px);
+  background: rgba(255, 255, 255, 0.86);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid #cfe2ff;
+  border-radius: clamp(16px, 1.5vw, 22px);
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* soft round shape in the top-right corner */
+.ab-value::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: clamp(-52px, -3.4vw, -36px);
+  right: clamp(-52px, -3.4vw, -36px);
+  width: clamp(84px, 8vw, 124px);
+  height: clamp(84px, 8vw, 124px);
+  border-radius: 50%;
+  background: #e2eeff;
+  pointer-events: none;
 }
 
 .ab-value:hover {
   transform: translateY(-4px);
-  border-color: #bfdbfe;
-  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+  border-color: #a9caff;
+  box-shadow: 0 22px 48px rgba(37, 99, 235, 0.18);
 }
 
 .ab-value__icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
-  margin-bottom: 18px;
-  border-radius: 12px;
-  background: #eff6ff;
-  color: var(--ab-secondary);
+  width: clamp(48px, 4.8vw, 64px);
+  height: clamp(48px, 4.8vw, 64px);
+  margin-bottom: clamp(14px, 1.5vw, 22px);
+  flex-shrink: 0;
+  border-radius: 16px;
+  background: #e2eeff;
+  color: #0a5cf0;
+}
+
+.ab-value__icon svg {
+  width: 46%;
+  height: 46%;
+}
+
+.ab-value__body {
+  min-width: 0;
+  flex: 1;
 }
 
 .ab-value h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 8px;
+  margin: 0 0 8px;
+  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #0b1f4e;
 }
 
 .ab-value p {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: clamp(0.85rem, 1.05vw, 1rem);
   line-height: 1.6;
-  color: var(--ab-muted);
+  color: #3f5a92;
+}
+
+/* round arrow button */
+.ab-value__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(38px, 3.4vw, 48px);
+  height: clamp(38px, 3.4vw, 48px);
+  margin-top: clamp(16px, 1.8vw, 24px);
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #dbeafe;
+  color: #0a5cf0;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.ab-value:hover .ab-value__arrow {
+  background: #0a5cf0;
+  color: #fff;
+  transform: translateX(3px);
 }
 
 /* ============================ WHY CHOOSE US ============================ */
+/* Desktop: photo background (aboutlastimage.png), text + button on the
+   left, 2 x 3 grid of white check cards on the right.
+   Mobile : gradient background, text on top, cards stacked full width. */
 .ab-why {
-  background: #fff;
-  padding: 88px 0;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #f4f8ff; /* fallback while the image loads */
+  padding: clamp(64px, 7vw, 120px) 0;
 }
 
-.ab-why__grid {
+.ab-why__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+}
+
+.ab-why .ab-why__grid {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
-  gap: 56px;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 4.5vw, 72px);
   align-items: center;
 }
 
-.ab-why__side h2 {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+.ab-why__side {
+  min-width: 0;
+}
+
+/* ----  WHY CHOOSE US  */
+.ab-why__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: clamp(14px, 1.4vw, 20px);
+  font-family: var(--ab-head);
+  font-size: clamp(0.72rem, 0.9vw, 0.9rem);
   font-weight: 600;
-  margin-bottom: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: #0a5cf0;
+}
+
+.ab-why__eyebrow::before {
+  content: '';
+  display: block;
+  width: clamp(24px, 2.2vw, 34px);
+  height: 1.5px;
+  background: #0a5cf0;
+}
+
+.ab-why .ab-why__side h2 {
+  margin: 0 0 clamp(14px, 1.5vw, 22px);
+  font-size: clamp(2rem, 3.6vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: #0b1f4e;
+}
+
+.ab-why__hl {
+  color: #0a5cf0;
 }
 
 .ab-why__side > p {
-  margin: 0 0 28px;
-  max-width: 420px;
-  color: var(--ab-muted);
-  line-height: 1.7;
+  max-width: 24em;
+  margin: 0 0 clamp(22px, 2.4vw, 34px);
+  color: #3f5a92;
+  font-size: clamp(0.92rem, 1.2vw, 1.12rem);
+  line-height: 1.65;
 }
 
 .ab-why__cta {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 13px 26px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--ab-primary), var(--ab-secondary));
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0a4fe0, #0a6cf5);
   color: #fff;
   font-family: var(--ab-head);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.98rem;
   text-decoration: none;
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+  box-shadow: 0 12px 26px rgba(10, 92, 240, 0.28);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ab-why__cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 16px 32px rgba(10, 92, 240, 0.36);
 }
 
 .ab-why__cta:focus-visible {
@@ -389,46 +825,185 @@
   outline-offset: 3px;
 }
 
+/* ---- 2 x 3 check cards ---- */
 .ab-why__list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 20px);
 }
 
 .ab-why__list li {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 18px;
-  background: var(--ab-bg);
-  border: 1px solid var(--ab-border);
-  border-radius: 14px;
-  color: var(--ab-text);
-  font-size: 0.9rem;
-  font-weight: 500;
+  gap: clamp(12px, 1.2vw, 16px);
+  padding: clamp(16px, 1.8vw, 26px) clamp(14px, 1.6vw, 22px);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e3edff;
+  border-radius: clamp(14px, 1.3vw, 18px);
+  box-shadow: 0 14px 34px rgba(37, 99, 235, 0.1);
+  color: #0b1f4e;
+  font-size: clamp(0.85rem, 1.05vw, 1rem);
+  font-weight: 600;
   line-height: 1.4;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .ab-why__list li:hover {
   border-color: #bbf7d0;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.16);
   transform: translateY(-2px);
 }
 
+/* green filled circle with a white tick and a soft ring */
 .ab-why__check {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
-  border-radius: 10px;
-  background: #f0fdf4;
-  color: var(--ab-success);
+  margin: 0 3px;
+  border-radius: 50%;
+  background: #22c55e;
+  color: #fff;
+  box-shadow: 0 0 0 4px #dcfce7;
+}
+
+/* ============================ BOTTOM CTA ============================ */
+/* Same look as the Contact page's "Not Sure Where to Start?" card:
+   #eff6ff background, dark-blue heading, slate text, white icon chip,
+   faint blue grid on the right, gradient + outline buttons. */
+.ab-cta {
+  background: var(--ab-bg);
+  padding: 48px 0 88px;
+}
+
+.ab-cta__card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 34px 40px;
+  border-radius: 16px;
+  background: var(--ab-card);
+  border: 1px solid var(--ab-card-border);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.1);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ab-cta__card:hover {
+  border-color: #bfdbfe;
+  box-shadow: 0 18px 38px rgba(37, 99, 235, 0.16);
+}
+
+/* Faint blue grid fading in from the right */
+.ab-cta__card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+  background-size: 36px 36px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 45%, #000);
+  mask-image: linear-gradient(90deg, transparent 45%, #000);
+  pointer-events: none;
+}
+
+.ab-cta__card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.ab-cta__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #bfdbfe;
+  color: var(--ab-secondary);
+  flex-shrink: 0;
+}
+
+.ab-cta__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.ab-cta h2 {
+  margin: 0 0 8px;
+  font-family: var(--ab-head);
+  font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ab-primary);
+}
+
+.ab-cta p {
+  margin: 0;
+  max-width: 560px;
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.ab-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.ab-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 24px;
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+  font-family: var(--ab-head);
+  font-weight: 600;
+  font-size: 0.93rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.ab-cta__btn--primary {
+  background: linear-gradient(135deg, var(--ab-primary), var(--ab-secondary));
+  color: #fff;
+}
+
+.ab-cta__btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(30, 58, 138, 0.28);
+}
+
+.ab-cta__btn--outline {
+  background: #fff;
+  color: var(--ab-primary);
+  border-color: #fff;
+}
+
+.ab-cta__btn--outline:hover {
+  transform: translateY(-2px);
+  border-color: var(--ab-secondary);
+  color: var(--ab-secondary);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.14);
+}
+
+.ab-cta__btn:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.45);
+  outline-offset: 3px;
 }
 
 /* ========================== RESPONSIVE ========================== */
@@ -436,171 +1011,394 @@
   .ab-story__grid {
     gap: 40px;
   }
+  /* tablets: 2 x 2 value cards */
   .ab-values__grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
   }
 }
 
 @media (max-width: 900px) {
-  .ab-hero__inner {
-    padding: 52px 0 44px;
-  }
-  .ab-hero__inner > p {
-    font-size: 1rem;
-  }
-  .ab-stats {
-    margin-top: 32px;
-    padding: 18px 8px;
-  }
-  .ab-stats li {
-    padding: 6px 10px;
-  }
-
-  .ab-story {
-    padding: 56px 0;
-  }
-  .ab-story__grid {
-    grid-template-columns: 1fr;
-    gap: 36px;
-  }
-  .ab-story__text h2 {
-    font-size: clamp(1.4rem, 5vw, 1.8rem);
-    margin-bottom: 14px;
-  }
-  .ab-story__text > p {
-    font-size: 0.95rem;
-    line-height: 1.65;
-    margin-bottom: 14px;
-  }
-  .ab-story__points {
-    gap: 10px;
-    margin-top: 20px;
-  }
-  .ab-story__panel {
-    flex-direction: row;
-    gap: 16px;
-  }
-  .ab-mv-card {
-    flex: 1;
-    padding: 22px 20px;
-  }
-  .ab-mv-card h3 {
-    font-size: 1.02rem;
-  }
-  .ab-mv-card p {
-    font-size: 0.85rem;
-  }
-
-  .ab-values {
-    padding: 56px 0;
-  }
-
   .ab-why {
     padding: 56px 0;
   }
-  .ab-why__grid {
+  .ab-why .ab-why__grid {
     grid-template-columns: 1fr;
     gap: 32px;
   }
   .ab-why__side > p {
-    max-width: none;
+    max-width: 30em;
+  }
+
+  .ab-cta__card {
+    flex-wrap: wrap;
+    padding: 28px 24px;
+  }
+  .ab-cta__text {
+    flex: 1 1 260px;
+  }
+  .ab-cta__actions {
+    width: 100%;
   }
 }
 
-/* Stats: always 2 columns / 2 rows on phones, with a clean cross-divider */
-@media (max-width: 640px) {
-  .ab-hero__inner {
-    padding: 44px 0 36px;
+/* ---------- HERO on tablets ---------- */
+@media (max-width: 860px) and (min-width: 768px) {
+  .ab-hero__copy {
+    max-width: 62%;
   }
-  .ab-eyebrow {
-    padding: 7px 14px;
-    font-size: 0.68rem;
-    margin-bottom: 16px;
-    padding-top: 25px;
-  }
-  .ab-hero h1 {
-    font-size: clamp(1.7rem, 7vw, 2.2rem);
-    line-height: 1.2;
-  }
-  .ab-hero__inner > p {
-    margin-top: 14px;
-    font-size: 0.94rem;
-    line-height: 1.6;
+}
+
+/* ---------- HERO on phones (uses the mobile background image) ---------- */
+@media (max-width: 767px) {
+  .ab-hero {
+    min-height: 0;
+    align-items: stretch;
   }
 
-  .ab-stats {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0;
-    margin-top: 26px;
-    padding: 14px 6px;
-    border-radius: 16px;
-  }
-  .ab-stats li {
-    border-left: 0;
-    border-right: 1px solid var(--ab-border);
-    padding: 10px 8px;
-  }
-  .ab-stats li:nth-child(even) {
-    border-right: 0;
-  }
-  .ab-stats li:nth-child(n + 3) {
-    border-top: 1px solid var(--ab-border);
-  }
-  .ab-stats strong {
-    font-size: 1.15rem;
-  }
-  .ab-stats span {
-    font-size: 0.72rem;
-    line-height: 1.3;
+  .ab-hero__bg img {
+    object-position: center top;
   }
 
-  .ab-story {
-    padding: 44px 0;
-  }
-  .ab-story__grid {
-    gap: 28px;
-  }
-  .ab-story__text h2 {
-    font-size: 1.4rem;
-  }
-  .ab-story__points li {
-    font-size: 0.88rem;
-  }
-  .ab-story__panel {
+  .ab-hero .ab-hero__inner {
+    display: flex;
     flex-direction: column;
-    gap: 14px;
+    /* keeps the photo visible between the text and the stats card */
+    min-height: min(128vw, 780px);
+    padding-top: 44px;
+    padding-bottom: 32px;
   }
 
-  .ab-values {
-    padding: 44px 0;
-  }
-  .ab-section-head {
+  .ab-hero__copy {
     margin-bottom: 32px;
   }
+
+  .ab-eyebrow {
+    margin-bottom: 14px;
+    font-size: 0.72rem;
+    gap: 7px;
+  }
+  .ab-eyebrow::before,
+  .ab-eyebrow::after {
+    width: 22px;
+  }
+
+  /* breaks into: Dedicated to / Academic / Excellence */
+  .ab-hero h1 {
+    max-width: 62%;
+    font-size: clamp(1.75rem, 8.2vw, 2.6rem);
+    line-height: 1.16;
+  }
+
+  .ab-hero__copy > p {
+    max-width: 58%;
+    margin-top: 18px;
+    font-size: 0.86rem;
+    line-height: 1.65;
+  }
+
+  /* 2 x 2 stats card with a cross divider */
+  .ab-stats {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+    margin: auto 0 0; /* pinned to the bottom of the hero */
+    padding: 10px 14px;
+    border-radius: 22px;
+  }
+  .ab-stats li {
+    padding: 18px 8px;
+  }
+  .ab-stats li + li::before {
+    display: none;
+  }
+  /* vertical divider (right column) */
+  .ab-stats li:nth-child(even)::before {
+    display: block;
+    top: 14%;
+    bottom: 14%;
+  }
+  /* horizontal divider (second row) */
+  .ab-stats li:nth-child(n + 3)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e5eaf3;
+  }
+  .ab-stats li:nth-child(3)::after {
+    left: 4%;
+  }
+  .ab-stats li:nth-child(4)::after {
+    right: 4%;
+  }
+  .ab-stats strong {
+    font-size: 1.5rem;
+  }
+  .ab-stats span {
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .ab-why__list {
+    grid-template-columns: 1fr;
+  }
+
+  /* Bottom CTA on mobile */
+  .ab-cta {
+    padding: 32px 0 64px;
+  }
+  .ab-cta__card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px 20px;
+  }
+  .ab-cta__text {
+    flex: 0 0 auto;
+  }
+  .ab-cta__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ab-cta__btn {
+    width: 100%;
+  }
+}
+
+/* ---------- STORY on tablets & phones ---------- */
+@media (max-width: 900px) {
+  .ab-story .ab-story__grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .ab-story .ab-story__text h2 {
+    max-width: none;
+  }
+  .ab-story__panel {
+    flex-direction: row;
+    max-width: none;
+    justify-self: stretch;
+    gap: 16px;
+  }
+  .ab-mv-card {
+    flex: 1;
+  }
+}
+
+/* Phones: no photo – light-blue gradient background like the mobile reference */
+@media (max-width: 767px) {
+  .ab-story {
+    padding: 44px 0 52px;
+    background:
+      radial-gradient(120% 55% at 0% 0%, rgba(147, 197, 253, 0.3), transparent 60%),
+      radial-gradient(90% 45% at 100% 100%, rgba(191, 219, 254, 0.6), transparent 70%),
+      linear-gradient(180deg, #ffffff 0%, #f3f7ff 60%, #e9f1ff 100%);
+  }
+  .ab-story__bg {
+    display: none;
+  }
+
+  /* ----  WHO WE ARE  ---- */
+  .ab-story__eyebrow {
+    gap: 8px;
+    margin-bottom: 14px;
+    font-size: 0.72rem;
+  }
+  .ab-story__eyebrow::before,
+  .ab-story__eyebrow::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1.5px;
+    background: var(--ab-secondary);
+  }
+
+  .ab-story .ab-story__text h2 {
+    font-size: clamp(1.5rem, 7.1vw, 2rem);
+    margin-bottom: 20px;
+  }
+  .ab-story__text > p {
+    max-width: none;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+  .ab-story__points {
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .ab-story__points li {
+    font-size: 0.9rem;
+  }
+
+  .ab-story__panel {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .ab-mv-card {
+    padding: 22px 20px;
+  }
+}
+
+/* ---------- VALUES on phones: gradient background + horizontal cards ---------- */
+@media (max-width: 767px) {
+  .ab-values {
+    padding: 44px 0 52px;
+    background:
+      radial-gradient(110% 40% at 0% 0%, rgba(191, 219, 254, 0.45), transparent 65%),
+      radial-gradient(90% 40% at 100% 100%, rgba(191, 219, 254, 0.65), transparent 70%),
+      linear-gradient(180deg, #ffffff 0%, #f3f7ff 55%, #e9f1ff 100%);
+  }
+  .ab-values__bg {
+    display: none;
+  }
+
+  .ab-values__head {
+    margin-bottom: 26px;
+  }
+  .ab-values__eyebrow {
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+  }
+  .ab-values__eyebrow::before,
+  .ab-values__eyebrow::after {
+    width: 26px;
+  }
+  .ab-values .ab-values__head h2 {
+    font-size: clamp(2rem, 9.5vw, 2.6rem);
+  }
+  .ab-values__head p {
+    max-width: 300px;
+    margin: 0 auto;
+    font-size: 0.9rem;
+  }
+
+  /* stacked, icon | text | arrow */
   .ab-values__grid {
     grid-template-columns: 1fr;
     gap: 14px;
   }
   .ab-value {
-    padding: 22px 20px;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 16px;
+    background: #fff;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-radius: 18px;
+    box-shadow: 0 10px 28px rgba(37, 99, 235, 0.1);
+  }
+  .ab-value::after {
+    display: none;
+  }
+  .ab-value__icon {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 0;
+    border-radius: 14px;
+  }
+  .ab-value__icon svg {
+    width: 26px;
+    height: 26px;
+  }
+  .ab-value h3 {
+    margin-bottom: 4px;
+    font-size: 1.05rem;
+  }
+  .ab-value p {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .ab-value__arrow {
+    width: 38px;
+    height: 38px;
+    margin-top: 0;
+    margin-left: auto;
+  }
+  .ab-value__arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+  /* no hover-lift on touch screens */
+  .ab-value:hover {
+    transform: none;
+  }
+}
+
+/* ---------- WHY CHOOSE US on phones: gradient background + stacked cards ---------- */
+@media (max-width: 767px) {
+  .ab-why {
+    padding: 44px 0 52px;
+    background:
+      radial-gradient(110% 40% at 100% 0%, rgba(191, 219, 254, 0.5), transparent 65%),
+      radial-gradient(90% 40% at 0% 100%, rgba(191, 219, 254, 0.55), transparent 70%),
+      linear-gradient(180deg, #ffffff 0%, #f3f7ff 55%, #e9f1ff 100%);
+  }
+  .ab-why__bg {
+    display: none;
   }
 
-  .ab-why {
-    padding: 44px 0;
+  .ab-why .ab-why__grid {
+    gap: 26px;
   }
+  .ab-why__eyebrow {
+    gap: 8px;
+    margin-bottom: 14px;
+    font-size: 0.7rem;
+  }
+  .ab-why__eyebrow::before {
+    width: 24px;
+  }
+  .ab-why .ab-why__side h2 {
+    margin-bottom: 14px;
+    font-size: clamp(1.9rem, 8.6vw, 2.4rem);
+  }
+  .ab-why__side > p {
+    max-width: none;
+    margin-bottom: 22px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .ab-why__cta {
+    padding: 13px 24px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+  }
+
   .ab-why__list {
-    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .ab-why__list li {
+    padding: 16px 18px;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.09);
+  }
+  .ab-why__list li:hover {
+    transform: none;
   }
 }
 
 /* ===================== REDUCED MOTION ===================== */
 @media (prefers-reduced-motion: reduce) {
   .ab-value,
-  .ab-why__cta {
+  .ab-value__arrow,
+  .ab-why__cta,
+  .ab-why__list li,
+  .ab-cta__btn,
+  .ab-cta__card {
     transition: none !important;
   }
   .ab-value:hover,
-  .ab-why__cta:hover {
+  .ab-value:hover .ab-value__arrow,
+  .ab-why__list li:hover,
+  .ab-why__cta:hover,
+  .ab-cta__btn:hover {
     transform: none;
   }
 }
