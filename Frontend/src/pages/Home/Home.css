@@ -35,7 +35,7 @@
 
 /* ---------- Section paddings ---------- */
 .home-section.services-section { padding: 40px 0 0; }
-.home-section.why-section { padding: 20px 0; }
+.home-section.why-section { padding: 0; }
 .home-section.testimonials-section { padding: 50px 0 60px; }
 .home-section.process-section { padding: 50px 0 40px; }
 .home-section.audience-section { padding: 40px 0 60px; }
@@ -520,15 +520,21 @@
   align-items: center;
   gap: 12px;
   padding: 16px 20px;
-  background: transparent;
-  border: 0;
+  background: #fff;
+  border: 1px solid transparent; /* added border for q */
+  border-radius: 10px;
   text-align: left;
   font: inherit;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--h-navy);
   cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
 }
+.faq-q:hover {
+  border-color: rgba(37, 99, 235, 0.35);
+}
+
 .faq-q > span { flex: 1; text-align: left; background: transparent; }
 .faq-q:focus-visible { outline: 2px solid var(--h-blue); outline-offset: -2px; }
 .faq-a {
@@ -544,9 +550,7 @@
 .cta-wrap .container { padding-top: 0; padding-bottom: 0; }
 
 .cta-banner {
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
   border: none;
-  border-radius: 20px;
   padding: 48px;
   display: flex;
   align-items: center;
@@ -555,7 +559,6 @@
   color: var(--h-navy);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 16px 32px rgba(37, 99, 235, 0.1);
 }
 .cta-banner::after {
   content: '';
@@ -615,7 +618,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 22px;
-  background: #fff;
+  background: transparent; /* transparent background */
   color: var(--h-blue);
   border: 1.5px solid var(--h-blue);
   border-radius: 8px;
@@ -651,7 +654,7 @@
     overflow-x: clip;
   }
   .home-section.services-section { padding: 36px 0 16px; }
-  .home-section.why-section { padding: 20px 0 36px; }
+  .home-section.why-section { padding: 20px 0; }
   .home-section.testimonials-section { padding: 36px 0 36px; }
   .home-section.process-section { padding: 36px 0 24px; }
   .home-section.audience-section { padding: 24px 0 36px; }
@@ -813,9 +816,8 @@
     gap: 12px;
     text-align: left;
     background: transparent;
-    border: 1px solid rgba(37, 99, 235, 0.22);
     border-radius: 12px;
-    padding: 12px 14px;
+    padding: 5px 14px;
     box-shadow: none;
   }
   .why-icon { flex-shrink: 0; width: 36px; height: 36px; background: #fff; }
