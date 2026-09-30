@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
@@ -20,8 +21,9 @@ import {
   ListChecks,
   MessagesSquare,
   ArrowUpRight,
-  ArrowRight,
 } from 'lucide-react';
+// react-icons  →  npm i react-icons
+import { FiClock, FiArrowRight, FiArrowUpRight, FiMessageSquare } from 'react-icons/fi';
 import SEO from '../../components/SEO.jsx';
 import api from '../../services/api.js';
 import { createEnquiry } from '../../services/enquiryApi.js';
@@ -288,6 +290,8 @@ export default function Contact() {
               Share your requirements with us and our team will guide you through the next steps.
             </p>
 
+            {/* Desktop: 3 features in one row.
+                Mobile: a 4th feature appears → 2 per row (2 × 2 grid). */}
             <ul className="ct-hero__features">
               <li>
                 <BookOpen size={30} strokeWidth={1.6} aria-hidden="true" />
@@ -310,12 +314,24 @@ export default function Contact() {
                   <span className="ct-hero__feature-sub">Insights that matter</span>
                 </span>
               </li>
+              <li className="ct-hero__feature--mobile">
+                <FileText size={30} strokeWidth={1.6} aria-hidden="true" />
+                <span className="ct-hero__feature-text">
+                  <span className="ct-hero__feature-title">Publication Help</span>
+                  <span className="ct-hero__feature-sub">Step-by-step support</span>
+                </span>
+              </li>
             </ul>
 
+            {/* Reply-time badge (react-icons) */}
             <a href="#enquiry-form" className="ct-hero__badge" onClick={focusForm}>
-              <Clock size={20} aria-hidden="true" />
-              <span>We aim to reply within 24 hours</span>
-              <ArrowRight size={18} aria-hidden="true" />
+              <span className="ct-hero__badge-icon">
+                <FiClock size={18} aria-hidden="true" />
+              </span>
+              <span className="ct-hero__badge-text"> Send Enquiry</span>
+              <span className="ct-hero__badge-arrow">
+                <FiArrowRight size={16} aria-hidden="true" />
+              </span>
             </a>
           </motion.div>
         </div>
@@ -407,7 +423,7 @@ export default function Contact() {
             </motion.div>
           </aside>
 
-          {/* RIGHT — enquiry form */}
+          {/* RIGHT — enquiry form (compact, stretches to match the left column) */}
           <motion.form
             id="enquiry-form"
             className="ct-form"
@@ -426,27 +442,28 @@ export default function Contact() {
 
             {submitted && (
               <div className="ct-success" role="status">
-                <CheckCircle2 size={18} aria-hidden="true" />
+                <CheckCircle2 size={16} aria-hidden="true" />
                 <span>Your enquiry has been submitted successfully! We&rsquo;ll be in touch soon.</span>
               </div>
             )}
 
-            <div className="ct-field">
-              <label htmlFor="ct-name">
-                <User size={14} aria-hidden="true" /> Full name *
-              </label>
-              <input
-                {...fieldProps('name')}
-                placeholder="Enter your full name"
-                autoComplete="name"
-              />
-              <FieldError name="name" />
-            </div>
-
+            {/* Row 1: Name + Email */}
             <div className="ct-row">
               <div className="ct-field">
+                <label htmlFor="ct-name">
+                  <User size={13} aria-hidden="true" /> Full name *
+                </label>
+                <input
+                  {...fieldProps('name')}
+                  placeholder="Enter your full name"
+                  autoComplete="name"
+                />
+                <FieldError name="name" />
+              </div>
+
+              <div className="ct-field">
                 <label htmlFor="ct-email">
-                  <Mail size={14} aria-hidden="true" /> Email *
+                  <Mail size={13} aria-hidden="true" /> Email *
                 </label>
                 <input
                   {...fieldProps('email')}
@@ -456,10 +473,13 @@ export default function Contact() {
                 />
                 <FieldError name="email" />
               </div>
+            </div>
 
+            {/* Row 2: Phone + Service */}
+            <div className="ct-row">
               <div className="ct-field">
                 <label htmlFor="ct-phone">
-                  <Phone size={14} aria-hidden="true" /> Phone *
+                  <Phone size={13} aria-hidden="true" /> Phone *
                 </label>
                 <input
                   {...fieldProps('phone')}
@@ -469,12 +489,10 @@ export default function Contact() {
                 />
                 <FieldError name="phone" />
               </div>
-            </div>
 
-            <div className="ct-row">
               <div className="ct-field">
                 <label htmlFor="ct-service">
-                  <FileText size={14} aria-hidden="true" /> Service *
+                  <FileText size={13} aria-hidden="true" /> Service *
                 </label>
                 <select
                   {...fieldProps('service')}
@@ -489,17 +507,18 @@ export default function Contact() {
                 </select>
                 <FieldError name="service" />
               </div>
+            </div>
 
-              <div className="ct-field">
-                <label htmlFor="ct-institution">
-                  <Building2 size={14} aria-hidden="true" /> Institution
-                </label>
-                <input
-                  {...fieldProps('institution')}
-                  placeholder="University / College"
-                  autoComplete="organization"
-                />
-              </div>
+            {/* Row 3: Institution */}
+            <div className="ct-field">
+              <label htmlFor="ct-institution">
+                <Building2 size={13} aria-hidden="true" /> Institution
+              </label>
+              <input
+                {...fieldProps('institution')}
+                placeholder="University / College"
+                autoComplete="organization"
+              />
             </div>
 
             <fieldset className="ct-field ct-fieldset">
@@ -523,11 +542,13 @@ export default function Contact() {
               </div>
             </fieldset>
 
-            <div className="ct-field">
+            {/* This field grows to fill any spare height, so the form's bottom
+                edge always lines up with the left column (no empty space). */}
+            <div className="ct-field ct-field--grow">
               <label htmlFor="ct-message">Your requirement *</label>
               <textarea
                 {...fieldProps('message')}
-                rows="4"
+                rows="3"
                 placeholder="Describe your requirement — topic, discipline, stage of work and any deadlines."
                 maxLength={2000}
               />
@@ -543,29 +564,30 @@ export default function Contact() {
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="ct-submit"
-              disabled={submitting}
-              aria-busy={submitting}
-            >
-              {submitting ? (
-                <>
-                  <span className="ct-spinner" aria-hidden="true" />
-                  Sending…
-                </>
-              ) : (
-                <>
-                  <Send size={16} aria-hidden="true" />
-                  Send Enquiry
-                </>
-              )}
-            </button>
-
-            <p className="ct-note">
-              By submitting this form, you agree to our{' '}
-              <Link to="/privacy-policy">Privacy Policy</Link>.
-            </p>
+            {/* Footer: privacy note (left) + compact button (right) */}
+            <div className="ct-form__footer">
+              <p className="ct-note">
+                By submitting, you agree to our <Link to="/privacy-policy">Privacy Policy</Link>.
+              </p>
+              <button
+                type="submit"
+                className="ct-submit"
+                disabled={submitting}
+                aria-busy={submitting}
+              >
+                {submitting ? (
+                  <>
+                    <span className="ct-spinner" aria-hidden="true" />
+                    Sending…
+                  </>
+                ) : (
+                  <>
+                    <Send size={14} aria-hidden="true" />
+                    Send Enquiry
+                  </>
+                )}
+              </button>
+            </div>
           </motion.form>
         </div>
       </section>
@@ -602,7 +624,7 @@ export default function Contact() {
             <motion.div className="ct-map__card" {...reveal()}>
               <div className="ct-map__text">
                 <h2 id="ct-map-title">Our Location</h2>
-                <p>We&rsquo;re based in India and support researchers across the globe.</p>
+                <p>Based in India, we provide dedicated research support to students, scholars, and professionals across the globe. Whether you need assistance with academic writing, data analysis, or publication, we're here to help you move forward with confidence.</p>
                 <div className="ct-map__address">
                   <MapPin size={18} aria-hidden="true" />
                   <span>{settings.address}</span>
@@ -626,11 +648,14 @@ export default function Contact() {
         </section>
       )}
 
-      {/* ===================== FINAL CTA ===================== */}
+      {/* ===================== FINAL CTA (card style) ===================== */}
       <section className="ct-cta" aria-labelledby="ct-cta-title">
         <div className="container">
           <motion.div className="ct-cta__card" {...reveal()}>
-            <div>
+            <span className="ct-cta__icon">
+              <FiMessageSquare size={22} aria-hidden="true" />
+            </span>
+            <div className="ct-cta__text">
               <h2 id="ct-cta-title">Not Sure Where to Start?</h2>
               <p>
                 Share your research requirement with us and we&rsquo;ll help you identify the
@@ -639,7 +664,7 @@ export default function Contact() {
             </div>
             <a href="#enquiry-form" className="ct-cta__btn" onClick={focusForm}>
               Send an Enquiry
-              <ArrowUpRight size={18} aria-hidden="true" />
+              <FiArrowUpRight size={18} aria-hidden="true" />
             </a>
           </motion.div>
         </div>

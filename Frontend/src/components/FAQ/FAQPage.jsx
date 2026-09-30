@@ -1,32 +1,34 @@
+
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
+// react-icons  →  npm i react-icons
 import {
-  Search,
-  X,
-  HelpCircle,
-  MessageCircle,
-  ArrowRight,
-  AlertTriangle,
-  RefreshCw,
-  SearchX,
-  BookOpen,
-  GraduationCap,
-  FileText,
-  BarChart3,
-} from 'lucide-react';
+  FiSearch,
+  FiX,
+  FiHelpCircle,
+  FiMessageCircle,
+  FiMessageSquare,
+  FiArrowRight,
+  FiArrowUpRight,
+  FiAlertTriangle,
+  FiRefreshCw,
+  FiBookOpen,
+  FiFileText,
+  FiBarChart2,
+} from 'react-icons/fi';
+import { FaGraduationCap } from 'react-icons/fa';
 import SEO from '../../components/SEO.jsx';
 import FAQAccordion from '../../components/FAQ/FAQAccordion.jsx';
 import LoadingSpinner from '../../components/Loading/LoadingSpinner.jsx';
-import CTASection from '../../components/CTA/CTASection.jsx';
 import { getFAQs } from '../../services/contentApi.js';
 import '../../components/FAQ/FAQ.css';
 
 const TOPICS = [
-  { icon: BookOpen, label: 'Services & research support' },
-  { icon: FileText, label: 'Process & timelines' },
-  { icon: GraduationCap, label: 'Publication assistance' },
-  { icon: BarChart3, label: 'Data analysis support' },
+  { icon: FiBookOpen, label: 'Services & research support' },
+  { icon: FiFileText, label: 'Process & timelines' },
+  { icon: FaGraduationCap, label: 'Publication assistance' },
+  { icon: FiBarChart2, label: 'Data analysis support' },
 ];
 
 export default function FAQPage() {
@@ -124,7 +126,7 @@ export default function FAQPage() {
               })}
         >
           <span className="faq-eyebrow">
-            <HelpCircle size={14} aria-hidden="true" /> FAQ &amp; Support
+            <FiHelpCircle size={14} aria-hidden="true" /> FAQ &amp; Support
           </span>
           <h1 id="faq-hero-title">Frequently Asked Questions</h1>
           <p>
@@ -137,18 +139,24 @@ export default function FAQPage() {
       {/* ======================== FAQ CONTENT ======================== */}
       <section className="faq-content" aria-label="Frequently asked questions">
         <div className="faq-container faq-layout">
-          {/* LEFT — introduction / support card */}
+          {/* TOP — horizontal introduction / support card */}
           <aside className="faq-aside">
             <motion.div className="faq-help" {...reveal()}>
-              <span className="faq-help__icon">
-                <HelpCircle size={22} aria-hidden="true" />
-              </span>
-              <h2>How can we help?</h2>
-              <p>
-                Explore answers to common questions about our services, research support, process,
-                timelines, and academic assistance.
-              </p>
+              {/* Column 1: icon + heading + text */}
+              <div className="faq-help__intro">
+                <span className="faq-help__icon">
+                  <FiHelpCircle size={22} aria-hidden="true" />
+                </span>
+                <div>
+                  <h2>How can we help?</h2>
+                  <p>
+                    Explore answers to common questions about our services, research support,
+                    process, timelines, and academic assistance.
+                  </p>
+                </div>
+              </div>
 
+              {/* Column 2: topics */}
               <ul className="faq-topics">
                 {TOPICS.map(({ icon: Icon, label }) => (
                   <li key={label}>
@@ -158,24 +166,25 @@ export default function FAQPage() {
                 ))}
               </ul>
 
+              {/* Column 3: contact box */}
               <div className="faq-help__more">
                 <strong>Still have questions?</strong>
                 <span>Talk to our research support team for personalized guidance.</span>
                 <Link to="/contact" className="faq-btn faq-btn--primary">
                   Contact Our Team
-                  <ArrowRight size={16} aria-hidden="true" />
+                  <FiArrowRight size={16} aria-hidden="true" />
                 </Link>
               </div>
             </motion.div>
           </aside>
 
-          {/* RIGHT — search, filters, accordion */}
+          {/* BELOW — search, filters, accordion (full width) */}
           <div className="faq-main">
             {/* Search + categories */}
             {!loading && !error && faqs.length > 0 && (
               <div className="faq-toolbar">
                 <div className="faq-search">
-                  <Search size={18} className="faq-search__icon" aria-hidden="true" />
+                  <FiSearch size={18} className="faq-search__icon" aria-hidden="true" />
                   <label htmlFor="faq-search" className="faq-sr">
                     Search frequently asked questions
                   </label>
@@ -194,7 +203,7 @@ export default function FAQPage() {
                       onClick={() => setQuery('')}
                       aria-label="Clear search"
                     >
-                      <X size={16} aria-hidden="true" />
+                      <FiX size={16} aria-hidden="true" />
                     </button>
                   )}
                 </div>
@@ -244,7 +253,7 @@ export default function FAQPage() {
             {!loading && error && (
               <div className="faq-state" role="alert">
                 <span className="faq-state__icon faq-state__icon--danger">
-                  <AlertTriangle size={26} aria-hidden="true" />
+                  <FiAlertTriangle size={26} aria-hidden="true" />
                 </span>
                 <h2>Unable to load FAQs</h2>
                 <p>
@@ -256,7 +265,7 @@ export default function FAQPage() {
                   className="faq-btn faq-btn--primary"
                   onClick={() => setAttempt((n) => n + 1)}
                 >
-                  <RefreshCw size={16} aria-hidden="true" />
+                  <FiRefreshCw size={16} aria-hidden="true" />
                   Try Again
                 </button>
               </div>
@@ -266,7 +275,7 @@ export default function FAQPage() {
             {!loading && !error && faqs.length === 0 && (
               <div className="faq-state">
                 <span className="faq-state__icon">
-                  <MessageCircle size={26} aria-hidden="true" />
+                  <FiMessageCircle size={26} aria-hidden="true" />
                 </span>
                 <h2>No FAQs available</h2>
                 <p>
@@ -275,7 +284,7 @@ export default function FAQPage() {
                 </p>
                 <Link to="/contact" className="faq-btn faq-btn--primary">
                   Contact Us
-                  <ArrowRight size={16} aria-hidden="true" />
+                  <FiArrowRight size={16} aria-hidden="true" />
                 </Link>
               </div>
             )}
@@ -284,7 +293,7 @@ export default function FAQPage() {
             {!loading && !error && faqs.length > 0 && filtered.length === 0 && (
               <div className="faq-state">
                 <span className="faq-state__icon">
-                  <SearchX size={26} aria-hidden="true" />
+                  <FiSearch size={26} aria-hidden="true" />
                 </span>
                 <h2>No matching questions</h2>
                 <p>
@@ -301,7 +310,7 @@ export default function FAQPage() {
                   </button>
                   <Link to="/contact" className="faq-btn faq-btn--primary">
                     Contact Us
-                    <ArrowRight size={16} aria-hidden="true" />
+                    <FiArrowRight size={16} aria-hidden="true" />
                   </Link>
                 </div>
               </div>
@@ -315,37 +324,35 @@ export default function FAQPage() {
         </div>
       </section>
 
-      {/* ==================== STILL HAVE QUESTIONS ==================== */}
-      <section className="faq-support-wrap" aria-labelledby="faq-support-title">
+      {/* ============ BOTTOM CTA (same card style as Contact page) ============ */}
+      <section className="faq-cta" aria-labelledby="faq-cta-title">
         <div className="faq-container">
-          <motion.div className="faq-support" {...reveal()}>
-            <span className="faq-support__icon">
-              <MessageCircle size={24} aria-hidden="true" />
+          <motion.div className="faq-cta__card" {...reveal()}>
+            <span className="faq-cta__icon">
+              <FiMessageSquare size={22} aria-hidden="true" />
             </span>
-            <div className="faq-support__text">
-              <h2 id="faq-support-title">Still have questions?</h2>
+
+            <div className="faq-cta__text">
+              <h2 id="faq-cta-title">Need Research or Academic Support?</h2>
               <p>
-                Our team is available to help you understand our research and academic support
-                services.
+                Talk to our team of experienced research professionals and get guidance tailored
+                to your academic goals.
               </p>
             </div>
-            <div className="faq-support__actions">
-              <Link to="/contact" className="faq-btn faq-btn--primary">
+
+            <div className="faq-cta__actions">
+              <Link to="/contact" className="faq-cta__btn faq-cta__btn--primary">
+                <FiMessageCircle size={17} aria-hidden="true" />
                 Talk to Our Team
-                <ArrowRight size={16} aria-hidden="true" />
               </Link>
-              <Link to="/contact" className="faq-btn faq-btn--outline">
-                Contact Us
+              <Link to="/services" className="faq-cta__btn faq-cta__btn--outline">
+                Explore Services
+                <FiArrowUpRight size={17} aria-hidden="true" />
               </Link>
             </div>
           </motion.div>
         </div>
       </section>
-
-      {/* ============================ CTA ============================ */}
-      <div className="faq-cta">
-        <CTASection />
-      </div>
     </div>
   );
 }

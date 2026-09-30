@@ -1,3 +1,4 @@
+
 /* =========================================================
    CONTACT PAGE — ResearchPlus
    All classes are prefixed "ct-" so nothing leaks into or
@@ -9,12 +10,13 @@
    logo lines up exactly with the hero text and the content
    below at every screen size.
 
-   HERO (matches the reference design):
-   - the photo is FULL-BLEED, anchored to the right edge of the
-     screen and fading softly into the page colour on its left
-   - the copy sits on the left, aligned to the .container edge
-   - features have a title + small caption
-   - the "reply within 24 hours" pill is solid blue with an arrow
+   LATEST UPDATE:
+   - Hero features: 3 in one row on desktop; on mobile a 4th
+     feature appears and they sit 2 per row (2 x 2 grid)
+   - "Reply within 24 hours" badge (icon chip + arrow chip)
+   - "Not Sure Where to Start?" uses the same card style as the
+     "Why reach out" cards (#eff6ff)
+   - Info column and enquiry form have EQUAL height (no empty space)
    ========================================================= */
 
 .ct-hero,
@@ -26,6 +28,8 @@
   --ct-secondary: var(--secondary, #2563eb);
   --ct-accent: #f59e0b;
   --ct-bg: #f8fafc;
+  --ct-card: #eff6ff;
+  --ct-card-border: #dbeafe;
   --ct-text: var(--text, #0f172a);
   --ct-muted: var(--text-muted, #64748b);
   --ct-border: var(--border, #e2e8f0);
@@ -176,6 +180,11 @@
   border-left: 1px solid #c3d1ec;
 }
 
+/* 4th feature is ONLY for mobile — hidden on desktop / tablet */
+.ct-hero__features .ct-hero__feature--mobile {
+  display: none;
+}
+
 .ct-hero__features svg {
   color: var(--ct-secondary);
   flex-shrink: 0;
@@ -200,25 +209,23 @@
   color: var(--ct-muted);
 }
 
-/* Solid blue pill with clock + arrow */
+/* Reply-time badge: blue pill · clock chip · text · white arrow chip */
 .ct-hero__badge {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  padding: 15px 28px;
+  gap: 12px;
+  padding: 7px 8px 7px 8px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #1d4ed8, var(--ct-secondary));
+  background: linear-gradient(135deg, #1e40af 0%, var(--ct-secondary) 100%);
   color: #fff;
-  font-size: 0.95rem;
-  font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ct-hero__badge:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.36);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.36), inset 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 
 .ct-hero__badge:focus-visible {
@@ -226,21 +233,51 @@
   outline-offset: 3px;
 }
 
-.ct-hero__badge svg {
+.ct-hero__badge-icon,
+.ct-hero__badge-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   flex-shrink: 0;
+}
+
+.ct-hero__badge-icon {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.ct-hero__badge-text {
+  font-size: 0.93rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+}
+
+.ct-hero__badge-arrow {
+  background: #fff;
+  color: var(--ct-secondary);
+  transition: transform 0.2s ease;
+}
+
+.ct-hero__badge:hover .ct-hero__badge-arrow {
+  transform: translateX(3px);
 }
 
 /* ============================ MAIN ============================ */
 .ct-main {
   background: var(--ct-bg);
-  padding: 56px 0 64px;
+  padding: 48px 0 56px;
 }
 
+/* Both columns stretch to the same height → bottoms line up perfectly */
 .ct-main .ct-main__grid {
   display: grid;
   grid-template-columns: 2fr 3fr; /* 40 / 60 */
-  gap: 40px;
-  align-items: start;
+  gap: 36px;
+  align-items: stretch;
 }
 
 /* ---- Info column ---- */
@@ -248,8 +285,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  position: sticky;
-  top: 110px; /* clears the sticky header (80px) + breathing room */
+  min-width: 0;
 }
 
 .ct-info h2 {
@@ -265,6 +301,7 @@
   line-height: 1.55;
 }
 
+/* The list takes all spare height and shares it equally between the cards */
 .ct-methods {
   list-style: none;
   margin: 0;
@@ -272,15 +309,22 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 1;
+}
+
+.ct-methods > li {
+  display: flex;
+  flex: 1 1 auto;
 }
 
 .ct-method {
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  flex: 1;
   gap: 12px;
   padding: 12px 14px;
-  background: #fff;
+  background: transparent;
   border: 1px solid var(--ct-border);
   border-radius: 12px;
   color: inherit;
@@ -355,7 +399,7 @@ a.ct-method:hover .ct-method__arrow {
   display: flex;
   gap: 12px;
   padding: 14px 16px;
-  background: #fff;
+  background: transparent;
   border: 1px solid var(--ct-border);
   border-radius: 14px;
 }
@@ -380,67 +424,80 @@ a.ct-method:hover .ct-method__arrow {
   color: var(--ct-muted);
 }
 
-/* ---- Form card ---- */
+/* ---- Form card (COMPACT, fills the column height) ---- */
 .ct-form {
-  background: #fff;
-  border: 1px solid var(--ct-border);
-  border-radius: 18px;
-  padding: 26px 28px;
-  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.07);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: transparent;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07);
   scroll-margin-top: 110px;
 }
 
 .ct-form__header {
-  margin-bottom: 18px;
-  padding-bottom: 16px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--ct-border);
 }
 
 .ct-form__header h2 {
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .ct-form__header p {
   margin: 0;
   color: var(--ct-muted);
-  font-size: 0.88rem;
-  line-height: 1.55;
+  font-size: 0.8rem;
+  line-height: 1.5;
 }
 
 .ct-success {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  margin-bottom: 16px;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
   background: #f0fdf4;
   border: 1px solid #bbf7d0;
-  border-radius: 12px;
+  border-radius: 10px;
   color: #166534;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 500;
 }
 
 .ct-field {
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   min-width: 0;
+}
+
+/* The message field soaks up any spare height so nothing is left empty */
+.ct-field--grow {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.ct-field--grow textarea.ct-input {
+  flex: 1 1 auto;
 }
 
 .ct-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0 14px;
+  gap: 0 12px;
 }
 
 .ct-field > label,
 .ct-fieldset legend {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 6px;
-  font-size: 0.82rem;
+  gap: 5px;
+  margin-bottom: 4px;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--ct-text);
 }
@@ -453,19 +510,22 @@ a.ct-method:hover .ct-method__arrow {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  min-height: 44px;
-  padding: 10px 14px;
+  min-height: 38px;
+  padding: 7px 12px;
   font: inherit;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: var(--ct-text);
   background: #fff;
   border: 1.5px solid var(--ct-border);
-  border-radius: 12px;
+  border-radius: 10px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
+/* Smaller placeholder text in every field */
 .ct-input::placeholder {
+  font-size: 0.8rem;
   color: #94a3b8;
+  opacity: 1;
 }
 
 .ct-input:hover {
@@ -475,7 +535,7 @@ a.ct-method:hover .ct-method__arrow {
 .ct-input:focus {
   outline: none;
   border-color: var(--ct-secondary);
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
 }
 
 .ct-input--error {
@@ -485,28 +545,34 @@ a.ct-method:hover .ct-method__arrow {
 
 .ct-input--error:focus {
   border-color: var(--ct-danger);
-  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
 }
 
 .ct-select {
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
-  padding-right: 40px;
+  padding-right: 36px;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: right 14px center;
+  background-position: right 12px center;
 }
 
 textarea.ct-input {
-  min-height: 96px;
+  min-height: 72px;
   resize: vertical;
-  line-height: 1.65;
+  line-height: 1.5;
+}
+
+/* "Your requirement" placeholder: even smaller so it fits on fewer lines */
+textarea.ct-input::placeholder {
+  font-size: 0.76rem;
+  line-height: 1.45;
 }
 
 .ct-error {
-  margin: 6px 0 0;
-  font-size: 0.8rem;
+  margin: 4px 0 0;
+  font-size: 0.74rem;
   font-weight: 500;
   color: var(--ct-danger);
 }
@@ -516,22 +582,22 @@ textarea.ct-input {
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
-  margin-top: 2px;
-  min-height: 20px;
+  margin-top: 0;
+  min-height: 16px;
 }
 
 .ct-count {
   margin-left: auto;
-  margin-top: 6px;
-  font-size: 0.75rem;
+  margin-top: 4px;
+  font-size: 0.7rem;
   color: var(--ct-muted);
 }
 
-/* Preferred contact — keyboard-accessible radio pills */
+/* Preferred contact — keyboard-accessible radio pills (compact) */
 .ct-fieldset {
   border: 0;
   padding: 0;
-  margin: 0 0 14px;
+  margin: 0 0 10px;
 }
 
 .ct-fieldset legend {
@@ -549,12 +615,12 @@ textarea.ct-input {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
-  padding: 8px 12px;
+  min-height: 34px;
+  padding: 5px 10px;
   border: 1.5px solid var(--ct-border);
-  border-radius: 12px;
+  border-radius: 10px;
   background: #fff;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 500;
   color: var(--ct-muted);
   cursor: pointer;
@@ -588,32 +654,43 @@ textarea.ct-input {
 }
 
 .ct-radio:focus-within {
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
-/* Submit */
+/* Footer: privacy note on the left, small button on the right */
+.ct-form__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+/* Submit — small, auto-width button */
 .ct-submit {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  width: 100%;
-  min-height: 48px;
-  padding: 12px 22px;
+  gap: 8px;
+  flex-shrink: 0;
+  width: auto;
+  min-height: 40px;
+  padding: 9px 22px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 10px;
   background: linear-gradient(135deg, var(--ct-primary), var(--ct-secondary));
   color: #fff;
   font-family: var(--ct-head);
-  font-size: 0.98rem;
+  font-size: 0.86rem;
   font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
 .ct-submit:not(:disabled):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(30, 58, 138, 0.28);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(30, 58, 138, 0.26);
 }
 
 .ct-submit:focus-visible {
@@ -627,8 +704,8 @@ textarea.ct-input {
 }
 
 .ct-spinner {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border: 2px solid rgba(255, 255, 255, 0.35);
   border-top-color: #fff;
   border-radius: 50%;
@@ -640,9 +717,10 @@ textarea.ct-input {
 }
 
 .ct-note {
-  margin: 10px 0 0;
-  text-align: center;
-  font-size: 0.8rem;
+  margin: 0;
+  text-align: left;
+  font-size: 0.76rem;
+  line-height: 1.4;
   color: var(--ct-muted);
 }
 
@@ -659,7 +737,7 @@ textarea.ct-input {
 
 /* ============================ WHY ============================ */
 .ct-why {
-  background: #fff;
+  background:transparent;
   padding: 80px 0;
   border-top: 1px solid var(--ct-border);
 }
@@ -692,17 +770,19 @@ textarea.ct-input {
   gap: 20px;
 }
 
+/* Cards: light #eff6ff background */
 .ct-why__item {
   padding: 26px 22px;
-  background: var(--ct-primary);
-  border: 1px solid var(--ct-primary);
+  background: var(--ct-card);
+  border: 1px solid var(--ct-card-border);
   border-radius: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .ct-why__item:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 30px rgba(30, 58, 138, 0.22);
+  border-color: #bfdbfe;
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.14);
 }
 
 .ct-why__icon {
@@ -713,23 +793,23 @@ textarea.ct-input {
   height: 44px;
   margin-bottom: 16px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: #fff;
+  border: 1px solid #bfdbfe;
+  color: var(--ct-secondary);
 }
 
 .ct-why__item h3 {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #fff;
+  color: var(--ct-primary);
 }
 
 .ct-why__item p {
   margin: 0;
   font-size: 0.88rem;
   line-height: 1.6;
-  color: #cbd5e1;
+  color: #475569;
 }
 
 .ct-why__note {
@@ -743,8 +823,8 @@ textarea.ct-input {
 
 /* ============================ MAP ============================ */
 .ct-map {
-  background: var(--ct-bg);
-  padding: 72px 0 24px;
+  background:transparent;
+  
 }
 
 .ct-map__card {
@@ -752,15 +832,12 @@ textarea.ct-input {
   grid-template-columns: 2fr 3fr;
   gap: 32px;
   align-items: center;
-  padding: 24px;
-  background: #fff;
-  border: 1px solid var(--ct-border);
-  border-radius: 20px;
+  background:transparent;
   box-shadow: 0 12px 36px rgba(15, 23, 42, 0.06);
 }
 
 .ct-map__text {
-  padding: 8px 8px 8px 12px;
+  padding: 0px 15px 20px 16px;
 }
 
 .ct-map__text h2 {
@@ -793,7 +870,6 @@ textarea.ct-input {
 
 .ct-map__frame {
   height: 300px;
-  border-radius: 14px;
   overflow: hidden;
   border: 1px solid var(--ct-border);
   background: #e2e8f0;
@@ -807,6 +883,8 @@ textarea.ct-input {
 }
 
 /* ============================ CTA ============================ */
+/* Same look as the "Why reach out" cards: #eff6ff background,
+   dark-blue heading, slate text, white icon chip. */
 .ct-cta {
   background: var(--ct-bg);
   padding: 48px 0 88px;
@@ -817,24 +895,30 @@ textarea.ct-input {
   overflow: hidden;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-  padding: 48px 52px;
-  border-radius: 22px;
-  background: linear-gradient(150deg, #172554 0%, var(--ct-primary) 100%);
-  color: #fff;
+  gap: 22px;
+  padding: 34px 40px;
+  border-radius: 16px;
+  background: var(--ct-card);
+  border: 1px solid var(--ct-card-border);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
+.ct-cta__card:hover {
+  border-color: #bfdbfe;
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.12);
+}
+
+/* Faint blue grid on the right, like the previous design but light */
 .ct-cta__card::after {
   content: '';
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
   background-size: 36px 36px;
-  -webkit-mask-image: linear-gradient(90deg, transparent 40%, #000);
-  mask-image: linear-gradient(90deg, transparent 40%, #000);
+  -webkit-mask-image: linear-gradient(90deg, transparent 45%, #000);
+  mask-image: linear-gradient(90deg, transparent 45%, #000);
   pointer-events: none;
 }
 
@@ -843,17 +927,36 @@ textarea.ct-input {
   z-index: 1;
 }
 
+.ct-cta__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #bfdbfe;
+  color: var(--ct-secondary);
+  flex-shrink: 0;
+}
+
+.ct-cta__text {
+  flex: 1;
+  min-width: 0;
+}
+
 .ct-cta h2 {
-  color: #fff;
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--ct-primary);
+  font-size: clamp(1.3rem, 2.6vw, 1.75rem);
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .ct-cta p {
   margin: 0;
-  max-width: 520px;
-  color: #cbd5e1;
+  max-width: 560px;
+  color: #475569;
+  font-size: 0.95rem;
   line-height: 1.65;
 }
 
@@ -862,25 +965,24 @@ textarea.ct-input {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  padding: 15px 26px;
+  padding: 13px 24px;
   border-radius: 12px;
-  background: var(--ct-accent);
-  color: #0f172a;
+  background: linear-gradient(135deg, var(--ct-primary), var(--ct-secondary));
+  color: #fff;
   font-family: var(--ct-head);
   font-weight: 600;
-  font-size: 0.97rem;
+  font-size: 0.93rem;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ct-cta__btn:hover {
-  background: #fbbf24;
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 12px 26px rgba(30, 58, 138, 0.28);
 }
 
 .ct-cta__btn:focus-visible {
-  outline: 3px solid #fff;
+  outline: 3px solid rgba(37, 99, 235, 0.45);
   outline-offset: 3px;
 }
 
@@ -921,7 +1023,7 @@ textarea.ct-input {
     grid-template-columns: repeat(2, 1fr);
   }
   .ct-main .ct-main__grid {
-    gap: 32px;
+    gap: 28px;
   }
 }
 
@@ -961,13 +1063,16 @@ textarea.ct-input {
     background: linear-gradient(to bottom, var(--ct-hero-bg) 0, transparent 34%);
   }
   .ct-main {
-    padding: 44px 0 52px;
+    padding: 40px 0 48px;
   }
+  /* Single column: columns no longer need to match height */
   .ct-main .ct-main__grid {
     grid-template-columns: 1fr;
+    align-items: start;
   }
-  .ct-info {
-    position: static;
+  .ct-methods,
+  .ct-methods > li {
+    flex: 0 0 auto;
   }
   .ct-form {
     scroll-margin-top: 90px;
@@ -980,9 +1085,11 @@ textarea.ct-input {
     padding: 4px;
   }
   .ct-cta__card {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 36px 28px;
+    flex-wrap: wrap;
+    padding: 28px 24px;
+  }
+  .ct-cta__text {
+    flex: 1 1 260px;
   }
 }
 
@@ -1005,34 +1112,140 @@ textarea.ct-input {
     font-size: 0.98rem;
     margin-bottom: 24px;
   }
+
+  /* ---- Hero features on mobile: 4 items, 2 per row (2 x 2 grid) ---- */
   .ct-hero__features {
-    gap: 16px 24px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
+    align-items: start;
     margin-bottom: 24px;
   }
   .ct-hero__features li,
   .ct-hero__features li:first-child {
     padding: 0;
+    gap: 10px;
+    min-width: 0;
     border-left: 0 !important;
   }
-  .ct-hero__badge {
-    padding: 13px 22px;
-    font-size: 0.9rem;
+  /* reveal the 4th feature on mobile only */
+  .ct-hero__features .ct-hero__feature--mobile {
+    display: flex;
   }
+  .ct-hero__features svg {
+    width: 26px;
+    height: 26px;
+  }
+  .ct-hero__feature-text {
+    min-width: 0;
+    white-space: normal;
+  }
+  .ct-hero__feature-title {
+    font-size: 0.88rem;
+    line-height: 1.25;
+  }
+  .ct-hero__feature-sub {
+    font-size: 0.74rem;
+    line-height: 1.3;
+  }
+
+  /* Badge on small screens */
+  .ct-hero__badge {
+    gap: 10px;
+    padding: 6px;
+    max-width: 100%;
+  }
+  .ct-hero__badge-icon,
+  .ct-hero__badge-arrow {
+    width: 32px;
+    height: 32px;
+  }
+  .ct-hero__badge-text {
+    font-size: 0.85rem;
+    white-space: normal;
+    line-height: 1.25;
+  }
+
+  /* ---- Compact form on mobile ---- */
   .ct-form {
-    padding: 20px 16px;
-    border-radius: 16px;
+    padding: 16px 14px;
+    border-radius: 14px;
+  }
+  .ct-form__header {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+  .ct-form__header h2 {
+    font-size: 1.05rem;
+  }
+  .ct-form__header p {
+    font-size: 0.76rem;
   }
   .ct-row {
     grid-template-columns: 1fr;
   }
-  .ct-radios {
-    grid-template-columns: 1fr;
+  .ct-field {
+    margin-bottom: 9px;
   }
+  /* Keep typed text at 16px so iOS doesn't zoom in on focus;
+     the placeholder stays small */
+  .ct-input {
+    font-size: 1rem;
+    min-height: 40px;
+    padding: 7px 12px;
+  }
+  .ct-input::placeholder {
+    font-size: 0.8rem;
+  }
+  textarea.ct-input {
+    min-height: 68px;
+  }
+  textarea.ct-input::placeholder {
+    font-size: 0.75rem;
+  }
+  .ct-radios {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .ct-radio {
+    min-height: 34px;
+    padding: 5px 6px;
+    font-size: 0.78rem;
+  }
+  .ct-form__footer {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2px;
+  }
+  .ct-submit {
+    min-height: 40px;
+    min-width: 170px;
+    padding: 9px 26px;
+  }
+  .ct-note {
+    text-align: center;
+  }
+
   .ct-why {
     padding: 60px 0;
   }
   .ct-why__grid {
     grid-template-columns: 1fr;
+  }
+
+  /* CTA card on mobile */
+  .ct-cta {
+    padding: 36px 0 64px;
+  }
+  .ct-cta__card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px 20px;
+  }
+  .ct-cta__text {
+    flex: 0 0 auto;
   }
   .ct-cta__btn {
     width: 100%;
@@ -1057,6 +1270,7 @@ textarea.ct-input {
   .ct-why__item:hover,
   .ct-submit:not(:disabled):hover,
   .ct-hero__badge:hover,
+  .ct-hero__badge:hover .ct-hero__badge-arrow,
   .ct-cta__btn:hover {
     transform: none;
   }

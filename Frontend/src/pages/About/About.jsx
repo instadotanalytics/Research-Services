@@ -1,17 +1,55 @@
 
+import { Link } from 'react-router-dom';
 import SEO from '../../components/SEO.jsx';
-import CTASection from '../../components/CTA/CTASection.jsx';
 import {
-  Target,
-  Eye,
   Heart,
   Shield,
   Users,
   TrendingUp,
-  CheckCircle,
+  Check,
   ArrowRight,
 } from 'lucide-react';
+// react-icons  →  npm i react-icons
+import { FiMessageSquare, FiMessageCircle, FiArrowUpRight } from 'react-icons/fi';
+
+// Hero background images (src/assets)
+import heroDesktop from '../../assets/about-heroimagedesktop.png';
+import heroMobile from '../../assets/about-heroimagemobile.png';
+// "Who We Are" section background (desktop). Mobile uses a CSS gradient.
+import storyDesktop from '../../assets/about-middleimage desktop.png';
+// "What Drives Us" (Our Values) section background (desktop). Mobile uses a CSS gradient.
+import valuesDesktop from '../../assets/aboutimage.png';
+// "Why Choose Us" section background (desktop). Mobile uses a CSS gradient.
+import whyDesktop from '../../assets/aboutlastimage.png';
+
 import './About.css';
+
+/* ---- Custom icons for the Mission / Vision cards (match the design) ---- */
+function TargetArrowIcon() {
+  return (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="3.4"
+         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="22" cy="26" r="17" />
+      <circle cx="22" cy="26" r="9.5" />
+      <circle cx="22" cy="26" r="2.6" fill="currentColor" stroke="none" />
+      <path d="M23.5 24.5 L40 8" />
+      <path d="M40 8 V15 M40 8 H33" />
+    </svg>
+  );
+}
+
+function EyeFilledIcon() {
+  return (
+    <svg viewBox="0 0 48 34" aria-hidden="true">
+      <path
+        d="M1.5 17 C8 6, 16 1.5, 24 1.5 C32 1.5, 40 6, 46.5 17 C40 28, 32 32.5, 24 32.5 C16 32.5, 8 28, 1.5 17 Z"
+        fill="currentColor"
+      />
+      <circle cx="24" cy="17" r="8.6" fill="#fff" />
+      <circle cx="24" cy="17" r="3.8" fill="currentColor" />
+    </svg>
+  );
+}
 
 const values = [
   { icon: Shield, title: 'Integrity', desc: 'Ethical, transparent support with no misleading claims.' },
@@ -46,18 +84,30 @@ export default function About() {
 
       {/* ============================ HERO ============================ */}
       <section className="ab-hero">
+        {/* Background: mobile image on phones, desktop image everywhere else */}
+        <picture className="ab-hero__bg" aria-hidden="true">
+          <source media="(max-width: 767px)" srcSet={heroMobile} />
+          <img src={heroDesktop} alt="" />
+        </picture>
+
         <div className="container ab-hero__inner">
-          <span className="ab-eyebrow">About ResearchPlus</span>
+          <div className="ab-hero__copy">
+            <span className="ab-eyebrow">
+              <span className="ab-eyebrow__light">About</span>
+              <strong>ResearchPlus</strong>
+            </span>
 
-          <h1>
-            Dedicated to
-            <span className="ab-hero__accent"> Academic Excellence</span>
-          </h1>
+            <h1>
+              Dedicated to
+              <span className="ab-hero__accent"> Academic Excellence</span>
+            </h1>
 
-          <p>
-            We provide professional research and academic support to students, researchers, scholars,
-            faculty members and institutions — with a focus on structure, ethics and quality.
-          </p>
+            <p>
+              We provide professional research and academic support to students, researchers,
+              scholars, faculty members and institutions — with a focus on structure, ethics and
+              quality.
+            </p>
+          </div>
 
           <ul className="ab-stats">
             {stats.map((s) => (
@@ -72,12 +122,41 @@ export default function About() {
 
       {/* ============================ STORY ============================ */}
       <section className="ab-story">
+        {/* Desktop background image (hidden on phones – they get a CSS gradient) */}
+        <img className="ab-story__bg" src={storyDesktop} alt="" aria-hidden="true" />
+
         <div className="container ab-story__grid">
           <div className="ab-story__text">
-            <span className="ab-kicker">Who We Are</span>
+            <span className="ab-story__eyebrow">Who We Are</span>
+
             <h2>
-              Research support built around <em>your</em> work
+              Research support built around{' '}
+              <span className="ab-story__hl">
+                your work
+                <svg
+                  className="ab-story__swoosh"
+                  viewBox="0 0 220 16"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3 10 C 48 3, 125 1, 217 6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3.4"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M46 14 C 95 9, 150 8, 192 10"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
             </h2>
+
             <p>
               We are a research and academic support service built to help researchers and academic
               professionals succeed in their academic journey. Our team assists with dissertations,
@@ -90,53 +169,66 @@ export default function About() {
             </p>
 
             <ul className="ab-story__points">
-              <li>
-                <CheckCircle size={18} aria-hidden="true" />
-                <span>Your research remains your own</span>
-              </li>
-              <li>
-                <CheckCircle size={18} aria-hidden="true" />
-                <span>Ethical guidance, never shortcuts</span>
-              </li>
-              <li>
-                <CheckCircle size={18} aria-hidden="true" />
-                <span>A transparent process, start to finish</span>
-              </li>
+              {[
+                'Your research remains your own',
+                'Ethical guidance, never shortcuts',
+                'A transparent process, start to finish',
+              ].map((t) => (
+                <li key={t}>
+                  <span className="ab-story__tick">
+                    <Check size={13} strokeWidth={3.2} aria-hidden="true" />
+                  </span>
+                  <span>{t}</span>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div className="ab-story__panel">
-            <div className="ab-mv-card">
+            <div className="ab-mv-card ab-mv-card--mission">
               <span className="ab-mv-icon">
-                <Target size={24} aria-hidden="true" />
+                <TargetArrowIcon />
               </span>
               <h3>Our Mission</h3>
               <p>
-                To empower researchers and academic professionals with structured, ethical and
-                high-quality support that helps them achieve their academic goals.
+                To empower researchers and academic{' '}
+                <br className="ab-br" />
+                professionals with structured, ethical and{' '}
+                <br className="ab-br" />
+                high-quality support that helps them{' '}
+                <br className="ab-br" />
+                achieve their academic goals.
               </p>
             </div>
 
-            <div className="ab-mv-card ab-mv-card--alt">
+            <div className="ab-mv-card ab-mv-card--vision">
               <span className="ab-mv-icon">
-                <Eye size={24} aria-hidden="true" />
+                <EyeFilledIcon />
               </span>
               <h3>Our Vision</h3>
               <p>
-                To become a trusted academic support partner for researchers, scholars and institutions
-                across disciplines.
+                To become a trusted academic support{' '}
+                <br className="ab-br" />
+                partner for researchers, scholars and{' '}
+                <br className="ab-br" />
+                institutions across disciplines.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ============================ VALUES ============================ */}
-      <section className="ab-values">
-        <div className="container">
-          <div className="ab-section-head">
-            <span className="ab-kicker">What Drives Us</span>
-            <h2>Our Values</h2>
+      {/* ============================ VALUES (What Drives Us) ============================ */}
+      <section className="ab-values" aria-labelledby="ab-values-title">
+        {/* Desktop background image (hidden on phones – they get a CSS gradient) */}
+        <img className="ab-values__bg" src={valuesDesktop} alt="" aria-hidden="true" />
+
+        <div className="container ab-values__inner">
+          <div className="ab-values__head">
+            <span className="ab-values__eyebrow">What Drives Us</span>
+            <h2 id="ab-values-title">
+              Our <span className="ab-values__hl">Values</span>
+            </h2>
             <p>The principles that shape how we work with every researcher we support.</p>
           </div>
 
@@ -144,10 +236,15 @@ export default function About() {
             {values.map(({ icon: Icon, title, desc }) => (
               <div key={title} className="ab-value">
                 <span className="ab-value__icon">
-                  <Icon size={22} aria-hidden="true" />
+                  <Icon size={28} strokeWidth={2} aria-hidden="true" />
                 </span>
-                <h3>{title}</h3>
-                <p>{desc}</p>
+                <div className="ab-value__body">
+                  <h3>{title}</h3>
+                  <p>{desc}</p>
+                </div>
+                <span className="ab-value__arrow" aria-hidden="true">
+                  <ArrowRight size={20} strokeWidth={2.2} />
+                </span>
               </div>
             ))}
           </div>
@@ -155,26 +252,33 @@ export default function About() {
       </section>
 
       {/* ============================ WHY CHOOSE US ============================ */}
-      <section className="ab-why">
+      <section className="ab-why" aria-labelledby="ab-why-title">
+        {/* Desktop background image (hidden on phones – they get a CSS gradient) */}
+        <img className="ab-why__bg" src={whyDesktop} alt="" aria-hidden="true" />
+
         <div className="container ab-why__grid">
           <div className="ab-why__side">
-            <span className="ab-kicker">Why Choose Us</span>
-            <h2>Support you can rely on</h2>
+            <span className="ab-why__eyebrow">Why Choose Us</span>
+            <h2 id="ab-why-title">
+              Support you can
+              <br />
+              <span className="ab-why__hl">rely on</span>
+            </h2>
             <p>
-              From your first enquiry to your final submission, we keep the process clear, honest and
-              focused on your success.
+              From your initial enquiry to your final submission, we keep your research on track.
+              Our team is committed to your success.
             </p>
-            <a href="/contact" className="ab-why__cta">
+            <Link to="/contact" className="ab-why__cta">
               Get in touch
               <ArrowRight size={18} aria-hidden="true" />
-            </a>
+            </Link>
           </div>
 
           <ul className="ab-why__list">
             {whyUs.map((w) => (
               <li key={w}>
                 <span className="ab-why__check">
-                  <CheckCircle size={18} aria-hidden="true" />
+                  <Check size={16} strokeWidth={3.4} aria-hidden="true" />
                 </span>
                 <span>{w}</span>
               </li>
@@ -183,7 +287,35 @@ export default function About() {
         </div>
       </section>
 
-      <CTASection />
+      {/* ============ BOTTOM CTA (same card style as Contact / FAQ) ============ */}
+      <section className="ab-cta" aria-labelledby="ab-cta-title">
+        <div className="container">
+          <div className="ab-cta__card">
+            <span className="ab-cta__icon">
+              <FiMessageSquare size={22} aria-hidden="true" />
+            </span>
+
+            <div className="ab-cta__text">
+              <h2 id="ab-cta-title">Need Research or Academic Support?</h2>
+              <p>
+                Talk to our team of experienced research professionals and get guidance tailored to
+                your academic goals.
+              </p>
+            </div>
+
+            <div className="ab-cta__actions">
+              <Link to="/contact" className="ab-cta__btn ab-cta__btn--primary">
+                <FiMessageCircle size={17} aria-hidden="true" />
+                Talk to Our Team
+              </Link>
+              <Link to="/services" className="ab-cta__btn ab-cta__btn--outline">
+                Explore Services
+                <FiArrowUpRight size={17} aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
