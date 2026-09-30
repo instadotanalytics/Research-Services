@@ -1,14 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import {
-  Mail,
-  Phone,
-  MessageCircle,
-  ShieldCheck,
-  Search,
-  ArrowRight,
-  X,
-} from 'lucide-react';
+import { Search, ArrowRight, X } from 'lucide-react';
 import './Navbar.css';
 
 // Logo image import
@@ -33,6 +25,7 @@ const SEARCH_TERMS = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -40,6 +33,14 @@ export default function Navbar() {
   const searchInputRef = useRef(null);
   const { pathname } = useLocation();
   const navigate = useNavigate();
+
+  // Scroll par navbar ko blur background do
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -104,39 +105,8 @@ export default function Navbar() {
   return (
     <>
       <header className="navbar-wrapper">
-        {/* --- Top Bar (Sticky) --- */}
-        <div className="top-bar">
-          <div className="container top-bar-inner">
-            <div className="top-bar-left">
-              <a href="mailto:info@researchplus.com" className="top-item">
-                <Mail size={14} />
-                <span>info@researchplus.com</span>
-              </a>
-              <span className="divider">|</span>
-              <a href="tel:+919876543210" className="top-item">
-                <Phone size={14} />
-                <span>+91 98765 43210</span>
-              </a>
-              <span className="divider">|</span>
-              <a
-                href="https://wa.me/919876543210"
-                className="top-item"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <MessageCircle size={14} />
-                <span>WhatsApp Us</span>
-              </a>
-            </div>
-            <div className="top-bar-right">
-              <ShieldCheck size={16} />
-              <span>Trusted by 500+ Researchers & Institutions</span>
-            </div>
-          </div>
-        </div>
-
         {/* --- Main Navigation --- */}
-        <div className="main-nav">
+        <div className={`main-nav ${scrolled ? 'scrolled' : ''}`}>
           <div className="container navbar-inner">
             {/* Logo with text */}
             <Link to="/" className="navbar-logo" aria-label="ResearchPlus Home">
