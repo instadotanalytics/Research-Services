@@ -30,7 +30,6 @@
 .home-section.section-gradient {
   background: var(--h-gradient-soft);
 }
-
 .home-section.cta-wrap,
 .home-section.audience-section,
 .home-section.testimonials-section,
@@ -40,6 +39,7 @@
   min-height: auto;
 }
 
+/* ---------- Section paddings ---------- */
 .home-section.services-section { padding: 60px 0 40px; }
 .home-section.testimonials-section { padding: 40px 0; }
 .home-section.process-section { padding: 50px 0 60px; }
@@ -71,7 +71,7 @@
 .pill-light::before { border-color: var(--h-blue); }
 
 .home-section h2 {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: clamp(1.6rem, 3vw, 2.3rem);
   line-height: 1.2;
   color: var(--h-navy);
@@ -160,7 +160,7 @@
 }
 .hero-content { max-width: 660px; }
 .hero h1 {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: clamp(1.9rem, 3.3vw, 3.1rem);
   line-height: 1.15;
   color: var(--h-blue);
@@ -179,7 +179,7 @@
 .hero-stat { display: flex; align-items: center; gap: 10px; color: var(--h-blue); }
 .hero-stat strong {
   display: block;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 1.35rem;
   color: var(--h-navy);
   line-height: 1.1;
@@ -229,7 +229,7 @@
   align-items: center;
   justify-content: center;
 }
-.why-item h4 { margin: 0 0 4px; font-size: 0.9rem; color: var(--h-navy); font-family: "Poppins", sans-serif; }
+.why-item h4 { margin: 0 0 4px; font-size: 0.9rem; color: var(--h-navy); font-family: 'Poppins', sans-serif; }
 .why-item p { margin: 0; font-size: 0.78rem; line-height: 1.5; }
 .why-visual { position: relative; }
 .side-img {
@@ -285,7 +285,7 @@
   font-size: 0.92rem;
   color: var(--h-navy);
   margin: 0 0 8px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 .process-card p { font-size: 0.78rem; margin: 0; line-height: 1.5; flex: 1; }
 
@@ -393,7 +393,7 @@
 
 /* ---------- FAQ ---------- */
 .faq-section {
-  background: var(--h-gradient-soft); /* light blue gradient background */
+  background: var(--h-gradient-soft);
 }
 .faq-grid {
   display: flex;
@@ -459,7 +459,7 @@
   box-shadow: 0 16px 32px rgba(37, 99, 235, 0.08);
 }
 .cta-banner::after {
-  content: "";
+  content: '';
   position: absolute;
   right: -60px;
   top: 50%;
@@ -474,11 +474,16 @@
 .cta-content h2 {
   color: var(--h-navy);
   font-size: clamp(1.5rem, 2.6vw, 2rem);
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   line-height: 1.25;
   margin: 0 0 10px;
 }
-.cta-content p { color: var(--h-muted); font-size: 0.95rem; line-height: 1.55; margin: 0; }
+.cta-content p {
+  color: var(--h-muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0;
+}
 .cta-actions {
   position: relative;
   z-index: 2;

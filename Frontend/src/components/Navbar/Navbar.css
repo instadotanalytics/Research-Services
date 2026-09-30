@@ -9,20 +9,13 @@
   --text-muted: #64748b;
   --border-light: #e2e8f0;
   --top-bar-height: 40px;
-
-  /* Premium 3-Color Blue Gradient */
-  --navbar-gradient: linear-gradient(
-    135deg,
-    #e0ecff 0%,
-    #b8d4ff 45%,
-    #7fb3ff 100%
-  );
 }
 
 /* ============ Wrapper ============ */
 .navbar-wrapper {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   z-index: 1000;
   width: 100%;
   display: flex;
@@ -34,86 +27,29 @@
   will-change: transform;
 }
 
-/* ============ Top Bar (Sticky - desktop only) ============ */
-.top-bar {
-  background-color: #0f2557;
-  color: #ffffff;
-  font-size: 0.8rem;
-  height: var(--top-bar-height);
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.top-bar-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  width: 100%;
-}
-
-.top-bar-left {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.top-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #e2e8f0;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.top-item:hover {
-  color: #ffffff;
-}
-
-.divider {
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.top-bar-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #e2e8f0;
-  font-weight: 500;
-}
-
-/* ============ Main Nav ============ */
+/* ============ Main Nav (Transparent) ============ */
 .main-nav {
-  background: var(--navbar-gradient);
-  height: 80px;
+  background: transparent;
+  height: 70px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgba(37, 99, 235, 0.15);
+ 
   position: relative;
   z-index: 2;
-  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.1);
+  box-shadow: none;
+  transition: background 0.3s ease,
+              box-shadow 0.3s ease,
+              border-color 0.3s ease,
+              backdrop-filter 0.3s ease;
 }
 
-/* Subtle top highlight for a glossy feel */
-.main-nav::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.6),
-    transparent
-  );
-  pointer-events: none;
+/* Scroll ke baad blur background */
+.main-nav.scrolled {
+  background: rgba(224, 236, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: rgba(37, 99, 235, 0.15);
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.1);
 }
 
 .navbar-inner {
@@ -134,7 +70,7 @@
 }
 
 .logo-img {
-  height: 46px;
+  height: 50px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
@@ -556,6 +492,13 @@
 
   .main-nav {
     height: 64px;
+  }
+
+  /* Menu khula ho toh header ko solid background do */
+  .main-nav:has(.hamburger.active) {
+    background: rgba(224, 236, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .hamburger {
