@@ -9,10 +9,10 @@ import {
 } from 'lucide-react';
 import SEO from '../../components/SEO.jsx';
 import { getTestimonials, getFAQs } from '../../services/contentApi.js';
+import { getServices } from '../../services/serviceApi.js';
 import herobanner from '../../assets/herobanner.png';
 import herobanner2 from '../../assets/herobanner2.png';
 import heroimg from '../../assets/heroimg.png';
-import { getServices } from '../../services/serviceApi.js';
 import ServiceCard from '../../components/ServiceCard/ServiceCard.jsx';
 import './Home.css';
 
@@ -37,4 +37,397 @@ const defaultServices = [
 
 const whyUs = [
   { icon: Award, title: 'Experienced Support', desc: 'Skilled professionals with domain expertise.' },
-  { icon: Target, title: 'Structured Approach', desc: '
+  { icon: Target, title: 'Structured Approach', desc: 'Well-defined process for best results.' },
+  { icon: BarChart3, title: 'Data-Driven Analysis', desc: 'Accurate and reliable research insights.' },
+  { icon: Users, title: 'Personalized Guidance', desc: 'Support tailored to your specific needs.' },
+  { icon: ShieldCheck, title: 'Confidentiality', desc: 'Your data and information are always safe.' },
+  { icon: Clock, title: 'Timely Assistance', desc: 'On-time delivery and clear communication.' },
+];
+
+const process = [
+  { icon: FileText, title: 'Submit Your Requirement', desc: 'Tell us your needs and expectations.' },
+  { icon: Search, title: 'Requirement Analysis', desc: 'We understand your requirements in detail.' },
+  { icon: ClipboardList, title: 'Research Planning', desc: 'Create a customized plan for your project.' },
+  { icon: Settings, title: 'Development / Analysis', desc: 'Work on research, writing and data analysis.' },
+  { icon: ClipboardCheck, title: 'Review & Assistance', desc: 'Quality check and revisions if needed.' },
+  { icon: PackageCheck, title: 'Final Delivery', desc: 'On-time delivery with complete support.' },
+];
+
+const audience = [
+  { icon: GraduationCap, title: 'Students' },
+  { icon: Search, title: 'PhD Scholars' },
+  { icon: FlaskConical, title: 'Researchers' },
+  { icon: Users, title: 'Faculty' },
+  { icon: School, title: 'Schools' },
+  { icon: Landmark, title: 'Institutions' },
+];
+
+const defaultTestimonials = [
+  { _id: 't1', name: 'Priya Sharma', designation: 'M.Sc. Student', institution: 'Delhi University', rating: 5, review: 'The team at ResearchPlus helped me with my dissertation. The quality of work and timely delivery was excellent. Highly recommended!' },
+  { _id: 't2', name: 'Rahul Verma', designation: 'PhD Scholar', institution: 'IIT Roorkee', rating: 5, review: 'Professional, supportive and very knowledgeable team. They guided me well throughout my research paper publication process.' },
+  { _id: 't3', name: 'Sneha Patel', designation: 'Assistant Professor', institution: 'SPPU', rating: 5, review: 'The FDP program was well-structured and very informative. It helped me improve my teaching and research skills.' },
+];
+
+const defaultFaqs = [
+  { _id: 'f1', question: 'What types of services do you offer?', answer: 'We offer dissertation, thesis, synopsis and research paper writing, publication assistance, data analysis, FDP programs and academic writing support.' },
+  { _id: 'f2', question: 'Do you provide revisions?', answer: 'Yes. Iterative reviews and revisions are part of our process until you are satisfied with the work.' },
+  { _id: 'f3', question: 'Is your work plagiarism-free?', answer: 'Yes. All work is written from scratch and checked with plagiarism detection tools.' },
+  { _id: 'f4', question: 'Can I get a refund if I’m not satisfied?', answer: 'Please review our Refund Policy. We aim to resolve every concern through revisions first.' },
+  { _id: 'f5', question: 'How long does it take to complete a project?', answer: 'Timelines depend on the scope and stage of your project. We share a clear timeline after requirement analysis.' },
+  { _id: 'f6', question: 'How do I contact your support team?', answer: 'You can reach us through the contact form, email, phone or WhatsApp.' },
+  { _id: 'f7', question: 'How do I make a payment?', answer: 'We accept UPI, bank transfer and other online payment methods. Details are shared after confirmation.' },
+  { _id: 'f8', question: 'Are your services available for international clients?', answer: 'Yes. We support students, scholars and institutions across the globe.' },
+];
+
+const fadeUp = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+};
+
+function useIsMobile(query = '(max-width: 768px)') {
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const onChange = (e) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, [query]);
+  return isMobile;
+}
+
+export default function Home() {
+  const isMobile = useIsMobile();
+  const [testimonials, setTestimonials] = useState(defaultTestimonials);
+  const [faqs, setFaqs] = useState(defaultFaqs);
+  const [services, setServices] = useState(defaultServices);
+  const [openFaq, setOpenFaq] = useState(null);
+  const [tIndex, setTIndex] = useState(0);
+  const [sIndex, setSIndex] = useState(0);
+
+  useEffect(() => {
+    Promise.all([getTestimonials(), getFAQs(), getServices()])
+      .then(([t, f, s]) => {
+        if (t?.data?.length) setTestimonials(t.data);
+        if (f?.data?.length) setFaqs(f.data);
+        if (s?.data?.length) setServices(s.data);
+      })
+      .catch(console.error);
+  }, []);
+
+  // Testimonials
+  const visibleCount = isMobile ? 1 : Math.min(3, testimonials.length);
+  const visibleTestimonials = Array.from({ length: visibleCount }, (_, i) =>
+    testimonials[(tIndex + i) % testimonials.length]
+  );
+  const prevT = () => setTIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
+  const nextT = () => setTIndex((i) => (i + 1) % testimonials.length);
+
+  // Services (mobile: 1 at a time)
+  const visibleServicesCount = isMobile ? 1 : services.length;
+  const visibleServices = Array.from({ length: visibleServicesCount }, (_, i) =>
+    services[(sIndex + i) % services.length]
+  );
+  const prevS = () => setSIndex((i) => (i - 1 + services.length) % services.length);
+  const nextS = () => setSIndex((i) => (i + 1) % services.length);
+
+  useEffect(() => {
+    if (!isMobile) setSIndex(0);
+  }, [isMobile]);
+
+  const renderArrows = (cls, onPrev, onNext) => (
+    <div className={cls}>
+      <button type="button" onClick={onPrev} aria-label="Previous"><ChevronLeft size={18} /></button>
+      <button type="button" onClick={onNext} aria-label="Next"><ChevronRight size={18} /></button>
+    </div>
+  );
+
+  const shownFaqs = faqs.slice(0, 8);
+
+  const renderFaq = (f) => {
+    const open = openFaq === f._id;
+    return (
+      <div key={f._id} className={`faq-item ${open ? 'open' : ''}`}>
+        <button
+          type="button"
+          className="faq-q"
+          onClick={() => setOpenFaq(open ? null : f._id)}
+          aria-expanded={open}
+        >
+          <span>{f.question}</span>
+          {open ? <Minus size={16} /> : <Plus size={16} />}
+        </button>
+        {open && <p className="faq-a">{f.answer}</p>}
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <SEO
+        title="Research & Academic Support Services"
+        description="Professional research and academic support services for students, researchers, scholars and educational institutions."
+      />
+
+      {/* ========== HERO ========== */}
+      <section
+        className="home-section hero"
+        style={
+          isMobile
+            ? { backgroundImage: `url(${herobanner2})` }
+            : { '--hero-bg': `url(${herobanner})` }
+        }
+      >
+        <div className="container hero-inner">
+          <motion.div
+            className="hero-content"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="pill">Your Research Partner</span>
+            <h1>Empowering Research. Supporting Academic Excellence.</h1>
+            <p>
+              Professional research and academic support services for students, researchers,
+              scholars and educational institutions.
+            </p>
+            <div className="hero-actions">
+              <Link to="/services" className="btn-orange">
+                Explore Services <ArrowRight size={16} />
+              </Link>
+              <Link to="/contact" className="btn-ghost">Get Consultation</Link>
+            </div>
+
+            <div className="hero-stats">
+              {heroStats.map((s) => (
+                <div key={s.label} className="hero-stat">
+                  <s.icon size={24} />
+                  <div>
+                    <strong>{s.value}</strong>
+                    <span>{s.label}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ========== SERVICES ========== */}
+      <section className="home-section section-alt services-section">
+        <div className="container">
+          <div className="section-head-row">
+            <div>
+              <span className="pill">Our Services</span>
+              <h2>Comprehensive Research & Academic Support</h2>
+              <p>
+                We offer a wide range of academic and research services to help you achieve
+                your goals with confidence and quality.
+              </p>
+            </div>
+            <Link to="/services" className="link-arrow">
+              View All Services <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div className="services-grid-wrapper">
+            {isMobile && (
+              <button
+                type="button"
+                className="mobile-arrow mobile-arrow-left"
+                onClick={prevS}
+                aria-label="Previous service"
+              >
+                <ChevronLeft size={18} />
+              </button>
+            )}
+
+            <div className="services-grid">
+              {visibleServices.map((s) => (
+                <ServiceCard key={s._id || s.title} service={s} />
+              ))}
+            </div>
+
+            {isMobile && (
+              <button
+                type="button"
+                className="mobile-arrow mobile-arrow-right"
+                onClick={nextS}
+                aria-label="Next service"
+              >
+                <ChevronRight size={18} />
+              </button>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ========== WHY CHOOSE US ========== */}
+      <section className="home-section section-gradient why-section">
+        <div className="container why-inner">
+          <div className="why-content">
+            <span className="pill">Why Choose Us</span>
+            <h2>Your Success Is Our Priority</h2>
+            <p>
+              We are committed to providing high-quality, reliable and plagiarism-free academic
+              support with a professional approach.
+            </p>
+            <div className="why-grid">
+              {whyUs.map((w, i) => (
+                <motion.div key={w.title} className="why-item" {...fadeUp} transition={{ delay: i * 0.06 }}>
+                  <div className="why-icon"><w.icon size={18} /></div>
+                  <div>
+                    <h4>{w.title}</h4>
+                    <p>{w.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {!isMobile && (
+            <div className="why-visual">
+              <img src={heroimg} alt="Research, analysis, writing and success" className="side-img" />
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ========== PROCESS ========== */}
+      <section className="home-section section-gradient process-section">
+        <div className="container">
+          <div className="section-head">
+            <span className="pill">Our Process</span>
+            <h2>Simple 6-Step Research Support Process</h2>
+            <p>We follow a transparent and systematic process to ensure the best results.</p>
+          </div>
+          <div className="process-grid">
+            {process.map((p, i) => (
+              <motion.div key={p.title} className="process-card" {...fadeUp} transition={{ delay: i * 0.07 }}>
+                <span className="process-num">{String(i + 1).padStart(2, '0')}</span>
+                <div className="process-icon"><p.icon size={30} /></div>
+                <h3>{p.title}</h3>
+                <p>{p.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========== AUDIENCE ========== */}
+      <section className="home-section section-gradient audience-section">
+        <div className="container">
+          <div className="section-head">
+            <span className="pill">Who We Work With</span>
+            <h2>Supporting a Wide Range of Researchers & Learners</h2>
+            <p>We serve students, scholars, researchers, faculty and educational institutions across the globe.</p>
+          </div>
+          <div className="audience-grid">
+            {audience.map((a, i) => (
+              <motion.div key={a.title} className="audience-card" {...fadeUp} transition={{ delay: i * 0.06 }}>
+                <span className="audience-num">{String(i + 1).padStart(2, '0')}</span>
+                <a.icon size={30} />
+                <span className="audience-title">{a.title}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========== TESTIMONIALS ========== */}
+      <section className="home-section section-alt testimonials-section">
+        <div className="container">
+          <div className="section-head">
+            <span className="pill">Testimonials</span>
+            <h2>What Our Clients Say</h2>
+            <p>Trusted by students, researchers and institutions for quality and reliability.</p>
+          </div>
+
+          <div className="testimonials-grid-wrapper">
+            {isMobile && (
+              <button
+                type="button"
+                className="mobile-arrow mobile-arrow-left"
+                onClick={prevT}
+                aria-label="Previous testimonial"
+              >
+                <ChevronLeft size={18} />
+              </button>
+            )}
+
+            <div className="testimonial-grid">
+              {visibleTestimonials.map((t) => (
+                <div key={t._id} className="testimonial-card">
+                  <div className="testimonial-top">
+                    <div className="testimonial-avatar">{t.name.charAt(0).toUpperCase()}</div>
+                    <div>
+                      <strong>{t.name}</strong>
+                      <span>{t.designation}{t.institution ? `, ${t.institution}` : ''}</span>
+                      <div className="stars">{'★'.repeat(t.rating || 5)}</div>
+                    </div>
+                  </div>
+                  <p>“{t.review}”</p>
+                </div>
+              ))}
+            </div>
+
+            {isMobile && (
+              <button
+                type="button"
+                className="mobile-arrow mobile-arrow-right"
+                onClick={nextT}
+                aria-label="Next testimonial"
+              >
+                <ChevronRight size={18} />
+              </button>
+            )}
+          </div>
+
+          {!isMobile && renderArrows('arrows arrows-bottom-desktop', prevT, nextT)}
+        </div>
+      </section>
+
+      {/* ========== FAQ ========== */}
+      <section className="home-section faq-section">
+        <div className="container">
+          <div className="section-head-row">
+            <div>
+              <span className="pill">Frequently Asked Questions</span>
+              <h2>Got Questions? We’re Here to Help</h2>
+              <p>Find answers to the most common questions about our services.</p>
+            </div>
+            <Link to="/faq" className="link-arrow">
+              View All FAQs <ArrowRight size={14} />
+            </Link>
+          </div>
+          <div className="faq-grid">
+            {shownFaqs.map(renderFaq)}
+          </div>
+        </div>
+      </section>
+
+      {/* ========== CTA ========== */}
+      <section className="home-section cta-wrap">
+        <div className="container">
+          <div className="cta-banner">
+            <div className="cta-content">
+              <h2>Need Research or Academic Support?</h2>
+              <p>Talk to our team of experienced research professionals and get guidance tailored to your academic goals.</p>
+            </div>
+            <div className="cta-actions">
+              <Link to="/contact" className="btn-orange">
+                <MessageCircle size={18} /> Talk to Our Team
+              </Link>
+              <Link to="/services" className="btn-ghost btn-ghost-light">
+                Explore Services <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
