@@ -1,0 +1,409 @@
+/* ==========================================================
+   ADMIN — MOBILE RESPONSIVE LAYER
+   Every selector is prefixed with `body` so it wins over the
+   per-page CSS files regardless of import order.
+   ========================================================== */
+
+/* ---------- Shell (sidebar + menu button) ---------- */
+@media (max-width: 900px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  body .admin-menu-btn {
+    top: 12px;
+    left: 12px;
+    width: 42px;
+    height: 42px;
+    transition:
+      opacity 0.2s,
+      transform 0.2s;
+  }
+  /* Drawer has its own close button, so hide the floating one while open */
+  body .admin-menu-btn.is-open {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* Hide the floating button while the search overlay is open */
+  body.search-open .admin-menu-btn {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  body .admin-sidebar {
+    width: min(280px, 85vw);
+    height: 100vh;
+    height: 100dvh;
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0.3s;
+  }
+  body .admin-sidebar:not(.open) {
+    visibility: hidden;
+  }
+  body .admin-sidebar-footer {
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 640px) {
+  body .admin-menu-btn {
+    top: 8px;
+  }
+}
+
+/* ---------- Dashboard ---------- */
+@media (max-width: 768px) {
+  body .dashboard-container {
+    gap: 16px;
+  }
+
+  body .stat-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 0;
+  }
+  body .stat-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 14px;
+  }
+  body .stat-card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+  body .stat-card-value {
+    font-size: 1.4rem;
+  }
+  body .stat-card-title {
+    font-size: 0.78rem;
+    margin-top: 2px;
+  }
+
+  body .dashboard-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  body .dashboard-grid > * {
+    min-width: 0;
+  }
+  body .dashboard-main,
+  body .dashboard-side {
+    gap: 16px;
+  }
+
+  body .dash-card-section {
+    padding: 16px;
+    border-radius: 14px;
+  }
+  body .dash-section-header {
+    margin-bottom: 14px;
+  }
+  body .stat-value {
+    font-size: 2rem;
+  }
+  body .bar-chart {
+    height: 100px;
+    gap: 8px;
+  }
+  body .calendar-days {
+    gap: 6px;
+  }
+}
+
+/* ---------- Page headers, filters, profile ---------- */
+@media (max-width: 768px) {
+  body .admin-page-header {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  body .admin-page-header h1 {
+    font-size: 1.25rem;
+  }
+  body .admin-page-header p {
+    font-size: 0.82rem;
+  }
+
+  body .admin-filters {
+    flex-direction: column;
+    gap: 10px;
+  }
+  body .admin-search-box {
+    min-width: 0;
+    width: 100%;
+  }
+  body .filter-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* 16px inputs stop iOS from zooming on focus */
+  body .form-control,
+  body .filter-select,
+  body .admin-search-box input {
+    font-size: 16px;
+  }
+
+  body .profile-grid {
+    gap: 16px;
+  }
+  body .profile-card {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  body .admin-page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  body .btn-add-small {
+    justify-content: center;
+    padding: 11px 16px;
+  }
+}
+
+/* ---------- Tables -> cards ---------- */
+@media (max-width: 768px) {
+  body .admin-table-container,
+  body .admin-table-wrap {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    overflow: visible; /* lets the ⋮ dropdown escape the container */
+  }
+
+  body .admin-table,
+  body .admin-table tbody {
+    display: block;
+    width: 100%;
+  }
+  body .admin-table thead {
+    display: none;
+  }
+
+  body .admin-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 14px 14px 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  body .admin-table tbody tr:hover {
+    background: #ffffff;
+  }
+
+  body .admin-table tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 7px 0;
+    border: none;
+    text-align: right;
+    font-size: 0.85rem;
+    min-width: 0;
+  }
+
+  /* field label (content is set per-table below) */
+  body .admin-table tbody td::before {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  /* Primary cell = card title (shown first, no label) */
+  body .admin-enquiries-page .admin-table td:nth-child(1),
+  body .admin-services-page .admin-table td:nth-child(2),
+  body .admin-faqs-page .admin-table td:nth-child(2),
+  body .admin-statistics-page .admin-table td:nth-child(2),
+  body .admin-testimonials-page .admin-table td:nth-child(1),
+  body .dashboard-container .admin-table td:nth-child(1) {
+    order: -1;
+    display: block;
+    text-align: left;
+    padding: 0 40px 10px 0;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  /* Actions cell = ⋮ button pinned to card's top-right */
+  body .admin-enquiries-page .admin-table td:nth-child(6),
+  body .admin-services-page .admin-table td:nth-child(5),
+  body .admin-faqs-page .admin-table td:nth-child(4),
+  body .admin-statistics-page .admin-table td:nth-child(5),
+  body .admin-testimonials-page .admin-table td:nth-child(6) {
+    position: absolute !important; /* beats the inline style */
+    top: 8px;
+    right: 8px;
+    padding: 0;
+    width: auto;
+    display: block;
+  }
+
+  body .kebab-btn {
+    width: 36px;
+    height: 36px;
+  }
+  body .dropdown-menu {
+    right: 0;
+    top: 100%;
+    min-width: 170px;
+  }
+  body .dropdown-menu button {
+    padding: 11px 12px;
+    font-size: 0.85rem;
+  }
+
+  /* Empty-state rows (colSpan) stay as a plain centered block */
+  body .admin-table tbody td[colspan] {
+    display: block;
+    text-align: center !important;
+  }
+  body .admin-table tbody td[colspan]::before {
+    content: none !important;
+  }
+
+  /* Long previews wrap instead of forcing sideways scroll */
+  body .faq-answer-preview,
+  body .service-desc-preview,
+  body .testimonial-inst-preview {
+    white-space: normal;
+    max-width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  /* ----- Labels per table ----- */
+  /* Enquiries */
+  body .admin-enquiries-page .admin-table td:nth-child(2)::before {
+    content: "Contact";
+  }
+  body .admin-enquiries-page .admin-table td:nth-child(3)::before {
+    content: "Service";
+  }
+  body .admin-enquiries-page .admin-table td:nth-child(4)::before {
+    content: "Status";
+  }
+  body .admin-enquiries-page .admin-table td:nth-child(5)::before {
+    content: "Date";
+  }
+  /* Services */
+  body .admin-services-page .admin-table td:nth-child(1)::before {
+    content: "Order";
+  }
+  body .admin-services-page .admin-table td:nth-child(3)::before {
+    content: "Slug";
+  }
+  body .admin-services-page .admin-table td:nth-child(4)::before {
+    content: "Status";
+  }
+  /* FAQs */
+  body .admin-faqs-page .admin-table td:nth-child(1)::before {
+    content: "Order";
+  }
+  body .admin-faqs-page .admin-table td:nth-child(3)::before {
+    content: "Status";
+  }
+  /* Statistics */
+  body .admin-statistics-page .admin-table td:nth-child(1)::before {
+    content: "Order";
+  }
+  body .admin-statistics-page .admin-table td:nth-child(3)::before {
+    content: "Value";
+  }
+  body .admin-statistics-page .admin-table td:nth-child(4)::before {
+    content: "Status";
+  }
+  /* Testimonials */
+  body .admin-testimonials-page .admin-table td:nth-child(2)::before {
+    content: "Designation";
+  }
+  body .admin-testimonials-page .admin-table td:nth-child(3)::before {
+    content: "Institution";
+  }
+  body .admin-testimonials-page .admin-table td:nth-child(4)::before {
+    content: "Rating";
+  }
+  body .admin-testimonials-page .admin-table td:nth-child(5)::before {
+    content: "Status";
+  }
+  /* Dashboard: Recent Enquiries */
+  body .dashboard-container .admin-table td:nth-child(2)::before {
+    content: "Email";
+  }
+  body .dashboard-container .admin-table td:nth-child(3)::before {
+    content: "Service";
+  }
+  body .dashboard-container .admin-table td:nth-child(4)::before {
+    content: "Status";
+  }
+  body .dashboard-container .admin-table td:nth-child(5)::before {
+    content: "Date";
+  }
+}
+
+/* ---------- Modals -> bottom sheets ---------- */
+@media (max-width: 768px) {
+  body .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+    overflow: hidden;
+  }
+  body .modal-box {
+    max-width: 100%;
+    max-height: 92vh;
+    max-height: 92dvh;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px 20px 0 0;
+    animation: sheetUp 0.25s ease;
+  }
+  body .modal-header {
+    padding: 16px 18px;
+    flex-shrink: 0;
+  }
+  body .modal-body {
+    padding: 18px;
+    max-height: none;
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  body .modal-footer {
+    position: sticky;
+    bottom: 0;
+    background: #ffffff;
+    margin-top: 16px;
+    padding: 14px 0 calc(4px + env(safe-area-inset-bottom, 0px));
+  }
+  body .modal-footer .btn {
+    flex: 1;
+    justify-content: center;
+  }
+  body .status-update-row {
+    flex-wrap: wrap;
+  }
+}
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

@@ -9,9 +9,11 @@ import {
 } from 'lucide-react';
 import SEO from '../../components/SEO.jsx';
 import { getTestimonials, getFAQs } from '../../services/contentApi.js';
+import { getServices } from '../../services/serviceApi.js';
 import herobanner from '../../assets/herobanner.png';
 import herobanner2 from '../../assets/herobanner2.png';
 import heroimg from '../../assets/heroimg.png';
+import ServiceCard from '../../components/ServiceCard/ServiceCard.jsx';
 import './Home.css';
 
 const heroStats = [
@@ -21,16 +23,16 @@ const heroStats = [
   { icon: Building2, value: '50+', label: 'Academic Institutions' },
 ];
 
-const services = [
-  { icon: FileText, title: 'Dissertation Writing', desc: 'Well-researched and professionally written dissertations tailored to your needs.' },
-  { icon: PenLine, title: 'Research Paper Writing', desc: 'High-quality research papers with proper structure and referencing.' },
-  { icon: Newspaper, title: 'Research Paper Publication Assistance', desc: 'Guidance for journal selection, formatting and submission support.' },
-  { icon: BookOpen, title: 'Thesis Writing', desc: 'Plagiarism-free thesis with in-depth research and analysis.' },
-  { icon: UserCheck, title: 'Synopsis Writing', desc: 'Well-structured synopsis for your research proposal.' },
-  { icon: Database, title: 'Data Collection & Analysis', desc: 'Accurate data collection, analysis and meaningful insights.' },
-  { icon: Users, title: 'Faculty Development Program (FDP)', desc: 'Customized FDP programs for faculty and institutions.' },
-  { icon: Lightbulb, title: 'Research Proposal Writing', desc: 'Professional research proposals for funding and academic projects.' },
-  { icon: School, title: 'College & School Academic Writing', desc: 'Assignments, projects, reports and academic content support.' },
+const defaultServices = [
+  { _id: 's1', icon: 'FileText', title: 'Dissertation Writing', shortDescription: 'Well-researched and professionally written dissertations tailored to your needs.' },
+  { _id: 's2', icon: 'PenLine', title: 'Research Paper Writing', shortDescription: 'High-quality research papers with proper structure and referencing.' },
+  { _id: 's3', icon: 'Newspaper', title: 'Research Paper Publication Assistance', shortDescription: 'Guidance for journal selection, formatting and submission support.' },
+  { _id: 's4', icon: 'BookOpen', title: 'Thesis Writing', shortDescription: 'In-depth thesis support with strong research and analysis.' },
+  { _id: 's5', icon: 'UserCheck', title: 'Synopsis Writing', shortDescription: 'Well-structured synopsis for your research proposal.' },
+  { _id: 's6', icon: 'Database', title: 'Data Collection & Analysis', shortDescription: 'Accurate data collection, analysis and meaningful insights.' },
+  { _id: 's7', icon: 'Users', title: 'Faculty Development Program (FDP)', shortDescription: 'Customized FDP programs for faculty and institutions.' },
+  { _id: 's8', icon: 'Lightbulb', title: 'Research Proposal Writing', shortDescription: 'Professional research proposals for funding and academic projects.' },
+  { _id: 's9', icon: 'School', title: 'College & School Academic Writing', shortDescription: 'Assignments, projects, reports and academic content support.' },
 ];
 
 const whyUs = [
@@ -101,15 +103,17 @@ export default function Home() {
   const isMobile = useIsMobile();
   const [testimonials, setTestimonials] = useState(defaultTestimonials);
   const [faqs, setFaqs] = useState(defaultFaqs);
+  const [services, setServices] = useState(defaultServices);
   const [openFaq, setOpenFaq] = useState(null);
   const [tIndex, setTIndex] = useState(0);
   const [sIndex, setSIndex] = useState(0);
 
   useEffect(() => {
-    Promise.all([getTestimonials(), getFAQs()])
-      .then(([t, f]) => {
+    Promise.all([getTestimonials(), getFAQs(), getServices()])
+      .then(([t, f, s]) => {
         if (t?.data?.length) setTestimonials(t.data);
         if (f?.data?.length) setFaqs(f.data);
+        if (s?.data?.length) setServices(s.data);
       })
       .catch(console.error);
   }, []);
@@ -122,7 +126,7 @@ export default function Home() {
   const prevT = () => setTIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
   const nextT = () => setTIndex((i) => (i + 1) % testimonials.length);
 
-  // Services
+  // Services (mobile: 1 at a time)
   const visibleServicesCount = isMobile ? 1 : services.length;
   const visibleServices = Array.from({ length: visibleServicesCount }, (_, i) =>
     services[(sIndex + i) % services.length]
@@ -243,14 +247,7 @@ export default function Home() {
 
             <div className="services-grid">
               {visibleServices.map((s) => (
-                <div key={s.title} className="service-card">
-                  <div className="icon-box"><s.icon size={18} /></div>
-                  <h3>{s.title}</h3>
-                  <p>{s.desc}</p>
-                  <Link to="/services" className="learn-more">
-                    Learn More <ArrowRight size={13} />
-                  </Link>
-                </div>
+                <ServiceCard key={s._id || s.title} service={s} />
               ))}
             </div>
 

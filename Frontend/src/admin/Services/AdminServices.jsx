@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Plus,
   Edit,
@@ -8,12 +8,16 @@ import {
   Briefcase,
   Search,
   ExternalLink,
+  ImagePlus,
+  Loader2,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getServices, createService, updateService, deleteService } from '../../services/serviceApi.js';
+import { uploadImage } from '../../services/uploadApi.js';
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal.jsx';
 import { TableSkeletonRows } from '../../components/Skeleton/Skeleton.jsx';
+import { withMinDelay } from '../../utils/minDelay.js';
 import { slugify } from '../../utils/slugify.js';
 import './AdminServices.css';
 
@@ -23,6 +27,7 @@ const emptyForm = {
   shortDescription: '',
   description: '',
   icon: 'FileText',
+  image: '',
   ctaText: 'Get Research Assistance',
   status: true,
   order: 0,
@@ -36,23 +41,50 @@ export default function AdminServices() {
   const [form, setForm] = useState(emptyForm);
   const [confirm, setConfirm] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [menuPos, setMenuPos] = useState({ top: 'auto', bottom: 'auto', right: 16 });
   const [search, setSearch] = useState('');
   const toast = useToast();
 
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef(null);
+
+  const onImagePick = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) return toast.error('Please select an image file');
+    setUploading(true);
+    try {
+      const { data } = await uploadImage(file);
+      setForm((p) => ({ ...p, image: data.url }));
+      toast.success('Image uploaded');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Image upload failed');
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = '';
+    }
+  };
+
   const load = () => {
     setLoading(true);
-    getServices(true)
+    withMinDelay(getServices(true))
       .then((r) => setItems(r.data))
       .finally(() => setLoading(false));
   };
 
   useEffect(load, []);
 
-  // Close dropdown when clicking outside
+  // Close dropdown on outside click, scroll, or resize
   useEffect(() => {
-    const handleClickOutside = () => setActiveDropdown(null);
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    const close = () => setActiveDropdown(null);
+    document.addEventListener('click', close);
+    window.addEventListener('scroll', close, true); // capture: catches inner scroll containers too
+    window.addEventListener('resize', close);
+    return () => {
+      document.removeEventListener('click', close);
+      window.removeEventListener('scroll', close, true);
+      window.removeEventListener('resize', close);
+    };
   }, []);
 
   // Body scroll lock when modal open
@@ -116,10 +148,20 @@ export default function AdminServices() {
 
   const toggleDropdown = (e, id) => {
     e.stopPropagation();
-    setActiveDropdown(activeDropdown === id ? null : id);
+    if (activeDropdown === id) return setActiveDropdown(null);
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const MENU_HEIGHT = 150; // approx height of the 3-item menu
+    const openUp = window.innerHeight - rect.bottom < MENU_HEIGHT;
+
+    setMenuPos({
+      top: openUp ? 'auto' : rect.bottom + 4,
+      bottom: openUp ? window.innerHeight - rect.top + 4 : 'auto',
+      right: Math.max(window.innerWidth - rect.right, 8),
+    });
+    setActiveDropdown(id);
   };
 
-  // Filtered by search
   const filtered = search
     ? items.filter(
       (s) =>
@@ -130,7 +172,6 @@ export default function AdminServices() {
 
   return (
     <div className="admin-services-page">
-      {/* ============ Header ============ */}
       <div className="admin-page-header">
         <div>
           <h1>Services</h1>
@@ -146,7 +187,6 @@ export default function AdminServices() {
         </button>
       </div>
 
-      {/* ============ Search ============ */}
       {items.length > 0 && (
         <div className="admin-filters">
           <div className="admin-search-box">
@@ -169,7 +209,6 @@ export default function AdminServices() {
         </div>
       )}
 
-      {/* ============ Content ============ */}
       {!loading && items.length === 0 ? (
         <div className="empty-wrapper">
           <Briefcase size={48} strokeWidth={1.5} className="empty-icon" />
@@ -210,11 +249,16 @@ export default function AdminServices() {
                       <span className="order-badge">{s.order}</span>
                     </td>
                     <td>
-                      <div className="service-title-cell">
-                        <strong>{s.title}</strong>
-                        <span className="service-desc-preview">
-                          {s.shortDescription}
-                        </span>
+                      <div className="service-cell-inner">
+                        {s.image ? (
+                          <img src={s.image} alt="" className="service-thumb" />
+                        ) : (
+                          <span className="service-thumb service-thumb-empty"><Briefcase size={16} /></span>
+                        )}
+                        <div className="service-title-cell">
+                          <strong>{s.title}</strong>
+                          <span className="service-desc-preview">{s.shortDescription}</span>
+                        </div>
                       </div>
                     </td>
                     <td>
@@ -228,7 +272,7 @@ export default function AdminServices() {
                         {s.status ? 'Active' : 'Disabled'}
                       </span>
                     </td>
-                    <td style={{ textAlign: 'right', position: 'relative' }}>
+                    <td style={{ textAlign: 'right' }}>
                       <button
                         className="kebab-btn"
                         onClick={(e) => toggleDropdown(e, s._id)}
@@ -238,7 +282,7 @@ export default function AdminServices() {
                       </button>
 
                       {activeDropdown === s._id && (
-                        <div className="dropdown-menu">
+                        <div className="dropdown-menu" style={menuPos}>
                           <Link
                             to={`/services/${s.slug}`}
                             target="_blank"
@@ -270,7 +314,6 @@ export default function AdminServices() {
         </div>
       )}
 
-      {/* ============ Add/Edit Modal ============ */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
@@ -355,6 +398,32 @@ export default function AdminServices() {
                 />
               </div>
 
+              <div className="form-group">
+                <label>Service Image</label>
+                <div className={`image-upload ${form.image ? 'has-image' : ''}`}>
+                  {form.image ? (
+                    <div className="image-upload-preview">
+                      <img src={form.image} alt="Service preview" />
+                      <div className="image-upload-actions">
+                        <button type="button" className="btn btn-ghost" onClick={() => fileRef.current?.click()} disabled={uploading}>
+                          {uploading ? 'Uploading…' : 'Change'}
+                        </button>
+                        <button type="button" className="btn btn-ghost danger-text" onClick={() => setForm((p) => ({ ...p, image: '' }))} disabled={uploading}>
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button type="button" className="image-upload-drop" onClick={() => fileRef.current?.click()} disabled={uploading}>
+                      {uploading ? <Loader2 size={22} className="spin" /> : <ImagePlus size={22} />}
+                      <span>{uploading ? 'Uploading…' : 'Click to upload an image'}</span>
+                      <small>JPG, PNG or WebP · landscape (16:10) works best</small>
+                    </button>
+                  )}
+                  <input ref={fileRef} type="file" accept="image/*" hidden onChange={onImagePick} />
+                </div>
+              </div>
+
               <div className="form-row">
                 <div className="form-group">
                   <label>Icon Name</label>
@@ -418,7 +487,7 @@ export default function AdminServices() {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn btn-primary" disabled={uploading}>
                   {editing ? 'Update Service' : 'Create Service'}
                 </button>
               </div>
@@ -427,7 +496,6 @@ export default function AdminServices() {
         </div>
       )}
 
-      {/* ============ Delete Confirmation ============ */}
       <ConfirmModal
         open={!!confirm}
         title="Delete Service"

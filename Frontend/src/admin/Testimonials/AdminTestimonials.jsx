@@ -4,6 +4,7 @@ import { getTestimonials, createTestimonial, updateTestimonial, deleteTestimonia
 import { useToast } from '../../components/Toast/ToastContext.jsx';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal.jsx';
 import { TableSkeletonRows } from '../../components/Skeleton/Skeleton.jsx';
+import { withMinDelay } from '../../utils/minDelay.js';
 import './AdminTestimonials.css';
 
 const empty = {
@@ -24,11 +25,12 @@ export default function AdminTestimonials() {
   const [form, setForm] = useState(empty);
   const [confirm, setConfirm] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [institutionFilter, setInstitutionFilter] = useState('all');
   const toast = useToast();
 
   const load = () => {
     setLoading(true);
-    getTestimonials(true)
+    withMinDelay(getTestimonials(true))
       .then((r) => setItems(r.data))
       .finally(() => setLoading(false));
   };
@@ -48,6 +50,21 @@ export default function AdminTestimonials() {
       document.body.style.overflow = '';
     };
   }, [showModal, confirm]);
+
+  /* ---- derived: institution list + filtered rows ---- */
+  const institutions = [...new Set(items.map((t) => t.institution).filter(Boolean))].sort();
+
+  const visible =
+    institutionFilter === 'all'
+      ? items
+      : items.filter((t) => t.institution === institutionFilter);
+
+  // Reset the filter if that institution no longer exists (e.g. after a delete)
+  useEffect(() => {
+    if (institutionFilter !== 'all' && !institutions.includes(institutionFilter)) {
+      setInstitutionFilter('all');
+    }
+  }, [items]); // eslint-disable-line
 
   const openCreate = () => {
     setEditing(null);
@@ -128,6 +145,24 @@ export default function AdminTestimonials() {
         </button>
       </div>
 
+      {/* ============ Institution Filter ============ */}
+      {items.length > 0 && (
+        <div className="admin-filters">
+          <select
+            className="filter-select"
+            value={institutionFilter}
+            onChange={(e) => setInstitutionFilter(e.target.value)}
+          >
+            <option value="all">All Institutions ({items.length})</option>
+            {institutions.map((inst) => (
+              <option key={inst} value={inst}>
+                {inst} ({items.filter((t) => t.institution === inst).length})
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       {/* ============ Content ============ */}
       {!loading && items.length === 0 ? (
         <div className="empty-wrapper">
@@ -145,6 +180,7 @@ export default function AdminTestimonials() {
               <tr>
                 <th>Client</th>
                 <th>Designation</th>
+                <th>Institution</th>
                 <th style={{ width: '130px' }}>Rating</th>
                 <th style={{ width: '110px' }}>Status</th>
                 <th style={{ textAlign: 'right', width: '80px' }}>Actions</th>
@@ -152,79 +188,80 @@ export default function AdminTestimonials() {
             </thead>
             <tbody>
               {loading ? (
-                <TableSkeletonRows rows={6} cols={5} />
+                <TableSkeletonRows rows={6} cols={6} />
               ) : (
-                items.map((t) => (
-                  <tr key={t._id}>
-                    <td>
-                      <div className="testimonial-name-cell">
-                        <div className="testimonial-avatar">
-                          {getInitials(t.name)}
-                        </div>
-                        <div>
+                <>
+                  {visible.map((t) => (
+                    <tr key={t._id}>
+                      <td>
+                        <div className="testimonial-name-cell">
+                          <div className="testimonial-avatar">{getInitials(t.name)}</div>
                           <strong>{t.name}</strong>
-                          {t.institution && (
-                            <span className="testimonial-inst-preview">
-                              {t.institution}
-                            </span>
-                          )}
                         </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span className="designation-text">
-                        {t.designation || '—'}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="rating-stars">
-                        {[1, 2, 3, 4, 5].map((n) => (
-                          <Star
-                            key={n}
-                            size={14}
-                            className={n <= t.rating ? 'star-filled' : 'star-empty'}
-                            fill={n <= t.rating ? 'currentColor' : 'none'}
-                          />
-                        ))}
-                        <span className="rating-number">{t.rating}.0</span>
-                      </div>
-                    </td>
-                    <td>
-                      <span
-                        className={`status-badge ${t.status ? 'status-active' : 'status-disabled'
-                          }`}
-                      >
-                        {t.status ? 'Active' : 'Disabled'}
-                      </span>
-                    </td>
-                    <td style={{ textAlign: 'right', position: 'relative' }}>
-                      <button
-                        className="kebab-btn"
-                        onClick={(e) => toggleDropdown(e, t._id)}
-                        aria-label="Actions"
-                      >
-                        <MoreVertical size={18} />
-                      </button>
+                      </td>
+                      <td>
+                        <span className="designation-text">{t.designation || '—'}</span>
+                      </td>
+                      <td>
+                        <span className="institution-text">{t.institution || '—'}</span>
+                      </td>
+                      <td>
+                        <div className="rating-stars">
+                          {[1, 2, 3, 4, 5].map((n) => (
+                            <Star
+                              key={n}
+                              size={14}
+                              className={n <= t.rating ? 'star-filled' : 'star-empty'}
+                              fill={n <= t.rating ? 'currentColor' : 'none'}
+                            />
+                          ))}
+                          <span className="rating-number">{t.rating}.0</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span
+                          className={`status-badge ${t.status ? 'status-active' : 'status-disabled'
+                            }`}
+                        >
+                          {t.status ? 'Active' : 'Disabled'}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: 'right', position: 'relative' }}>
+                        <button
+                          className="kebab-btn"
+                          onClick={(e) => toggleDropdown(e, t._id)}
+                          aria-label="Actions"
+                        >
+                          <MoreVertical size={18} />
+                        </button>
 
-                      {activeDropdown === t._id && (
-                        <div className="dropdown-menu">
-                          <button onClick={() => openEdit(t)}>
-                            <Edit size={14} /> Edit
-                          </button>
-                          <button
-                            className="danger"
-                            onClick={() => {
-                              setConfirm(t);
-                              setActiveDropdown(null);
-                            }}
-                          >
-                            <Trash2 size={14} /> Delete
-                          </button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))
+                        {activeDropdown === t._id && (
+                          <div className="dropdown-menu">
+                            <button onClick={() => openEdit(t)}>
+                              <Edit size={14} /> Edit
+                            </button>
+                            <button
+                              className="danger"
+                              onClick={() => {
+                                setConfirm(t);
+                                setActiveDropdown(null);
+                              }}
+                            >
+                              <Trash2 size={14} /> Delete
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                  {visible.length === 0 && (
+                    <tr>
+                      <td colSpan="6" className="empty-state">
+                        No testimonials for this institution.
+                      </td>
+                    </tr>
+                  )}
+                </>
               )}
             </tbody>
           </table>
@@ -289,10 +326,20 @@ export default function AdminTestimonials() {
                 <input
                   name="institution"
                   className="form-control"
+                  list="institution-options"
                   value={form.institution}
                   onChange={onChange}
-                  placeholder="e.g. Delhi University"
+                  placeholder="Select an existing institution or type a new one"
+                  autoComplete="off"
                 />
+                <datalist id="institution-options">
+                  {institutions.map((inst) => (
+                    <option key={inst} value={inst} />
+                  ))}
+                </datalist>
+                <span className="form-hint">
+                  Pick from existing institutions or type a new one
+                </span>
               </div>
 
               <div className="form-group">
@@ -322,9 +369,7 @@ export default function AdminTestimonials() {
                         type="button"
                         className={`rating-star-btn ${n <= form.rating ? 'active' : ''
                           }`}
-                        onClick={() =>
-                          setForm({ ...form, rating: n })
-                        }
+                        onClick={() => setForm({ ...form, rating: n })}
                         aria-label={`Rate ${n} stars`}
                       >
                         <Star

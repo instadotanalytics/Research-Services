@@ -1,3 +1,7 @@
+import dns from 'dns';
+
+dns.setServers(['8.8.8.8']);
+
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -14,6 +18,7 @@ import testimonialRoutes from './routes/testimonialRoutes.js';
 import faqRoutes from './routes/faqRoutes.js';
 import statisticRoutes from './routes/statisticRoutes.js';
 import settingRoutes from './routes/settingRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 
 dotenv.config();
 
@@ -65,6 +70,8 @@ app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/faqs', faqRoutes);
 app.use('/api/statistics', statisticRoutes);
 app.use('/api/settings', settingRoutes);
+
+app.use('/api/upload', uploadRoutes);
 
 // Error handlers
 app.use(notFound);
