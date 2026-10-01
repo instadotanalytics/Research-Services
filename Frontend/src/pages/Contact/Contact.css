@@ -11,9 +11,11 @@
    below at every screen size.
 
    LATEST UPDATE:
+   - Hero "Send Enquiry" button: removed the clock chip and the
+     white arrow circle. Now it is a single blue pill with the
+     text and a plain forward arrow.
    - Hero features: 3 in one row on desktop; on mobile a 4th
      feature appears and they sit 2 per row (2 x 2 grid)
-   - "Reply within 24 hours" badge (icon chip + arrow chip)
    - "Not Sure Where to Start?" uses the same card style as the
      "Why reach out" cards (#eff6ff)
    - Info column and enquiry form have EQUAL height (no empty space)
@@ -209,12 +211,13 @@
   color: var(--ct-muted);
 }
 
-/* Reply-time badge: blue pill · clock chip · text · white arrow chip */
+/* "Send Enquiry" button: one blue pill · text · plain forward arrow
+   (no clock chip, no white circle) */
 .ct-hero__badge {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 7px 8px 7px 8px;
+  gap: 10px;
+  padding: 14px 28px;
   border-radius: 999px;
   background: linear-gradient(135deg, #1e40af 0%, var(--ct-secondary) 100%);
   color: #fff;
@@ -233,37 +236,22 @@
   outline-offset: 3px;
 }
 
-.ct-hero__badge-icon,
-.ct-hero__badge-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.ct-hero__badge-icon {
-  background: rgba(255, 255, 255, 0.18);
-  color: #fff;
-}
-
 .ct-hero__badge-text {
-  font-size: 0.93rem;
+  font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.005em;
+  line-height: 1.2;
   white-space: nowrap;
 }
 
 .ct-hero__badge-arrow {
-  background: #fff;
-  color: var(--ct-secondary);
+  flex-shrink: 0;
+  color: #fff;
   transition: transform 0.2s ease;
 }
 
 .ct-hero__badge:hover .ct-hero__badge-arrow {
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
 /* ============================ MAIN ============================ */
@@ -1150,21 +1138,14 @@ textarea.ct-input::placeholder {
     line-height: 1.3;
   }
 
-  /* Badge on small screens */
+  /* Send Enquiry button on small screens */
   .ct-hero__badge {
-    gap: 10px;
-    padding: 6px;
+    gap: 8px;
+    padding: 12px 24px;
     max-width: 100%;
   }
-  .ct-hero__badge-icon,
-  .ct-hero__badge-arrow {
-    width: 32px;
-    height: 32px;
-  }
   .ct-hero__badge-text {
-    font-size: 0.85rem;
-    white-space: normal;
-    line-height: 1.25;
+    font-size: 0.9rem;
   }
 
   /* ---- Compact form on mobile ---- */
