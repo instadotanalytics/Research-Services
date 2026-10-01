@@ -23,7 +23,7 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 // react-icons  →  npm i react-icons
-import { FiClock, FiArrowRight, FiArrowUpRight, FiMessageSquare } from 'react-icons/fi';
+import { FiArrowRight, FiArrowUpRight, FiMessageSquare } from 'react-icons/fi';
 import SEO from '../../components/SEO.jsx';
 import api from '../../services/api.js';
 import { createEnquiry } from '../../services/enquiryApi.js';
@@ -323,15 +323,10 @@ export default function Contact() {
               </li>
             </ul>
 
-            {/* Reply-time badge (react-icons) */}
+            {/* Send Enquiry button: text + plain forward arrow */}
             <a href="#enquiry-form" className="ct-hero__badge" onClick={focusForm}>
-              <span className="ct-hero__badge-icon">
-                <FiClock size={18} aria-hidden="true" />
-              </span>
-              <span className="ct-hero__badge-text"> Send Enquiry</span>
-              <span className="ct-hero__badge-arrow">
-                <FiArrowRight size={16} aria-hidden="true" />
-              </span>
+              <span className="ct-hero__badge-text">Send Enquiry</span>
+              <FiArrowRight className="ct-hero__badge-arrow" size={18} aria-hidden="true" />
             </a>
           </motion.div>
         </div>

@@ -17,8 +17,6 @@ import heroDesktop from '../../assets/about-heroimagedesktop.png';
 import heroMobile from '../../assets/about-heroimagemobile.png';
 // "Who We Are" section background (desktop). Mobile uses a CSS gradient.
 import storyDesktop from '../../assets/about-middleimage desktop.png';
-// "What Drives Us" (Our Values) section background (desktop). Mobile uses a CSS gradient.
-import valuesDesktop from '../../assets/aboutimage.png';
 // "Why Choose Us" section background (desktop). Mobile uses a CSS gradient.
 import whyDesktop from '../../assets/aboutlastimage.png';
 
@@ -83,10 +81,13 @@ export default function About() {
       />
 
       {/* ============================ HERO ============================ */}
+      {/* Same structure as the Home hero: full-height section, background
+          image, a "container" (aligned with the navbar) and one content
+          column (max 660px) holding eyebrow, heading, text and stats. */}
       <section className="ab-hero">
-        {/* Background: mobile image on phones, desktop image everywhere else */}
+        {/* Background: mobile image on phones (<=768px), desktop image elsewhere */}
         <picture className="ab-hero__bg" aria-hidden="true">
-          <source media="(max-width: 767px)" srcSet={heroMobile} />
+          <source media="(max-width: 768px)" srcSet={heroMobile} />
           <img src={heroDesktop} alt="" />
         </picture>
 
@@ -107,16 +108,16 @@ export default function About() {
               scholars, faculty members and institutions — with a focus on structure, ethics and
               quality.
             </p>
-          </div>
 
-          <ul className="ab-stats">
-            {stats.map((s) => (
-              <li key={s.label}>
-                <strong>{s.value}</strong>
-                <span>{s.label}</span>
-              </li>
-            ))}
-          </ul>
+            <ul className="ab-stats">
+              {stats.map((s) => (
+                <li key={s.label}>
+                  <strong>{s.value}</strong>
+                  <span>{s.label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -219,10 +220,9 @@ export default function About() {
       </section>
 
       {/* ============================ VALUES (What Drives Us) ============================ */}
+      {/* Light-blue gradient + soft bubbles, same look as the Home page
+          sections. No photo background. */}
       <section className="ab-values" aria-labelledby="ab-values-title">
-        {/* Desktop background image (hidden on phones – they get a CSS gradient) */}
-        <img className="ab-values__bg" src={valuesDesktop} alt="" aria-hidden="true" />
-
         <div className="container ab-values__inner">
           <div className="ab-values__head">
             <span className="ab-values__eyebrow">What Drives Us</span>

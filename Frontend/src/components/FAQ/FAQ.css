@@ -34,8 +34,8 @@
 .faq-container {
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
+  margin: 24px auto;
+  padding: 20px 24px;
   box-sizing: border-box;
 }
 
@@ -105,8 +105,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 16px;
-  margin-bottom: 20px;
+  padding: 10px 20px;
+  margin-bottom: 30px;
   border-radius: 999px;
   background: #e0eafc;
   color: var(--fq-primary);
