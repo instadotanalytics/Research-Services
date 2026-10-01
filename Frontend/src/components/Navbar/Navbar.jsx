@@ -102,6 +102,21 @@ export default function Navbar() {
     return 'search-bar-anim-item';
   };
 
+  /**
+   * Logo click handler:
+   * - If we're already on Home → smooth scroll to top
+   * - If we're on another page → navigate to Home (natural top)
+   */
+  const handleLogoClick = (e) => {
+    if (pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Also close mobile menu if open
+      setOpen(false);
+    }
+    // else: default Link behavior → navigates to '/' and top automatically
+  };
+
   return (
     <>
       <header className="navbar-wrapper">
@@ -109,7 +124,12 @@ export default function Navbar() {
         <div className={`main-nav ${scrolled ? 'scrolled' : ''}`}>
           <div className="container navbar-inner">
             {/* Logo with text */}
-            <Link to="/" className="navbar-logo" aria-label="ResearchPlus Home">
+            <Link
+              to="/"
+              className="navbar-logo"
+              aria-label="ResearchPlus Home"
+              onClick={handleLogoClick}
+            >
               <img src={logo} alt="ResearchPlus" className="logo-img" />
               <div className="logo-text">
                 <span className="logo-title">
