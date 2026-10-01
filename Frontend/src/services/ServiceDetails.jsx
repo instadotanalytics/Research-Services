@@ -4,13 +4,113 @@ import { CheckCircle2, Users, ArrowRight, Phone, Sparkles, FileText, ShieldCheck
 import SEO from '../components/SEO';
 import FAQAccordion from '../components/FAQ/FAQAccordion.jsx';
 import CTASection from '../components/CTA/CTASection.jsx';
-import LoadingSpinner from '../components/Loading/LoadingSpinner.jsx';
 import EmptyState from '../components/Loading/EmptyState.jsx';
 import { getServiceBySlug } from '../services/serviceApi.js';
 import { iconMap } from '../utils/serviceIcons.js';
 import { optimizeImage } from '../utils/cloudinary.js';
 import './ServiceDetails.css';
 
+/* ---------- Skeleton helpers ---------- */
+function Sk({ w = '100%', h = 14, r = 6, style }) {
+  return <span className="sd-sk" style={{ width: w, height: h, borderRadius: r, ...style }} />;
+}
+
+function ServiceDetailsSkeleton() {
+  return (
+    <div className="sd-page" aria-busy="true" aria-label="Loading service details">
+      {/* HERO */}
+      <section className="sd-hero">
+        <div className="container sd-hero-inner">
+          <div className="sd-sk-row" style={{ marginBottom: 20 }}>
+            <Sk w={50} h={12} />
+            <Sk w={60} h={12} />
+            <Sk w={120} h={12} />
+          </div>
+          <Sk w={130} h={28} r={999} style={{ marginBottom: 16 }} />
+          <Sk w="min(520px, 90%)" h={36} r={10} style={{ marginBottom: 12 }} />
+          <Sk w="min(380px, 70%)" h={36} r={10} style={{ marginBottom: 20 }} />
+          <Sk w="min(540px, 95%)" h={14} style={{ marginBottom: 10 }} />
+          <Sk w="min(420px, 80%)" h={14} style={{ marginBottom: 26 }} />
+          <div className="sd-hero-actions">
+            <Sk w={200} h={44} r={10} />
+            <Sk w={140} h={44} r={10} />
+          </div>
+        </div>
+      </section>
+
+      {/* BODY */}
+      <section className="sd-body">
+        <div className="container sd-layout">
+          <div className="sd-main">
+            {/* Overview */}
+            <div className="sd-block">
+              <Sk w={150} h={24} r={8} style={{ marginBottom: 20 }} />
+              <Sk h={14} style={{ marginBottom: 12 }} />
+              <Sk h={14} style={{ marginBottom: 12 }} />
+              <Sk h={14} style={{ marginBottom: 12 }} />
+              <Sk w="60%" h={14} />
+            </div>
+
+            {/* Features */}
+            <div className="sd-block">
+              <Sk w={170} h={24} r={8} style={{ marginBottom: 20 }} />
+              <div className="sd-features">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="sd-feature">
+                    <Sk w={20} h={20} r={999} style={{ flexShrink: 0 }} />
+                    <Sk w={i % 2 ? '65%' : '80%'} h={14} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Process */}
+            <div className="sd-block">
+              <Sk w={140} h={24} r={8} style={{ marginBottom: 20 }} />
+              <ol className="sd-steps">
+                {[...Array(3)].map((_, i) => (
+                  <li key={i} className="sd-step">
+                    <Sk w={44} h={44} r={999} style={{ flexShrink: 0, position: 'relative', zIndex: 1 }} />
+                    <div>
+                      <Sk w="40%" h={16} style={{ marginBottom: 10 }} />
+                      <Sk h={12} style={{ marginBottom: 8 }} />
+                      <Sk w="70%" h={12} />
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            {/* Audience */}
+            <div className="sd-block">
+              <Sk w={160} h={24} r={8} style={{ marginBottom: 20 }} />
+              <div className="sd-audience">
+                {[130, 160, 110, 150].map((w, i) => (
+                  <Sk key={i} w={w} h={36} r={999} />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Aside */}
+          <aside className="sd-aside">
+            <div className="sd-aside-card">
+              <Sk w={46} h={46} r={12} />
+              <Sk w="70%" h={20} style={{ marginTop: 4 }} />
+              <Sk h={12} />
+              <Sk w="85%" h={12} style={{ marginBottom: 6 }} />
+              <Sk h={44} r={10} />
+              <Sk h={44} r={10} />
+              <Sk w="75%" h={12} style={{ margin: '10px auto 0' }} />
+            </div>
+          </aside>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/* ---------- Page ---------- */
 export default function ServiceDetails() {
   const { slug } = useParams();
   const [service, setService] = useState(null);
@@ -27,7 +127,7 @@ export default function ServiceDetails() {
       .finally(() => setLoading(false));
   }, [slug]);
 
-  if (loading) return <LoadingSpinner fullScreen />;
+  if (loading) return <ServiceDetailsSkeleton />;
   if (error || !service)
     return (
       <div className="container section">
