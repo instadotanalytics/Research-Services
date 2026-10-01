@@ -472,3 +472,44 @@
     padding: 22px 18px;
   }
 }
+
+/* ---------- Loading skeleton ---------- */
+.sd-sk {
+  display: block;
+  max-width: 100%;
+  background: linear-gradient(90deg, #e6ecf8 25%, #f4f7fd 50%, #e6ecf8 75%);
+  background-size: 200% 100%;
+  animation: sdShimmer 1.3s ease-in-out infinite;
+}
+
+.sd-sk-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* skeleton step cards keep the real card look */
+.sd-step > div > .sd-sk:first-child {
+  margin-top: 4px;
+}
+
+@keyframes sdShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sd-sk {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .sd-hero-actions .sd-sk {
+    width: 100% !important;
+  }
+}
