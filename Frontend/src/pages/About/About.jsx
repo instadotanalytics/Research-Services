@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import SEO from '../../components/SEO.jsx';
 import {
@@ -9,20 +8,19 @@ import {
   Check,
   ArrowRight,
 } from 'lucide-react';
-// react-icons  →  npm i react-icons
 import { FiMessageSquare, FiMessageCircle, FiArrowUpRight } from 'react-icons/fi';
 
 // Hero background images (src/assets)
 import heroDesktop from '../../assets/about-heroimagedesktop.png';
-import heroMobile from '../../assets/about-heroimagemobile.png';
-// "Who We Are" section background (desktop). Mobile uses a CSS gradient.
+import heroMobile from '../../assets/about-heroimagemobile2.png';
+// "Who We Are" background (desktop)
 import storyDesktop from '../../assets/about-middleimage desktop.png';
-// "Why Choose Us" section background (desktop). Mobile uses a CSS gradient.
+// "Why Choose Us" background (desktop)
 import whyDesktop from '../../assets/aboutlastimage.png';
 
 import './About.css';
 
-/* ---- Custom icons for the Mission / Vision cards (match the design) ---- */
+/* ---- Custom icons for the Mission / Vision cards ---- */
 function TargetArrowIcon() {
   return (
     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="3.4"
@@ -81,11 +79,7 @@ export default function About() {
       />
 
       {/* ============================ HERO ============================ */}
-      {/* Same structure as the Home hero: full-height section, background
-          image, a "container" (aligned with the navbar) and one content
-          column (max 660px) holding eyebrow, heading, text and stats. */}
       <section className="ab-hero">
-        {/* Background: mobile image on phones (<=768px), desktop image elsewhere */}
         <picture className="ab-hero__bg" aria-hidden="true">
           <source media="(max-width: 768px)" srcSet={heroMobile} />
           <img src={heroDesktop} alt="" />
@@ -123,7 +117,6 @@ export default function About() {
 
       {/* ============================ STORY ============================ */}
       <section className="ab-story">
-        {/* Desktop background image (hidden on phones – they get a CSS gradient) */}
         <img className="ab-story__bg" src={storyDesktop} alt="" aria-hidden="true" />
 
         <div className="container ab-story__grid">
@@ -219,9 +212,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* ============================ VALUES (What Drives Us) ============================ */}
-      {/* Light-blue gradient + soft bubbles, same look as the Home page
-          sections. No photo background. */}
+      {/* ============================ VALUES ============================ */}
       <section className="ab-values" aria-labelledby="ab-values-title">
         <div className="container ab-values__inner">
           <div className="ab-values__head">
@@ -253,7 +244,6 @@ export default function About() {
 
       {/* ============================ WHY CHOOSE US ============================ */}
       <section className="ab-why" aria-labelledby="ab-why-title">
-        {/* Desktop background image (hidden on phones – they get a CSS gradient) */}
         <img className="ab-why__bg" src={whyDesktop} alt="" aria-hidden="true" />
 
         <div className="container ab-why__grid">
@@ -287,7 +277,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* ============ BOTTOM CTA (same card style as Contact / FAQ) ============ */}
+      {/* ============================ BOTTOM CTA ============================ */}
       <section className="ab-cta" aria-labelledby="ab-cta-title">
         <div className="container">
           <div className="ab-cta__card">

@@ -1,4 +1,3 @@
-
 /* =========================================================
    ABOUT PAGE — ResearchPlus
    All classes are prefixed "ab-" so nothing leaks into or
@@ -11,6 +10,8 @@
      gradient + soft bubbles as the Home page sections, with white
      cards (same border / shadow as Home cards). No photo, no dark
      look, same on desktop and mobile.
+   - HERO: Added a max-width and padding to the copy block on
+     desktop to prevent overlap with the background image.
    ========================================================= */
 
 .ab-hero,
@@ -1139,6 +1140,14 @@
   }
   .ab-stats span {
     font-size: 0.7rem;
+  }
+}
+
+/* ---------- HERO on desktop: constrain copy to avoid overlap ---------- */
+@media (min-width: 769px) {
+  .ab-hero__copy {
+    max-width: 52%;
+    padding-right: 20px;
   }
 }
 

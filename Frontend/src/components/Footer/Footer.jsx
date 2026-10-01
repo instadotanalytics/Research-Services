@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
-import { GraduationCap, Mail, Phone, MapPin, Share2, MessageCircle, Briefcase, Camera } from 'lucide-react';
+import { Mail, Phone, MapPin, Share2, MessageCircle, Briefcase, Camera } from 'lucide-react';
 import './Footer.css';
+
+// Logo image import
+import logo from '../../assets/logo.png';
 
 export default function Footer() {
   return (
@@ -11,10 +14,10 @@ export default function Footer() {
           {/* Brand */}
           <div className="footer-brand">
             <div className="footer-logo">
-              <div className="logo-icon">
-                <GraduationCap size={22} />
-              </div>
-              <span>ResearchEdge</span>
+              <img src={logo} alt="ResearchPlus Logo" className="footer-logo-img" />
+              <span>
+                Research<span className="logo-accent">Plus</span>
+              </span>
             </div>
             <p>
               Professional research and academic support services for students, researchers, scholars and educational
@@ -56,36 +59,51 @@ export default function Footer() {
           <div className="footer-col footer-col-contact">
             <h4>Contact</h4>
             <ul className="footer-contact">
-              <li><Mail size={16} /> info@research.com</li>
-              <li><Phone size={16} /> +91 98765 43210</li>
-              <li><MapPin size={16} /> India</li>
+              <li>
+                <span className="contact-icon"><Mail size={16} /></span>
+                info@research.com
+              </li>
+              <li>
+                <span className="contact-icon"><Phone size={16} /></span>
+                +91 98765 43210
+              </li>
+              <li>
+                <span className="contact-icon"><MapPin size={16} /></span>
+                India
+              </li>
             </ul>
           </div>
 
-          {/* Copyright + Legal — desktop pe footer-bottom, mobile pe Contact ke saath 2nd row */}
-          <div className="footer-col footer-col-copyright">
-            <p className="footer-copy">
-              © {new Date().getFullYear()} ResearchEdge. All rights reserved.
-            </p>
-            <div className="footer-legal">
-              <Link to="/privacy-policy">Privacy Policy</Link>
-              <Link to="/terms-and-conditions">Terms &amp; Conditions</Link>
-              <Link to="/refund-policy">Refund Policy</Link>
-              <Link to="/disclaimer">Disclaimer</Link>
-            </div>
+          {/* Mobile-only legal links */}
+          <div className="footer-col footer-col-legal-mobile">
+            <h4>Legal</h4>
+            <ul className="footer-legal-list">
+              <li><Link to="/privacy-policy">Privacy Policy</Link></li>
+              <li><Link to="/terms-and-conditions">Terms &amp; Conditions</Link></li>
+              <li><Link to="/refund-policy">Refund Policy</Link></li>
+              <li><Link to="/disclaimer">Disclaimer</Link></li>
+            </ul>
           </div>
 
         </div>
 
-        {/* Desktop footer bottom — copyright + legal (original look) */}
+        {/* Desktop bottom row: copyright + legal */}
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} ResearchEdge. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} ResearchPlus. All rights reserved.</p>
           <div className="footer-legal">
             <Link to="/privacy-policy">Privacy Policy</Link>
+            <span className="legal-divider">|</span>
             <Link to="/terms-and-conditions">Terms &amp; Conditions</Link>
+            <span className="legal-divider">|</span>
             <Link to="/refund-policy">Refund Policy</Link>
+            <span className="legal-divider">|</span>
             <Link to="/disclaimer">Disclaimer</Link>
           </div>
+        </div>
+
+        {/* Mobile-only bottom copyright */}
+        <div className="footer-copy-mobile">
+          © {new Date().getFullYear()} ResearchPlus. All rights reserved.
         </div>
       </div>
     </footer>
