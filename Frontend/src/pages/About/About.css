@@ -1065,7 +1065,7 @@
     flex-direction: column;
     /* keeps the photo visible between the text and the stats card */
     min-height: min(128vw, 780px);
-    padding-top: 44px;
+    padding-top: 60px;
     padding-bottom: 32px;
   }
 

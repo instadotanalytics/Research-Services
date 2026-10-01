@@ -1099,6 +1099,7 @@ textarea.ct-input::placeholder {
   }
   .ct-eyebrow-row {
     margin-bottom: 18px;
+    padding-top: 10px;
   }
   .ct-eyebrow {
     padding: 7px 14px;
