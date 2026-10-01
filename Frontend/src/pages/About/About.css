@@ -1,4 +1,3 @@
-
 /* =========================================================
    ABOUT PAGE — ResearchPlus
    All classes are prefixed "ab-" so nothing leaks into or
@@ -7,15 +6,12 @@
    uses) so everything lines up with the header at every size.
 
    LATEST UPDATE:
-   - "Why Choose Us" redesigned to match the desktop + mobile
-     references (photo background aboutlastimage.png on desktop,
-     white check cards, gradient background on phones).
-   - "What Drives Us" (Our Values) redesigned to match the
-     desktop + mobile references:
-       desktop : photo background (aboutimage.png), centred heading,
-                 4 glass cards with corner shape + arrow button
-       mobile  : light gradient background, stacked horizontal cards
-                 (icon | text | arrow)
+   - "What Drives Us" (Our Values) now uses the same light-blue
+     gradient + soft bubbles as the Home page sections, with white
+     cards (same border / shadow as Home cards). No photo, no dark
+     look, same on desktop and mobile.
+   - HERO: Added a max-width and padding to the copy block on
+     desktop to prevent overlap with the background image.
    ========================================================= */
 
 .ab-hero,
@@ -53,22 +49,23 @@
 }
 
 /* ============================ HERO ============================ */
-/* Sizes are tuned to the design reference (1600px-wide artboard):
-   heading ~56px, paragraph ~19px, stats card ~840px wide, hero height
-   = 1600x622 ratio. Everything scales with the viewport (vw) and is
-   capped, so the hero keeps the same proportions at every width.
-
-   NOTE: vertical padding is set on ".ab-hero .ab-hero__inner" (2 classes)
-   so the global ".container { padding: ... }" can no longer wipe it out. */
+/* Mirrors Home's ".hero":
+   - desktop : min-height 100vh, content vertically centred, 40px padding
+   - mobile  : (<=768px) padding 70px 0 320px, image pinned bottom,
+               text centred
+   - the .container is width:100% (same as ".home-section > .container")
+     so the text starts exactly where the navbar logo starts.
+   - content column is max 660px, like ".hero-content".               */
 .ab-hero {
-  --ab-hero-h: clamp(460px, 38.9vw, 700px);
   position: relative;
   display: flex;
   align-items: center;
-  min-height: var(--ab-hero-h);
+  min-height: 100vh;
+  padding: 40px 0;
+  box-sizing: border-box;
   overflow: hidden;
   isolation: isolate;
-  background: #f4f8ff; /* fallback while the image loads */
+  background: #f3f8ff; /* fallback while the image loads */
 }
 
 /* Full-bleed background image */
@@ -88,15 +85,14 @@
   object-position: right center;
 }
 
-.ab-hero .ab-hero__inner {
+.ab-hero > .container {
   position: relative;
   z-index: 1;
   width: 100%;
-  padding-top: clamp(48px, 5.2vw, 84px);
-  padding-bottom: clamp(40px, 4vw, 64px);
 }
 
 .ab-hero__copy {
+  max-width: 660px;
   min-width: 0;
 }
 
@@ -107,7 +103,7 @@
   gap: 9px;
   margin-bottom: 14px;
   font-family: var(--ab-head);
-  font-size: clamp(0.72rem, 0.92vw, 0.92rem);
+  font-size: 0.8rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   line-height: 1;
@@ -118,7 +114,7 @@
 .ab-eyebrow::after {
   content: '';
   display: block;
-  width: clamp(20px, 1.8vw, 30px);
+  width: 26px;
   height: 1px;
   background: var(--ab-secondary);
 }
@@ -131,41 +127,42 @@
   font-weight: 700;
 }
 
-/* Heading breaks after "Academic":  Dedicated to Academic / Excellence */
+/* Same size as the Home hero heading */
 .ab-hero h1 {
-  max-width: 12.6em;
-  font-size: clamp(2rem, 3.5vw, 3.5rem);
+  max-width: 660px;
+  margin: 0 0 16px;
+  font-family: var(--ab-head);
+  font-size: clamp(1.9rem, 3.3vw, 3.1rem);
   font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  letter-spacing: normal;
   color: var(--ab-primary);
-  margin: 0;
 }
 
 .ab-hero__accent {
   color: var(--ab-secondary);
 }
 
-/* Paragraph breaks after "students," / "focus on" like the reference */
+/* Same paragraph size / spacing as the Home hero */
 .ab-hero__copy > p {
-  max-width: 35.5em;
-  margin: clamp(16px, 1.5vw, 24px) 0 0;
+  max-width: 480px;
+  margin: 0 0 24px;
   color: var(--ab-muted);
-  font-size: clamp(1rem, 1.2vw, 1.2rem);
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.55;
 }
 
-/* Stats card */
+/* Stats card – same width as the content column */
 .ab-stats {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
-  width: min(100%, max(52.5vw, 640px), 840px);
-  margin: clamp(28px, 2.5vw, 40px) 0 0; /* left-aligned with text + header */
-  padding: clamp(16px, 1.6vw, 24px) 8px;
+  width: 100%;
+  margin: 32px 0 0;
+  padding: 18px 8px;
   background: rgba(255, 255, 255, 0.97);
-  border-radius: clamp(16px, 1.5vw, 24px);
+  border-radius: 20px;
   box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
 }
 
@@ -176,7 +173,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 6px 14px;
+  padding: 6px 10px;
   text-align: center;
 }
 
@@ -193,15 +190,15 @@
 
 .ab-stats strong {
   font-family: var(--ab-head);
-  font-size: clamp(1.25rem, 1.7vw, 1.75rem);
+  font-size: 1.35rem;
   font-weight: 700;
   line-height: 1.1;
   color: #0b3fc4;
 }
 
 .ab-stats span {
-  font-size: clamp(0.72rem, 0.88vw, 0.9rem);
-  line-height: 1.45;
+  font-size: 0.72rem;
+  line-height: 1.4;
   color: var(--ab-muted);
 }
 
@@ -535,39 +532,56 @@
 }
 
 /* ============================ VALUES (What Drives Us) ============================ */
-/* Desktop: photo background (aboutimage.png) with a centred heading and
-   four glass cards sitting on top of it. The extra bottom padding leaves
-   room for the wave / dots at the bottom of the photo.
-   Mobile : no photo – soft blue gradient, cards stacked full width.     */
+/* Light-blue gradient + two soft bubbles – the same recipe the Home page
+   uses for its Process / Audience sections. Cards are white with the
+   Home card border + shadow. Same look on desktop and mobile.
+   The content sits in the global ".container" so it lines up with the
+   navbar logo.                                                          */
 .ab-values {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background: #f4f8ff; /* fallback while the image loads */
-  padding: clamp(56px, 5.4vw, 88px) 0 clamp(96px, 11vw, 176px);
+  background: linear-gradient(180deg, #eef6ff 0%, #dbe9ff 100%);
+  padding: clamp(48px, 5vw, 72px) 0 clamp(56px, 6vw, 88px);
 }
 
-.ab-values__bg {
+/* soft bubbles (top-right + bottom-left) */
+.ab-values::before {
+  content: '';
   position: absolute;
-  inset: 0;
   z-index: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
+  width: 520px;
+  height: 520px;
+  top: -200px;
+  right: -180px;
+  background: radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.28), rgba(96, 165, 250, 0));
+  border-radius: 50%;
   pointer-events: none;
 }
 
-.ab-values .ab-values__inner {
+.ab-values::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  width: 420px;
+  height: 420px;
+  bottom: -180px;
+  left: -140px;
+  background: radial-gradient(circle at 50% 50%, rgba(147, 197, 253, 0.32), rgba(147, 197, 253, 0));
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ab-values > .container {
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 
 /* ---- Heading block ---- */
 .ab-values__head {
-  max-width: 760px;
-  margin: 0 auto clamp(36px, 4vw, 60px);
+  max-width: 720px;
+  margin: 0 auto clamp(30px, 3.2vw, 46px);
   text-align: center;
 }
 
@@ -575,51 +589,53 @@
 .ab-values__eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: clamp(12px, 1.4vw, 20px);
-  margin-bottom: clamp(10px, 1.2vw, 16px);
+  gap: 14px;
+  margin-bottom: 12px;
   font-family: var(--ab-head);
-  font-size: clamp(0.78rem, 1.05vw, 1.05rem);
+  font-size: clamp(0.72rem, 0.9vw, 0.9rem);
   font-weight: 600;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   line-height: 1;
-  color: #0a5cf0;
+  color: #1d4ed8;
 }
 
 .ab-values__eyebrow::before,
 .ab-values__eyebrow::after {
   content: '';
   display: block;
-  width: clamp(28px, 3.6vw, 56px);
+  width: clamp(24px, 3vw, 44px);
   height: 1.5px;
-  background: #0a5cf0;
+  background: #1d4ed8;
 }
 
 .ab-values .ab-values__head h2 {
-  margin: 0 0 clamp(10px, 1.2vw, 16px);
-  font-size: clamp(2.4rem, 4.6vw, 4.4rem);
+  margin: 0 0 12px;
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: -0.02em;
-  color: #0b1f4e;
+  color: #0f2a6b;
 }
 
 .ab-values__hl {
-  color: #0a5cf0;
+  color: #1d4ed8;
 }
 
 .ab-values__head p {
-  margin: 0;
-  color: #3a5288;
-  font-size: clamp(0.95rem, 1.35vw, 1.3rem);
-  line-height: 1.55;
+  margin: 0 auto;
+  max-width: 560px;
+  color: #5b6785;
+  font-size: clamp(0.92rem, 1.15vw, 1.08rem);
+  line-height: 1.6;
 }
 
 /* ---- Cards ---- */
 .ab-values__grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(14px, 1.5vw, 24px);
+  gap: clamp(14px, 1.5vw, 22px);
+  align-items: stretch;
 }
 
 .ab-value {
@@ -629,14 +645,12 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: clamp(20px, 2vw, 30px) clamp(18px, 1.8vw, 28px) clamp(20px, 2vw, 28px);
-  background: rgba(255, 255, 255, 0.86);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  border: 1px solid #cfe2ff;
-  border-radius: clamp(16px, 1.5vw, 22px);
-  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  padding: clamp(20px, 2vw, 28px) clamp(18px, 1.8vw, 26px) clamp(20px, 2vw, 26px);
+  background: #fff;
+  border: 1px solid #e3e9f5;
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 /* soft round shape in the top-right corner */
@@ -644,32 +658,32 @@
   content: '';
   position: absolute;
   z-index: -1;
-  top: clamp(-52px, -3.4vw, -36px);
-  right: clamp(-52px, -3.4vw, -36px);
-  width: clamp(84px, 8vw, 124px);
-  height: clamp(84px, 8vw, 124px);
+  top: -42px;
+  right: -42px;
+  width: 112px;
+  height: 112px;
   border-radius: 50%;
-  background: #e2eeff;
+  background: #eaf2ff;
   pointer-events: none;
 }
 
 .ab-value:hover {
-  transform: translateY(-4px);
-  border-color: #a9caff;
-  box-shadow: 0 22px 48px rgba(37, 99, 235, 0.18);
+  transform: translateY(-5px);
+  border-color: #bfd4ff;
+  box-shadow: 0 18px 38px rgba(29, 78, 216, 0.15);
 }
 
 .ab-value__icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(48px, 4.8vw, 64px);
-  height: clamp(48px, 4.8vw, 64px);
-  margin-bottom: clamp(14px, 1.5vw, 22px);
+  width: clamp(48px, 4.4vw, 58px);
+  height: clamp(48px, 4.4vw, 58px);
+  margin-bottom: clamp(14px, 1.4vw, 20px);
   flex-shrink: 0;
   border-radius: 16px;
-  background: #e2eeff;
-  color: #0a5cf0;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  color: #1d4ed8;
 }
 
 .ab-value__icon svg {
@@ -684,17 +698,17 @@
 
 .ab-value h3 {
   margin: 0 0 8px;
-  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
   font-weight: 700;
   line-height: 1.2;
-  color: #0b1f4e;
+  color: #0f2a6b;
 }
 
 .ab-value p {
   margin: 0;
-  font-size: clamp(0.85rem, 1.05vw, 1rem);
+  font-size: clamp(0.83rem, 0.98vw, 0.92rem);
   line-height: 1.6;
-  color: #3f5a92;
+  color: #5b6785;
 }
 
 /* round arrow button */
@@ -702,18 +716,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(38px, 3.4vw, 48px);
-  height: clamp(38px, 3.4vw, 48px);
-  margin-top: clamp(16px, 1.8vw, 24px);
+  width: clamp(38px, 3.2vw, 44px);
+  height: clamp(38px, 3.2vw, 44px);
+  margin-top: clamp(16px, 1.6vw, 22px);
   flex-shrink: 0;
   border-radius: 50%;
   background: #dbeafe;
-  color: #0a5cf0;
+  color: #1d4ed8;
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .ab-value:hover .ab-value__arrow {
-  background: #0a5cf0;
+  background: #1d4ed8;
   color: #fff;
   transform: translateX(3px);
 }
@@ -1042,71 +1056,59 @@
   }
 }
 
-/* ---------- HERO on tablets ---------- */
-@media (max-width: 860px) and (min-width: 768px) {
-  .ab-hero__copy {
-    max-width: 62%;
-  }
-}
-
-/* ---------- HERO on phones (uses the mobile background image) ---------- */
-@media (max-width: 767px) {
+/* ---------- HERO on phones (<=768px, same breakpoint as Home) ----------
+   Same recipe as Home's mobile hero: 70px top, 320px bottom space so the
+   mobile photo stays visible, text centred, image pinned to the bottom. */
+@media (max-width: 768px) {
   .ab-hero {
     min-height: 0;
-    align-items: stretch;
+    padding: 70px 0 320px;
+    background-color: #eaf3ff;
   }
 
   .ab-hero__bg img {
-    object-position: center top;
-  }
-
-  .ab-hero .ab-hero__inner {
-    display: flex;
-    flex-direction: column;
-    /* keeps the photo visible between the text and the stats card */
-    min-height: min(128vw, 780px);
-    padding-top: 60px;
-    padding-bottom: 32px;
+    object-position: center bottom;
   }
 
   .ab-hero__copy {
-    margin-bottom: 32px;
+    max-width: 100%;
+    text-align: center;
   }
 
   .ab-eyebrow {
-    margin-bottom: 14px;
-    font-size: 0.72rem;
+    margin-bottom: 12px;
+    font-size: 0.7rem;
     gap: 7px;
   }
   .ab-eyebrow::before,
   .ab-eyebrow::after {
-    width: 22px;
+    width: 20px;
   }
 
-  /* breaks into: Dedicated to / Academic / Excellence */
   .ab-hero h1 {
-    max-width: 62%;
-    font-size: clamp(1.75rem, 8.2vw, 2.6rem);
-    line-height: 1.16;
+    max-width: 100%;
+    margin-bottom: 12px;
+    font-size: clamp(1.5rem, 7vw, 2rem);
+    line-height: 1.2;
   }
 
   .ab-hero__copy > p {
-    max-width: 58%;
-    margin-top: 18px;
-    font-size: 0.86rem;
-    line-height: 1.65;
+    max-width: 100%;
+    margin: 0 auto 20px;
+    font-size: 0.88rem;
+    line-height: 1.55;
   }
 
   /* 2 x 2 stats card with a cross divider */
   .ab-stats {
     grid-template-columns: repeat(2, 1fr);
     width: 100%;
-    margin: auto 0 0; /* pinned to the bottom of the hero */
-    padding: 10px 14px;
-    border-radius: 22px;
+    margin: 22px 0 0;
+    padding: 6px 12px;
+    border-radius: 20px;
   }
   .ab-stats li {
-    padding: 18px 8px;
+    padding: 14px 8px;
   }
   .ab-stats li + li::before {
     display: none;
@@ -1134,10 +1136,18 @@
     right: 4%;
   }
   .ab-stats strong {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
   .ab-stats span {
-    font-size: 0.78rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* ---------- HERO on desktop: constrain copy to avoid overlap ---------- */
+@media (min-width: 769px) {
+  .ab-hero__copy {
+    max-width: 52%;
+    padding-right: 20px;
   }
 }
 
@@ -1242,87 +1252,77 @@
   }
 }
 
-/* ---------- VALUES on phones: gradient background + horizontal cards ---------- */
+/* ---------- VALUES on phones: same light-blue background, stacked horizontal cards ---------- */
 @media (max-width: 767px) {
   .ab-values {
-    padding: 44px 0 52px;
-    background:
-      radial-gradient(110% 40% at 0% 0%, rgba(191, 219, 254, 0.45), transparent 65%),
-      radial-gradient(90% 40% at 100% 100%, rgba(191, 219, 254, 0.65), transparent 70%),
-      linear-gradient(180deg, #ffffff 0%, #f3f7ff 55%, #e9f1ff 100%);
-  }
-  .ab-values__bg {
-    display: none;
+    padding: 36px 0 40px;
   }
 
   .ab-values__head {
-    margin-bottom: 26px;
+    margin-bottom: 24px;
   }
   .ab-values__eyebrow {
     gap: 10px;
     margin-bottom: 10px;
     font-size: 0.68rem;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.18em;
   }
   .ab-values__eyebrow::before,
   .ab-values__eyebrow::after {
-    width: 26px;
+    width: 24px;
   }
   .ab-values .ab-values__head h2 {
-    font-size: clamp(2rem, 9.5vw, 2.6rem);
+    font-size: 1.6rem;
+    line-height: 1.25;
   }
   .ab-values__head p {
     max-width: 300px;
-    margin: 0 auto;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
 
   /* stacked, icon | text | arrow */
   .ab-values__grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 12px;
   }
   .ab-value {
     flex-direction: row;
     align-items: center;
     gap: 14px;
-    padding: 18px 16px;
-    background: #fff;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    border-radius: 18px;
-    box-shadow: 0 10px 28px rgba(37, 99, 235, 0.1);
+    padding: 16px 16px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
   }
   .ab-value::after {
     display: none;
   }
   .ab-value__icon {
-    width: 52px;
-    height: 52px;
+    width: 50px;
+    height: 50px;
     margin-bottom: 0;
     border-radius: 14px;
   }
   .ab-value__icon svg {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
   }
   .ab-value h3 {
     margin-bottom: 4px;
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
   .ab-value p {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     line-height: 1.5;
   }
   .ab-value__arrow {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     margin-top: 0;
     margin-left: auto;
   }
   .ab-value__arrow svg {
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
   }
   /* no hover-lift on touch screens */
   .ab-value:hover {
