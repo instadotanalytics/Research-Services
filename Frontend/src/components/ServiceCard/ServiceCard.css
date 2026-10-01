@@ -6,14 +6,15 @@
 
   display: flex;
   flex-direction: column;
+  width: 100%;
   height: 100%;
   background: #fff;
   border: 1px solid var(--c-border);
-  border-radius: 18px;
+  border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  box-shadow: 0 6px 20px rgba(29, 78, 216, 0.06);
+  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.06);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
@@ -26,14 +27,13 @@
   outline-offset: 2px;
 }
 
-/* ---- image area ---- */
+/* ---- image ---- */
 .svc-card-media {
   position: relative;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: linear-gradient(135deg, #eaf3ff, #cfe0ff);
 }
-
 .svc-card-media img {
   position: absolute;
   inset: 0;
@@ -42,60 +42,44 @@
   object-fit: cover;
   transition: transform 0.5s ease;
 }
-
-.svc-card-fallback-icon {
-  position: absolute;
-  top: 22%;
-  left: 50%;
-  transform: translateX(-50%);
-  color: rgba(29, 78, 216, 0.35);
-}
-
-/* white fade so the heading is always readable */
-.svc-card-fade {
+/* soft tint at the bottom edge so the image blends into the card */
+.svc-card-media::after {
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to top,
-    #fff 0%,
-    rgba(255, 255, 255, 0.94) 24%,
-    rgba(255, 255, 255, 0.55) 46%,
-    rgba(255, 255, 255, 0) 70%
+    180deg,
+    rgba(15, 42, 107, 0) 55%,
+    rgba(15, 42, 107, 0.14) 100%
   );
   pointer-events: none;
 }
 
-.svc-card .svc-card-title {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 0 18px 12px;
-  font-family: "Poppins", sans-serif;
-  font-size: 1.08rem;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--c-navy);
-  text-shadow:
-    0 0 14px rgba(255, 255, 255, 0.95),
-    0 1px 2px rgba(255, 255, 255, 0.9);
+/* no-image fallback */
+.svc-card.no-img .svc-card-media {
+  background:
+    radial-gradient(
+      220px 120px at 15% 0%,
+      rgba(96, 165, 250, 0.35),
+      transparent 70%
+    ),
+    radial-gradient(
+      200px 120px at 95% 100%,
+      rgba(29, 78, 216, 0.18),
+      transparent 70%
+    ),
+    linear-gradient(135deg, #eaf3ff, #d8e6ff);
 }
-
-.svc-card-badge {
+.svc-card-fallback {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--c-blue);
-  box-shadow: 0 4px 12px rgba(15, 42, 107, 0.15);
-  backdrop-filter: blur(6px);
+  color: rgba(29, 78, 216, 0.4);
+}
+.svc-card.no-img .svc-card-badge {
+  display: none;
 }
 
 /* ---- body ---- */
@@ -103,10 +87,40 @@
   position: relative;
   flex: 1;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 4px 18px 18px;
+  flex-direction: column;
+  gap: 8px;
+  padding: 32px 18px 18px;
+}
+
+/* icon badge overlapping the image edge */
+.svc-card-badge {
+  position: absolute;
+  top: -22px;
+  left: 18px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: var(--c-blue);
+  border: 1px solid var(--c-border);
+  box-shadow: 0 6px 14px rgba(29, 78, 216, 0.14);
+}
+
+.svc-card .svc-card-title {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--c-navy);
+  min-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .svc-card .svc-card-body p {
@@ -115,67 +129,61 @@
   color: var(--c-muted);
   font-size: 0.86rem;
   line-height: 1.6;
+  min-height: 4.8em;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.svc-card-arrow {
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+.svc-card-link {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: #eff4ff;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--c-border);
   color: var(--c-blue);
-  transition:
-    background 0.2s,
-    color 0.2s,
-    transform 0.2s;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.svc-card-link svg {
+  transition: transform 0.2s ease;
 }
 
-/* hover effects only on devices that actually hover */
+/* hover only on devices that actually hover */
 @media (hover: hover) {
   .svc-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 36px rgba(29, 78, 216, 0.16);
+    transform: translateY(-5px);
+    box-shadow: 0 16px 34px rgba(29, 78, 216, 0.14);
     border-color: rgba(37, 99, 235, 0.35);
   }
   .svc-card:hover .svc-card-media img {
     transform: scale(1.06);
   }
-  .svc-card:hover .svc-card-arrow {
-    background: var(--c-blue);
-    color: #fff;
+  .svc-card:hover .svc-card-link svg {
     transform: translate(2px, -2px);
   }
 }
 
-.svc-card:active .svc-card-arrow {
-  background: var(--c-blue);
-  color: #fff;
-}
-
 @media (max-width: 480px) {
-  .svc-card {
-    border-radius: 16px;
+  .svc-card-body {
+    padding: 30px 16px 16px;
+  }
+  .svc-card-badge {
+    left: 16px;
+    width: 42px;
+    height: 42px;
   }
   .svc-card .svc-card-title {
     font-size: 1rem;
-    padding: 0 14px 10px;
-  }
-  .svc-card-body {
-    padding: 2px 14px 14px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .svc-card,
   .svc-card-media img,
-  .svc-card-arrow {
+  .svc-card-link svg {
     transition: none;
   }
 }

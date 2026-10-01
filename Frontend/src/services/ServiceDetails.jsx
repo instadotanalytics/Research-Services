@@ -1,14 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CheckCircle2, Users, ArrowRight, Phone, Sparkles, FileText, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  CheckCircle2, Users, ArrowRight, Phone, Sparkles, FileText, ShieldCheck, MessageCircle,
+} from 'lucide-react';
 import SEO from '../components/SEO';
 import FAQAccordion from '../components/FAQ/FAQAccordion.jsx';
-import CTASection from '../components/CTA/CTASection.jsx';
 import EmptyState from '../components/Loading/EmptyState.jsx';
 import { getServiceBySlug } from '../services/serviceApi.js';
 import { iconMap } from '../utils/serviceIcons.js';
 import { optimizeImage } from '../utils/cloudinary.js';
 import './ServiceDetails.css';
+
+const fadeUp = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+};
 
 /* ---------- Skeleton helpers ---------- */
 function Sk({ w = '100%', h = 14, r = 6, style }) {
@@ -32,8 +40,8 @@ function ServiceDetailsSkeleton() {
           <Sk w="min(540px, 95%)" h={14} style={{ marginBottom: 10 }} />
           <Sk w="min(420px, 80%)" h={14} style={{ marginBottom: 26 }} />
           <div className="sd-hero-actions">
-            <Sk w={200} h={44} r={10} />
-            <Sk w={140} h={44} r={10} />
+            <Sk w={200} h={44} r={6} />
+            <Sk w={140} h={44} r={6} />
           </div>
         </div>
       </section>
@@ -42,7 +50,6 @@ function ServiceDetailsSkeleton() {
       <section className="sd-body">
         <div className="container sd-layout">
           <div className="sd-main">
-            {/* Overview */}
             <div className="sd-block">
               <Sk w={150} h={24} r={8} style={{ marginBottom: 20 }} />
               <Sk h={14} style={{ marginBottom: 12 }} />
@@ -51,7 +58,6 @@ function ServiceDetailsSkeleton() {
               <Sk w="60%" h={14} />
             </div>
 
-            {/* Features */}
             <div className="sd-block">
               <Sk w={170} h={24} r={8} style={{ marginBottom: 20 }} />
               <div className="sd-features">
@@ -64,7 +70,6 @@ function ServiceDetailsSkeleton() {
               </div>
             </div>
 
-            {/* Process */}
             <div className="sd-block">
               <Sk w={140} h={24} r={8} style={{ marginBottom: 20 }} />
               <ol className="sd-steps">
@@ -81,7 +86,6 @@ function ServiceDetailsSkeleton() {
               </ol>
             </div>
 
-            {/* Audience */}
             <div className="sd-block">
               <Sk w={160} h={24} r={8} style={{ marginBottom: 20 }} />
               <div className="sd-audience">
@@ -92,15 +96,14 @@ function ServiceDetailsSkeleton() {
             </div>
           </div>
 
-          {/* Aside */}
           <aside className="sd-aside">
             <div className="sd-aside-card">
               <Sk w={46} h={46} r={12} />
               <Sk w="70%" h={20} style={{ marginTop: 4 }} />
               <Sk h={12} />
               <Sk w="85%" h={12} style={{ marginBottom: 6 }} />
-              <Sk h={44} r={10} />
-              <Sk h={44} r={10} />
+              <Sk h={44} r={6} />
+              <Sk h={44} r={6} />
               <Sk w="75%" h={12} style={{ margin: '10px auto 0' }} />
             </div>
           </aside>
@@ -155,24 +158,31 @@ export default function ServiceDetails() {
         {heroImg && <img className="sd-hero-img" src={heroImg} alt="" />}
         <div className="sd-hero-overlay" />
         <div className="container sd-hero-inner">
-          <nav className="sd-crumbs" aria-label="Breadcrumb">
-            <Link to="/">Home</Link><span>/</span>
-            <Link to="/services">Services</Link><span>/</span>
-            <em>{service.title}</em>
-          </nav>
+          <motion.div
+            className="sd-hero-content"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <nav className="sd-crumbs" aria-label="Breadcrumb">
+              <Link to="/">Home</Link><span>/</span>
+              <Link to="/services">Services</Link><span>/</span>
+              <em>{service.title}</em>
+            </nav>
 
-          <span className="sd-chip"><Icon size={15} /> Academic Service</span>
-          <h1>{service.title}</h1>
-          <p>{service.shortDescription}</p>
+            <span className="sd-chip"><Icon size={14} /> Academic Service</span>
+            <h1>{service.title}</h1>
+            <p>{service.shortDescription}</p>
 
-          <div className="sd-hero-actions">
-            <Link to="/contact" className="sd-btn sd-btn-orange">
-              <Phone size={17} /> {cta}
-            </Link>
-            {service.process?.length > 0 && (
-              <a href="#sd-process" className="sd-btn sd-btn-ghost">How it works</a>
-            )}
-          </div>
+            <div className="sd-hero-actions">
+              <Link to="/contact" className="sd-btn sd-btn-orange">
+                <Phone size={16} /> {cta}
+              </Link>
+              {service.process?.length > 0 && (
+                <a href="#sd-process" className="sd-btn sd-btn-ghost">How it works</a>
+              )}
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -180,13 +190,13 @@ export default function ServiceDetails() {
       <section className="sd-body">
         <div className="container sd-layout">
           <div className="sd-main">
-            <div className="sd-block">
+            <motion.div className="sd-block" {...fadeUp}>
               <h2 className="sd-h2">Overview</h2>
               <p className="sd-lead">{service.description}</p>
-            </div>
+            </motion.div>
 
             {service.features?.length > 0 && (
-              <div className="sd-block">
+              <motion.div className="sd-block" {...fadeUp}>
                 <h2 className="sd-h2">Key Features</h2>
                 <div className="sd-features">
                   {service.features.map((f, i) => (
@@ -196,11 +206,11 @@ export default function ServiceDetails() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {service.benefits?.length > 0 && (
-              <div className="sd-block">
+              <motion.div className="sd-block" {...fadeUp}>
                 <h2 className="sd-h2">Benefits</h2>
                 <div className="sd-benefits">
                   {service.benefits.map((b, i) => (
@@ -210,11 +220,11 @@ export default function ServiceDetails() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {service.process?.length > 0 && (
-              <div className="sd-block" id="sd-process">
+              <motion.div className="sd-block" id="sd-process" {...fadeUp}>
                 <h2 className="sd-h2">Our Process</h2>
                 <ol className="sd-steps">
                   {service.process.map((p, i) => (
@@ -227,25 +237,25 @@ export default function ServiceDetails() {
                     </li>
                   ))}
                 </ol>
-              </div>
+              </motion.div>
             )}
 
             {service.audience?.length > 0 && (
-              <div className="sd-block">
+              <motion.div className="sd-block" {...fadeUp}>
                 <h2 className="sd-h2">Who Is It For?</h2>
                 <div className="sd-audience">
                   {service.audience.map((a, i) => (
                     <span key={i}><Users size={15} /> {a}</span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {faqs.length > 0 && (
-              <div className="sd-block">
+              <motion.div className="sd-block" {...fadeUp}>
                 <h2 className="sd-h2">Frequently Asked Questions</h2>
                 <FAQAccordion faqs={faqs} />
-              </div>
+              </motion.div>
             )}
           </div>
 
@@ -256,7 +266,7 @@ export default function ServiceDetails() {
               <h3>Ready to get started?</h3>
               <p>Tell us about your requirement and our team will get back to you within 24 hours.</p>
               <Link to="/contact" className="sd-btn sd-btn-orange sd-btn-block">
-                <Phone size={17} /> {cta}
+                <Phone size={16} /> {cta}
               </Link>
               <Link to="/services" className="sd-btn sd-btn-ghost sd-btn-block">
                 View All Services <ArrowRight size={16} />
@@ -269,7 +279,28 @@ export default function ServiceDetails() {
         </div>
       </section>
 
-      <CTASection />
+      {/* ============ CTA (same as Home) ============ */}
+      <section className="sd-cta-wrap">
+        <div className="container">
+          <div className="sd-cta-banner">
+            <div className="sd-cta-content">
+              <h2>Need Research or Academic Support?</h2>
+              <p>
+                Talk to our team of experienced research professionals and get guidance tailored
+                to your academic goals.
+              </p>
+            </div>
+            <div className="sd-cta-actions">
+              <Link to="/contact" className="sd-btn sd-btn-orange">
+                <MessageCircle size={18} /> Talk to Our Team
+              </Link>
+              <Link to="/services" className="sd-btn sd-btn-ghost">
+                Explore Services <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

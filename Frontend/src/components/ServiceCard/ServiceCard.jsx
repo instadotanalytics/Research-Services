@@ -10,24 +10,27 @@ export default function ServiceCard({ service }) {
   const img = optimizeImage(service.image, 700);
 
   return (
-    <Link to={to} className="svc-card" aria-label={service.title}>
-      <div className={`svc-card-media ${img ? '' : 'no-img'}`}>
+    <Link
+      to={to}
+      className={`svc-card ${img ? '' : 'no-img'}`}
+      aria-label={service.title}
+    >
+      <div className="svc-card-media">
         {img ? (
           <img src={img} alt="" loading="lazy" />
         ) : (
-          <Icon size={46} strokeWidth={1.5} className="svc-card-fallback-icon" />
+          <span className="svc-card-fallback">
+            <Icon size={46} strokeWidth={1.5} />
+          </span>
         )}
-        {img && (
-          <span className="svc-card-badge"><Icon size={16} /></span>
-        )}
-        <div className="svc-card-fade" />
-        <h3 className="svc-card-title">{service.title}</h3>
       </div>
 
       <div className="svc-card-body">
+        <span className="svc-card-badge"><Icon size={20} /></span>
+        <h3 className="svc-card-title">{service.title}</h3>
         <p>{service.shortDescription}</p>
-        <span className="svc-card-arrow" aria-hidden="true">
-          <ArrowUpRight size={18} />
+        <span className="svc-card-link">
+          Learn more <ArrowUpRight size={15} />
         </span>
       </div>
     </Link>
