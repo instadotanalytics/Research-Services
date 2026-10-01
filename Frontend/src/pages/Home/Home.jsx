@@ -45,27 +45,28 @@ const whyUs = [
 ];
 
 const process = [
-  { icon: FileText, title: 'Submit Your Requirement', desc: 'Tell us your needs and expectations.' },
-  { icon: Search, title: 'Requirement Analysis', desc: 'We understand your requirements in detail.' },
-  { icon: ClipboardList, title: 'Research Planning', desc: 'Create a customized plan for your project.' },
-  { icon: Settings, title: 'Development / Analysis', desc: 'Work on research, writing and data analysis.' },
-  { icon: ClipboardCheck, title: 'Review & Assistance', desc: 'Quality check and revisions if needed.' },
-  { icon: PackageCheck, title: 'Final Delivery', desc: 'On-time delivery with complete support.' },
+  { icon: FileText, title: 'Submit Your Requirement', desc: 'Tell us your needs and expectations.', image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&q=70' },
+  { icon: Search, title: 'Requirement Analysis', desc: 'We understand your requirements in detail.', image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=600&q=70' },
+  { icon: ClipboardList, title: 'Research Planning', desc: 'Create a customized plan for your project.', image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=600&q=70' },
+  { icon: Settings, title: 'Development / Analysis', desc: 'Work on research, writing and data analysis.', image: 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?auto=format&fit=crop&w=600&q=70' },
+  { icon: ClipboardCheck, title: 'Review & Assistance', desc: 'Quality check and revisions if needed.', image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=70' },
+  { icon: PackageCheck, title: 'Final Delivery', desc: 'On-time delivery with complete support.', image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=600&q=70' },
 ];
 
 const audience = [
-  { icon: GraduationCap, title: 'Students' },
-  { icon: Search, title: 'PhD Scholars' },
-  { icon: FlaskConical, title: 'Researchers' },
-  { icon: Users, title: 'Faculty' },
-  { icon: School, title: 'Schools' },
-  { icon: Landmark, title: 'Institutions' },
+  { icon: GraduationCap, title: 'Students', image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=70' },
+  { icon: Search, title: 'PhD Scholars', image: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=600&q=70' },
+  { icon: FlaskConical, title: 'Researchers', image: 'https://images.unsplash.com/photo-1581093588401-fbb62a02f120?auto=format&fit=crop&w=600&q=70' },
+  { icon: Users, title: 'Faculty', image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=70' },
+  { icon: School, title: 'Schools', image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=70' },
+  { icon: Landmark, title: 'Institutions', image: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=70' },
 ];
 
 const defaultTestimonials = [
   { _id: 't1', name: 'Priya Sharma', designation: 'M.Sc. Student', institution: 'Delhi University', rating: 5, review: 'The team at ResearchPlus helped me with my dissertation. The quality of work and timely delivery was excellent. Highly recommended!' },
   { _id: 't2', name: 'Rahul Verma', designation: 'PhD Scholar', institution: 'IIT Roorkee', rating: 5, review: 'Professional, supportive and very knowledgeable team. They guided me well throughout my research paper publication process.' },
   { _id: 't3', name: 'Sneha Patel', designation: 'Assistant Professor', institution: 'SPPU', rating: 5, review: 'The FDP program was well-structured and very informative. It helped me improve my teaching and research skills.' },
+  { _id: 't4', name: 'Amit Kumar', designation: 'Research Scholar', institution: 'BHU', rating: 5, review: 'Excellent support with data analysis and interpretation. Their structured approach saved me weeks of work.' },
 ];
 
 const defaultFaqs = [
@@ -99,14 +100,66 @@ function useIsMobile(query = '(max-width: 768px)') {
   return isMobile;
 }
 
+function ProcessCard({ p }) {
+  return (
+    <div className="image-card">
+      <div className="image-card-media">
+        <img
+          src={p.image}
+          alt={p.title}
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.src =
+              'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&q=70';
+          }}
+        />
+      </div>
+      <div className="image-card-body">
+        <div className="image-card-icon">
+          <p.icon size={20} />
+        </div>
+        <h3>{p.title}</h3>
+        <p>{p.desc}</p>
+      </div>
+    </div>
+  );
+}
+
+function AudienceCard({ a }) {
+  return (
+    <div className="image-card">
+      <div className="image-card-media">
+        <img
+          src={a.image}
+          alt={a.title}
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.src =
+              'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=70';
+          }}
+        />
+      </div>
+      <div className="image-card-body">
+        <div className="image-card-icon">
+          <a.icon size={20} />
+        </div>
+        <h3>{a.title}</h3>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const isMobile = useIsMobile();
   const [testimonials, setTestimonials] = useState(defaultTestimonials);
   const [faqs, setFaqs] = useState(defaultFaqs);
   const [services, setServices] = useState(defaultServices);
   const [openFaq, setOpenFaq] = useState(null);
-  const [tIndex, setTIndex] = useState(0);
+
   const [sIndex, setSIndex] = useState(0);
+  const [pIndex, setPIndex] = useState(0);
+  const [aIndex, setAIndex] = useState(0);
+  const [tIndex, setTIndex] = useState(0);
 
   useEffect(() => {
     Promise.all([getTestimonials(), getFAQs(), getServices()])
@@ -118,31 +171,34 @@ export default function Home() {
       .catch(console.error);
   }, []);
 
-  // Testimonials
-  const visibleCount = isMobile ? 1 : Math.min(3, testimonials.length);
-  const visibleTestimonials = Array.from({ length: visibleCount }, (_, i) =>
-    testimonials[(tIndex + i) % testimonials.length]
-  );
-  const prevT = () => setTIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
-  const nextT = () => setTIndex((i) => (i + 1) % testimonials.length);
-
-  // Services (mobile: 1 at a time)
-  const visibleServicesCount = isMobile ? 1 : services.length;
-  const visibleServices = Array.from({ length: visibleServicesCount }, (_, i) =>
-    services[(sIndex + i) % services.length]
-  );
   const prevS = () => setSIndex((i) => (i - 1 + services.length) % services.length);
   const nextS = () => setSIndex((i) => (i + 1) % services.length);
 
-  useEffect(() => {
-    if (!isMobile) setSIndex(0);
-  }, [isMobile]);
+  const maxPIndex = Math.max(0, process.length - 1);
+  const prevP = () => setPIndex((i) => Math.max(0, i - 1));
+  const nextP = () => setPIndex((i) => Math.min(maxPIndex, i + 1));
 
-  const renderArrows = (cls, onPrev, onNext) => (
-    <div className={cls}>
-      <button type="button" onClick={onPrev} aria-label="Previous"><ChevronLeft size={18} /></button>
-      <button type="button" onClick={onNext} aria-label="Next"><ChevronRight size={18} /></button>
-    </div>
+  const prevA = () => setAIndex((i) => (i - 1 + audience.length) % audience.length);
+  const nextA = () => setAIndex((i) => (i + 1) % audience.length);
+
+  const prevT = () => setTIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
+  const nextT = () => setTIndex((i) => (i + 1) % testimonials.length);
+
+  const visibleServices = isMobile
+    ? [services[sIndex]]
+    : Array.from({ length: 3 }, (_, i) => services[(sIndex + i) % services.length]);
+
+  const visibleProcess = isMobile
+    ? [process[pIndex]]
+    : process.slice(pIndex, pIndex + 4);
+
+  const visibleAudience = isMobile
+    ? [audience[aIndex]]
+    : Array.from({ length: 4 }, (_, i) => audience[(aIndex + i) % audience.length]);
+
+  const visibleTestimonials = Array.from(
+    { length: isMobile ? 1 : 3 },
+    (_, i) => testimonials[(tIndex + i) % testimonials.length]
   );
 
   const shownFaqs = faqs.slice(0, 8);
@@ -172,7 +228,7 @@ export default function Home() {
         description="Professional research and academic support services for students, researchers, scholars and educational institutions."
       />
 
-      {/* ========== HERO ========== */}
+      {/* HERO */}
       <section
         className="home-section hero"
         style={
@@ -216,13 +272,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== SERVICES ========== */}
-      <section className="home-section section-alt services-section">
+      {/* SERVICES */}
+      <section className="home-section services-section">
         <div className="container">
           <div className="section-head-row">
             <div>
               <span className="pill">Our Services</span>
-              <h2>Comprehensive Research & Academic Support</h2>
+              <h2>Comprehensive Research &amp; Academic Support</h2>
               <p>
                 We offer a wide range of academic and research services to help you achieve
                 your goals with confidence and quality.
@@ -233,40 +289,42 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="services-grid-wrapper">
-            {isMobile && (
-              <button
-                type="button"
-                className="mobile-arrow mobile-arrow-left"
-                onClick={prevS}
-                aria-label="Previous service"
-              >
+          {isMobile ? (
+            <div className="carousel-wrapper">
+              <button type="button" className="mobile-arrow mobile-arrow-left" onClick={prevS} aria-label="Previous service">
                 <ChevronLeft size={18} />
               </button>
-            )}
-
-            <div className="services-grid">
-              {visibleServices.map((s) => (
-                <ServiceCard key={s._id || s.title} service={s} />
-              ))}
-            </div>
-
-            {isMobile && (
-              <button
-                type="button"
-                className="mobile-arrow mobile-arrow-right"
-                onClick={nextS}
-                aria-label="Next service"
-              >
+              <div className="services-grid">
+                {visibleServices.map((s) => (
+                  <ServiceCard key={s._id || s.title} service={s} />
+                ))}
+              </div>
+              <button type="button" className="mobile-arrow mobile-arrow-right" onClick={nextS} aria-label="Next service">
                 <ChevronRight size={18} />
               </button>
-            )}
-          </div>
+            </div>
+          ) : (
+            <>
+              <div className="three-col-grid">
+                {visibleServices.map((s) => (
+                  <ServiceCard key={s._id || s.title} service={s} />
+                ))}
+              </div>
+              <div className="arrows-below">
+                <button type="button" onClick={prevS} aria-label="Previous services">
+                  <ChevronLeft size={18} />
+                </button>
+                <button type="button" onClick={nextS} aria-label="Next services">
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
-      {/* ========== WHY CHOOSE US ========== */}
-      <section className="home-section section-gradient why-section">
+      {/* WHY CHOOSE US */}
+      <section className="home-section why-section">
         <div className="container why-inner">
           <div className="why-content">
             <span className="pill">Why Choose Us</span>
@@ -296,49 +354,94 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== PROCESS ========== */}
-      <section className="home-section section-gradient process-section">
+      {/* PROCESS */}
+      <section className="home-section process-section">
         <div className="container">
           <div className="section-head">
             <span className="pill">Our Process</span>
-            <h2>Simple 6-Step Research Support Process</h2>
+            <h2 className="nowrap-heading">Simple 6-Step Research Support Process</h2>
             <p>We follow a transparent and systematic process to ensure the best results.</p>
           </div>
-          <div className="process-grid">
-            {process.map((p, i) => (
-              <motion.div key={p.title} className="process-card" {...fadeUp} transition={{ delay: i * 0.07 }}>
-                <span className="process-num">{String(i + 1).padStart(2, '0')}</span>
-                <div className="process-icon"><p.icon size={30} /></div>
-                <h3>{p.title}</h3>
-                <p>{p.desc}</p>
-              </motion.div>
-            ))}
-          </div>
+
+          {isMobile ? (
+            <div className="carousel-wrapper">
+              <button type="button" className="mobile-arrow mobile-arrow-left" onClick={prevP} disabled={pIndex === 0} aria-label="Previous step">
+                <ChevronLeft size={18} />
+              </button>
+              <div className="four-col-grid process-mobile-grid">
+                {visibleProcess.map((p) => (
+                  <ProcessCard key={p.title} p={p} />
+                ))}
+              </div>
+              <button type="button" className="mobile-arrow mobile-arrow-right" onClick={nextP} disabled={pIndex === maxPIndex} aria-label="Next step">
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="four-col-grid">
+                {visibleProcess.map((p) => (
+                  <ProcessCard key={p.title} p={p} />
+                ))}
+              </div>
+              <div className="arrows-below">
+                <button type="button" onClick={prevP} disabled={pIndex === 0} aria-label="Previous process">
+                  <ChevronLeft size={18} />
+                </button>
+                <button type="button" onClick={nextP} disabled={pIndex === maxPIndex} aria-label="Next process">
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
-      {/* ========== AUDIENCE ========== */}
-      <section className="home-section section-gradient audience-section">
+      {/* AUDIENCE */}
+      <section className="home-section audience-section">
         <div className="container">
           <div className="section-head">
             <span className="pill">Who We Work With</span>
-            <h2>Supporting a Wide Range of Researchers & Learners</h2>
+            <h2>Supporting a Wide Range of Researchers &amp; Learners</h2>
             <p>We serve students, scholars, researchers, faculty and educational institutions across the globe.</p>
           </div>
-          <div className="audience-grid">
-            {audience.map((a, i) => (
-              <motion.div key={a.title} className="audience-card" {...fadeUp} transition={{ delay: i * 0.06 }}>
-                <span className="audience-num">{String(i + 1).padStart(2, '0')}</span>
-                <a.icon size={30} />
-                <span className="audience-title">{a.title}</span>
-              </motion.div>
-            ))}
-          </div>
+
+          {isMobile ? (
+            <div className="carousel-wrapper">
+              <button type="button" className="mobile-arrow mobile-arrow-left" onClick={prevA} aria-label="Previous audience">
+                <ChevronLeft size={18} />
+              </button>
+              <div className="four-col-grid">
+                {visibleAudience.map((a) => (
+                  <AudienceCard key={a.title} a={a} />
+                ))}
+              </div>
+              <button type="button" className="mobile-arrow mobile-arrow-right" onClick={nextA} aria-label="Next audience">
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="four-col-grid">
+                {visibleAudience.map((a) => (
+                  <AudienceCard key={a.title} a={a} />
+                ))}
+              </div>
+              <div className="arrows-below">
+                <button type="button" onClick={prevA} aria-label="Previous audience">
+                  <ChevronLeft size={18} />
+                </button>
+                <button type="button" onClick={nextA} aria-label="Next audience">
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
-      {/* ========== TESTIMONIALS ========== */}
-      <section className="home-section section-alt testimonials-section">
+      {/* TESTIMONIALS */}
+      <section className="home-section testimonials-section">
         <div className="container">
           <div className="section-head">
             <span className="pill">Testimonials</span>
@@ -346,21 +449,16 @@ export default function Home() {
             <p>Trusted by students, researchers and institutions for quality and reliability.</p>
           </div>
 
-          <div className="testimonials-grid-wrapper">
+          <div className="carousel-wrapper">
             {isMobile && (
-              <button
-                type="button"
-                className="mobile-arrow mobile-arrow-left"
-                onClick={prevT}
-                aria-label="Previous testimonial"
-              >
+              <button type="button" className="mobile-arrow mobile-arrow-left" onClick={prevT} aria-label="Previous testimonial">
                 <ChevronLeft size={18} />
               </button>
             )}
 
-            <div className="testimonial-grid">
-              {visibleTestimonials.map((t) => (
-                <div key={t._id} className="testimonial-card">
+            <div className="three-col-grid testimonials-grid">
+              {visibleTestimonials.map((t, i) => (
+                <div key={t._id + '-' + i} className="testimonial-card">
                   <div className="testimonial-top">
                     <div className="testimonial-avatar">{t.name.charAt(0).toUpperCase()}</div>
                     <div>
@@ -375,22 +473,26 @@ export default function Home() {
             </div>
 
             {isMobile && (
-              <button
-                type="button"
-                className="mobile-arrow mobile-arrow-right"
-                onClick={nextT}
-                aria-label="Next testimonial"
-              >
+              <button type="button" className="mobile-arrow mobile-arrow-right" onClick={nextT} aria-label="Next testimonial">
                 <ChevronRight size={18} />
               </button>
             )}
           </div>
 
-          {!isMobile && renderArrows('arrows arrows-bottom-desktop', prevT, nextT)}
+          {!isMobile && (
+            <div className="arrows-below">
+              <button type="button" onClick={prevT} aria-label="Previous">
+                <ChevronLeft size={18} />
+              </button>
+              <button type="button" onClick={nextT} aria-label="Next">
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* ========== FAQ ========== */}
+      {/* FAQ */}
       <section className="home-section faq-section">
         <div className="container">
           <div className="section-head-row">
@@ -409,7 +511,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== CTA ========== */}
+      {/* CTA — lighter theme blue */}
       <section className="home-section cta-wrap">
         <div className="container">
           <div className="cta-banner">
